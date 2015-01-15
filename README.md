@@ -4,6 +4,7 @@ share分享平台
 最新的JAVA spring mvc +hibernate的HTML5 框架bootstrap css3.0，
 
 初期目标：
+
   1.实现springmvc3+hibernate3+mysql的框架数据库整合;
   
   2.实现springmvc3+hibernate4+mysql的框架数据库整合;
@@ -16,6 +17,7 @@ share分享平台
   1.实现springmvc3+mybatis+mysql/oracle的框架数据库整合。
   
 项目综述：
+
 全注解实现，实现零配置文件，代码简洁，功能完善
 页面UI采用最新的bootstrap +css3.0实现，达到页面美观、大气。
 已经实现的功能点：

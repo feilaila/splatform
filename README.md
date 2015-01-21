@@ -14,7 +14,16 @@ share分享平台
   4.实现springmvc3+hibernate4+oracle的框架数据库整合。
   
 远期目标：
-  1.实现springmvc3+mybatis+mysql/oracle的框架数据库整合。
+
+  1.实现springmvc3/4+mybatis+mysql/oracle的框架数据库整合;
+  
+  2.实现springmvc4+hibernate3+mysql的框架数据库整合;
+  
+  3.实现springmvc4+hibernate4+mysql的框架数据库整合;
+  
+  4.实现springmvc4+hibernate3+oracle的框架数据库整合;
+  
+  5.实现springmvc4+hibernate4+oracle的框架数据库整合。
   
 项目综述：
 

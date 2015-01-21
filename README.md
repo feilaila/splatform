@@ -1,5 +1,5 @@
 # splatform
-share分享平台
+share分享平台[仅限学习和交流]
 
 最新的JAVA spring mvc +hibernate的HTML5 框架bootstrap css3.0，
 

@@ -1,8 +1,8 @@
-有兴趣的可以本地建立新的分支，提交你们想增加的功能或者修改bug。
+#有兴趣的可以本地建立新的分支，提交你们想增加的功能或者修改bug。
 
-希望一起研究技术，方便工作和学习。
+#希望一起研究技术，方便工作和学习。
 
-注意事项：
+#注意事项：
 
 1.本平台所实现工具统一使用eclipse，方便快捷,插件丰富！然后还会涉及到一些工具，
   
@@ -32,11 +32,11 @@
   
   JDK相关工具：
   
-  http://yunpan.cn/cKgSj5AzvfpyG  提取码 2fbb
+  jdk6  http://yunpan.cn/cKgSbQTn3BFsh  提取码 ec99
   
-  http://yunpan.cn/cKgSV5UB9VjG9  提取码 8d41
+  jdk7  http://yunpan.cn/cKgSUwRuN9QgX  提取码 79fb
   
-  http://yunpan.cn/cKgSQjgEJhRy5  提取码 d5b7
+  jdk8  http://yunpan.cn/cKgSeKuNDTqYm  提取码 d7e8
   
 2.项目工程pull到本地后，首先应该更改工程编译环境-->修改为你本地jdk；
 

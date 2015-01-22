@@ -12,14 +12,7 @@ String fpath=this.getServletContext().getContextPath();
         	 <p>&copy;  XX技术支持, &nbsp;2015 &nbsp;</p>
         </div>
     </div>
-    <!--END FOOTER -->
-    <!-- GLOBAL SCRIPTS -->
+
     <script src="<%=fpath %>/static/assets/plugins/jquery-2.0.3.min.js"></script>
      <script src="<%=fpath %>/static/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<%=fpath %>/static/assets/plugins/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    <!-- END GLOBAL SCRIPTS -->
-
-    <!-- PAGE LEVEL SCRIPTS -->
-
-   
-    <!-- END PAGE LEVEL SCRIPTS -->

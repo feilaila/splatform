@@ -107,7 +107,7 @@ public class GroupController {
 		if (null == pageNo) {
 			pageNo = initPageNo;
 		}
-		ModelAndView model = new ModelAndView("/system/g_manage");
+		ModelAndView model = new ModelAndView("/group/g_manage");
 		/**获取组列表*/
 		
 		page = groupService.getGroups(pageNo, pageSize);

@@ -26,32 +26,24 @@
 											<thead>
 												<tr>
 													<th class="center">序号</th>
-													<th>用户名</th>
-													<th>姓名</th>
-													<th>角色</th>
-													<th>有效性</th>
+													<th>组织名称</th>
+													<th>描述</th>
 													<th>添加时间</th>
-													<th>上次登录时间</th>
-													<th>上次访问IP</th>
 													<th>操作</th>
 												</tr>
 											</thead>
 
 											<tbody>
-												<c:forEach items="${sysUserList}" var="sysUser"
+												<c:forEach items="${groupList}" var="sysGroup"
 													varStatus="status">
 													<tr>
-														<td>${sysUser.uid}</td>
-														<td>${sysUser['username']}</td>
-														<td>${sysUser.name}</td>
-														<td>${sysUser.roleName}</td>
+														<td>${sysGroup.id}</td>
+														<td>${sysGroup.groupName}</td>
+														<td>${sysGroup.groupDesc}</td>
 														<td>
-															<c:if test="${sysUser.status == 1}">有效</c:if>
-															<c:if test="${sysUser.status == 9}">失效</c:if>
+															<fmt:parseDate value="${sysGroup.createTime}" pattern="yyyyMMddHHmmss" var="date"/>
+															 <fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm:ss"/>
 														</td>
-														<td>${sysUser.createTime}</td>
-														<td>${sysUser.lastLoginTime}</td>
-														<td>${sysUser.lastLoginIP}</td>
 														<td>														
 														<c:if test="${sysUser.status == 1}">
 															<a data-toggle="modal" href="#suserEdit"

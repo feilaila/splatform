@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+String tpath=this.getServletContext().getContextPath();
+//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
+%>
 <!-- HEADER SECTION -->
         <div id="top">
 
@@ -238,12 +242,12 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#"><i class="icon-user"></i> User Profile </a>
+                            <li><a href="#"><i class="icon-user"></i> 个人资料 </a>
                             </li>
-                            <li><a href="#"><i class="icon-gear"></i> Settings </a>
+                            <li><a href="#"><i class="icon-gear"></i> 设置 </a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="login.html"><i class="icon-signout"></i> Logout </a>
+                            <li><a href="user_logout.do"><i class="icon-signout"></i> 退出 </a>
                             </li>
                         </ul>
 

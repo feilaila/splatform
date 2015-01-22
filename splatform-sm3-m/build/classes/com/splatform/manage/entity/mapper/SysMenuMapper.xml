@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.splatform.manage.entity.SysMenuMapper" >
+  
+  <resultMap id="SysMenuResultMap" type="com.splatform.manage.entity.SysMenu" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="menu_pid" property="menuPid" jdbcType="VARCHAR" />
+    <result column="menu_url" property="menuUrl" jdbcType="VARCHAR" />
+    <result column="leaf_yn" property="leafYn" jdbcType="VARCHAR" />
+    <result column="menu_btns" property="menuBtns" jdbcType="VARCHAR" />
+    <result column="icon_tag" property="iconTag" jdbcType="VARCHAR" />
+    <result column="has_child" property="hasChild" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="SysMenu_Column_List" >
+    id,menu_code,menu_name,menu_pid,menu_url,
+    leaf_yn,menu_btns,icon_tag,has_child
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="SysMenuResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="SysMenu_Column_List" />
+    from sys_menu
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_menu
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.splatform.manage.entity.SysMenu" >
+    insert into sys_menu (id,menu_code,menu_name,menu_pid,menu_url,
+    leaf_yn,menu_btns,icon_tag,has_child
+      )
+    values (#{id,jdbcType=VARCHAR}, #{menu_code,jdbcType=VARCHAR}, #{menu_name,jdbcType=VARCHAR}
+    		, #{menu_pid,jdbcType=VARCHAR}, #{menu_url,jdbcType=VARCHAR}, #{leaf_yn,jdbcType=VARCHAR}
+    		, #{menu_btns,jdbcType=VARCHAR}, #{icon_tag,jdbcType=VARCHAR}, #{has_child,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.splatform.manage.entity.SysMenu" >
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="menuCode != null" >
+        menu_code,
+      </if>
+      <if test="menuName != null" >
+        menu_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null" >
+        #{menu_code,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        #{menu_name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.splatform.manage.entity.SysMenu" >
+    update sys_menu
+    <set >
+      <if test="menu_code != null" >
+        menu_code = #{menu_code,jdbcType=VARCHAR},
+      </if>
+      <if test="menu_name != null" >
+        menu_name = #{menu_name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.splatform.manage.entity.SysMenu" >
+    update sys_menu
+    set menu_code = #{menu_code,jdbcType=VARCHAR},
+      menu_name = #{menu_name,jdbcType=VARCHAR},
+      menu_pid = #{menu_pid,jdbcType=VARCHAR},
+      menu_url = #{menu_url,jdbcType=VARCHAR},
+      leaf_yn = #{leaf_yn,jdbcType=VARCHAR},
+      menu_btns = #{menu_btns,jdbcType=VARCHAR},
+      icon_tag = #{icon_tag,jdbcType=VARCHAR},
+      has_child = #{has_child,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <select id="getAll" resultMap="SysMenuResultMap">
+  	SELECT * FROM sys_menu
+  </select>
+</mapper>

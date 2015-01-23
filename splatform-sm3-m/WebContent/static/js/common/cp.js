@@ -162,10 +162,10 @@ Cp.Date = {
       fmt = (!fmt) ? 'yyyy-MM-dd' : fmt;
       var o = { 
         "M+" : v.getMonth()+1,                 // 月份
-        "d+" : v.getDate(),                    // 日
+        "d+" : v.getDate(),                    // 日
         "h+" : v.getHours(),                   // 小时
-        "m+" : v.getMinutes(),                 // 分
-        "s+" : v.getSeconds(),                 // 秒
+        "m+" : v.getMinutes(),                 // 分
+        "s+" : v.getSeconds(),                 // 秒
         "q+" : Math.floor((v.getMonth()+3)/3), // 季度
         "S"  : v.getMilliseconds()             // 毫秒
       }; 
@@ -324,7 +324,7 @@ Cp.Page = {
   
   toPage : function(page) {
     var url = this.addUrlParam('curPage', (page == null ? 1 : page));
-    // 为什么要移除 INFO? 注释掉
+    // 为什么要移除 INFO? 注释掉
     //url = this.removeParam('INFO', url);
     window.location.href = url;
   },

@@ -27,6 +27,7 @@ share分享平台[仅限学习和交流]
   
 
 已经实现：
+
   springmvc3+hibernate3+mysql的框架数据库整合1.0.1；
   
   springmvc3+mybatis3+mysql的框架数据库整合1.0.1；

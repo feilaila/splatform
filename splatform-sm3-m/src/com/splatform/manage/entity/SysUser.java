@@ -71,15 +71,20 @@ public class SysUser implements Serializable {
 	
 	private String lastLoginTime;
 	
-	/**
-	 * 角色名称
-	 */
-	private String roleName;
-	/**
-	 * 角色id
-	 */
-	private Integer roleId;
-	
+//	/**
+//	 * 角色名称
+//	 */
+//	private String roleName;
+//	/**
+//	 * 角色id
+//	 */
+//	private Integer roleId;
+//	
+//	
+//	/**
+//	 * 组织id
+//	 */
+//	private Integer groupId;
 	
 	
 //	/**
@@ -208,20 +213,29 @@ public class SysUser implements Serializable {
 	
 	
 
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
-	}
+//	public String getRoleName() {
+//		return roleName;
+//	}
+//
+//	public void setRoleName(String roleName) {
+//		this.roleName = roleName;
+//	}
+//
+//	public Integer getRoleId() {
+//		return roleId;
+//	}
+//
+//	public void setRoleId(Integer roleId) {
+//		this.roleId = roleId;
+//	}
+//
+//	public Integer getGroupId() {
+//		return groupId;
+//	}
+//
+//	public void setGroupId(Integer groupId) {
+//		this.groupId = groupId;
+//	}
+	
 	
 }

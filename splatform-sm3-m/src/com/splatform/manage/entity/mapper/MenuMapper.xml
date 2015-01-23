@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.splatform.manage.entity.SysMenuMapper" >
+<mapper namespace="com.splatform.manage.entity.MenuMapper" >
   
   <resultMap id="SysMenuResultMap" type="com.splatform.manage.entity.SysMenu" >
     <id column="id" property="id" jdbcType="VARCHAR" />
@@ -22,17 +22,17 @@
   <select id="selectByPrimaryKey" resultMap="SysMenuResultMap" parameterType="java.lang.String" >
     select 
     <include refid="SysMenu_Column_List" />
-    from sys_menu
+    from t_sys_menu
     where id = #{id,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from sys_menu
+    delete from t_sys_menu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   
   <insert id="insert" parameterType="com.splatform.manage.entity.SysMenu" >
-    insert into sys_menu (id,menu_code,menu_name,menu_pid,menu_url,
+    insert into t_sys_menu (id,menu_code,menu_name,menu_pid,menu_url,
     leaf_yn,menu_btns,icon_tag,has_child
       )
     values (#{id,jdbcType=VARCHAR}, #{menu_code,jdbcType=VARCHAR}, #{menu_name,jdbcType=VARCHAR}
@@ -42,7 +42,7 @@
   </insert>
   
   <insert id="insertSelective" parameterType="com.splatform.manage.entity.SysMenu" >
-    insert into sys_menu
+    insert into t_sys_menu
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -68,7 +68,7 @@
   </insert>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.splatform.manage.entity.SysMenu" >
-    update sys_menu
+    update t_sys_menu
     <set >
       <if test="menu_code != null" >
         menu_code = #{menu_code,jdbcType=VARCHAR},
@@ -81,7 +81,7 @@
   </update>
   
   <update id="updateByPrimaryKey" parameterType="com.splatform.manage.entity.SysMenu" >
-    update sys_menu
+    update t_sys_menu
     set menu_code = #{menu_code,jdbcType=VARCHAR},
       menu_name = #{menu_name,jdbcType=VARCHAR},
       menu_pid = #{menu_pid,jdbcType=VARCHAR},
@@ -95,6 +95,6 @@
   
   
   <select id="getAll" resultMap="SysMenuResultMap">
-  	SELECT * FROM sys_menu
+  	SELECT * FROM t_sys_menu
   </select>
 </mapper>

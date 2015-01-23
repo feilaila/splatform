@@ -20,6 +20,7 @@ public interface UserMapper {
 	int insertSelective(SysUser record);
 
 	SysUser selectByPrimaryKey(String id);
+	
 	SysUser selectByUserInfo(String userCode);
 
 	int updateByPrimaryKeySelective(SysUser record);

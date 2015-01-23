@@ -1,8 +1,5 @@
 package com.sh.manage.controller;
 
-
-
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +32,6 @@ import com.sh.manage.service.SystemService;
 import com.sh.manage.service.UserService;
 import com.sh.manage.utils.ResponseUtils;
 import com.sh.manage.utils.SafeUtil;
-
 
 /**
  * 后台登陆管理

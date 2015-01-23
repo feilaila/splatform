@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+						"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+						
+<mapper namespace="com.splatform.manage.dao.UserMapper" >
+  
+  <resultMap id="SysUserResultMap" type="com.splatform.manage.entity.SysUser" >
+    <id column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="usercode" property="usercode" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="terminal_id" property="terminalId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="change_pwd_time" property="changePwdTime" jdbcType="VARCHAR" />
+    <result column="valid_time" property="validTime" jdbcType="VARCHAR" />
+    <result column="lock_status" property="lockStatus" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="last_login_ip" property="lastLoginIP" jdbcType="VARCHAR" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="VARCHAR" />
+
+	
+  </resultMap>
+  
+  <sql id="SysUser_Column_List" >
+    uid,email,name,usercode,password,
+    terminal_id,create_time,change_pwd_time,valid_time,
+    lock_status,status,last_login_ip,last_login_time
+  </sql>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="SysUserResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="SysUser_Column_List" />
+    from t_sys_user
+    where uid = #{uid,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <!-- 通过usercode查询用户信息 -->
+  <select id="selectByUserInfo" resultMap="SysUserResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="SysUser_Column_List" />
+    from t_sys_user
+    where usercode = #{usercode,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_sys_user
+    where uid = #{uid,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.splatform.manage.entity.SysUser" >
+    insert into t_sys_user (uid,email,name,usercode,password,
+    terminal_id,create_time,change_pwd_time,valid_time,
+    lock_status,status,last_login_ip,last_login_time
+      )
+    values (#{uid,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+    		, #{usercode,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{terminal_id,jdbcType=VARCHAR}
+    		, #{create_time,jdbcType=VARCHAR}, #{change_pwd_time,jdbcType=VARCHAR}, #{valid_time,jdbcType=VARCHAR}
+      		, #{lock_status,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{last_login_ip,jdbcType=VARCHAR}
+      		, #{last_login_time,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.splatform.manage.entity.SysUser" >
+    insert into t_sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="usercode != null" >
+        usercode,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null" >
+        #{usercode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.splatform.manage.entity.SysUser" >
+    update t_sys_user
+    <set >
+      <if test="menu_code != null" >
+        usercode = #{usercode,jdbcType=VARCHAR},
+      </if>
+      <if test="menu_name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.splatform.manage.entity.SysUser" >
+
+    update t_sys_user
+    set email = #{email,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      usercode = #{usercode,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      terminal_id = #{terminal_id,jdbcType=VARCHAR},
+      valid_time = #{valid_time,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      lock_status = #{lock_status,jdbcType=VARCHAR},
+      last_login_ip = #{last_login_ip,jdbcType=VARCHAR},
+      last_login_time = #{last_login_time,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <select id="getAll" resultMap="SysUserResultMap">
+  	SELECT * FROM t_sys_user
+  </select>
+</mapper>

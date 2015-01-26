@@ -44,7 +44,7 @@ public class GroupService extends BaseService{
 	 * @return
 	 */
 	public void addGroup(SysGroup group) {
-		//groupDao;
+		groupDao.addObject(group);
 	}
 	/**
 	 * 更新组
@@ -52,7 +52,7 @@ public class GroupService extends BaseService{
 	 * @return
 	 */
 	public boolean updateGroup(SysGroup group) {
-		// TODO Auto-generated method stub
+		groupDao.update(group);
 		return false;
 	}
 
@@ -66,6 +66,7 @@ public class GroupService extends BaseService{
 	}
 
 	public boolean delGroup(SysGroup group) {
+		groupDao.delete(group);
 		return false;
 	};
 	

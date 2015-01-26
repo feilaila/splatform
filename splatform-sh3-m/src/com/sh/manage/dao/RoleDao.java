@@ -249,28 +249,27 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 		StringBuilder sqlBuff = new StringBuilder(500);
 
 		sqlBuff.setLength(0);
-		sqlBuff.append("select id, name, remark, update_user_id, update_time, rel_prov");
+		sqlBuff.append("select id, role_name, remark, operate_id, create_time, group_id");
 		sqlBuff.append("  from t_sys_role ");
 
 		try {
 			roleList = jdbcTemplate.query(sqlBuff.toString(),
 					new RowMapper<SysRole>() {
-
 						public SysRole mapRow(ResultSet rs, int rowNum)
 								throws SQLException {
 							SysRole role = new SysRole();
-
-//							role.setId(rs.getString("id"));
-//							role.setName(rs.getString("name"));
-//							role.setRemark(rs.getString("remark"));
-//							role.setUpdateUserId(rs.getString("update_user_id"));
-//							role.setRelProv(rs.getLong("rel_prov"));
+							role.setId(Integer.parseInt(rs.getString("id")));
+							role.setRoleName(rs.getString("role_name"));
+							role.setRemark(rs.getString("remark"));
+							role.setOperateId(Integer.parseInt(rs.getString("operate_id")));
+							role.setCreateTime(rs.getString("create_time"));
+							role.setGroupId(rs.getInt("group_id"));
 							return role;
 						}
 					});
 		} catch (DataAccessException e) {
-			logger.info("查询地市信息。", e);
-			throw new SPlatformDaoException("查询地市信息。", e);
+			logger.info("查询角色信息。", e);
+			throw new SPlatformDaoException("查询角色信息。", e);
 		}
 
 		return roleList;

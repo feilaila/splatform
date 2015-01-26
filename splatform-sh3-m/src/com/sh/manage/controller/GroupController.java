@@ -1,6 +1,8 @@
 package com.sh.manage.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +26,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sh.manage.constants.SessionConstants;
 import com.sh.manage.entity.SysGroup;
 import com.sh.manage.entity.SysMenu;
+import com.sh.manage.entity.SysRole;
+import com.sh.manage.exception.SPlatformServiceException;
 import com.sh.manage.module.page.Page;
 import com.sh.manage.module.page.ZTreeNode;
 import com.sh.manage.pojo.LoginUser;
 import com.sh.manage.service.GroupService;
 import com.sh.manage.service.MenuService;
+import com.sh.manage.service.RoleService;
+import com.sh.manage.utils.TimeUtil;
 import com.sh.manage.utils.WebUtils;
 
 /**
@@ -52,13 +58,17 @@ public class GroupController {
 	 */
 	@Autowired
 	private MenuService menuService;
-	
+	/**
+	 * 注入roleService包装
+	 */
+	@Autowired
+	private RoleService roleService;
 	
 	/** 当前页 */
 	private int initPageNo = 1;
 
 	/** 页面大小 */
-	private int pageSize = 3;
+	private int pageSize = 5;
 
 	/** Page对象 */
 	private Page page;
@@ -90,7 +100,7 @@ public class GroupController {
 	}
 
 	/**
-	 * 跳转权限组管理页面
+	 * 跳转组织管理页面
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -144,6 +154,207 @@ public class GroupController {
 		logger.info("..expand:"+expand);
         return model;
     }
+	
+	/**
+	 * 跳转组织编辑页面
+	 * @return
+	 */
+	@RequestMapping(value="/toEditGroup.do")
+    public ModelAndView groupEditPage(HttpServletRequest req,
+			HttpServletResponse resp,
+    		@RequestParam(value = "gid", required = false, defaultValue = "") Integer gid,
+    		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
+    		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {		
+		//获取组织列表
+		if (null == pageNo) {
+			pageNo = initPageNo;
+		}
+		ModelAndView model = new ModelAndView("/group/g_edit");
+		
+		try {
+			/**获取组织信息*/
+			SysGroup group = groupService.findSysGroup(gid);
+			
+			/**角色列表*/
+			List<SysRole> roleList = new ArrayList<SysRole>();
+			
+			List<SysRole> dbRoleList = roleService.getAllRoleList();
+			
+			Set<SysRole> groupRoles = group.getRoles();
+			for(SysRole dbRole:dbRoleList){
+				Iterator<SysRole> iter = groupRoles.iterator();
+				while(iter.hasNext()){
+					SysRole gRole = (SysRole) iter.next();
+					if(gRole.getId() == dbRole.getId()){
+						dbRole.setChecked(true);//已经选择
+						break;
+					}else{
+						dbRole.setChecked(false);//未选择
+					}
+				}
+				roleList.add(dbRole);
+			}
+			
+			model.addObject("roleList", roleList);
+			model.addObject("group", group);
+		} catch (SPlatformServiceException e) {
+			logger.error(e.getMessage());
+			if(logger.isDebugEnabled()){
+				e.printStackTrace();
+			}
+		}
+		
+		logger.info("..expand:"+expand);
+        return model;
+    }
+	
+	/**
+	 * 跳转组织新增页面
+	 * @return
+	 */
+	@RequestMapping(value="/toAddGroup.do")
+    public ModelAndView groupAddPage(HttpServletRequest req,
+			HttpServletResponse resp) {
+		ModelAndView model = new ModelAndView("/group/g_add");
+		List<SysRole> dbRoleList = roleService.getAllRoleList();
+		model.addObject("roleList", dbRoleList);
+        return model;
+    }
+	
+	
+	/**
+	 * 组织新增
+	 * @return
+	 */
+	@RequestMapping(value="/doAddGroup.do")
+    public ResponseEntity<String> groupAdd(HttpServletRequest req,
+			HttpServletResponse resp,
+    		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
+    		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
+    		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
+    		@RequestParam(value = "createTime", required = false, defaultValue = "") String createTime,
+			HttpServletRequest request,HttpServletResponse response,
+			Model model) {		
+		logger.info("controller:GroupController..组织新增!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
+		try{
+			
+			/* get sysGroup */
+			SysGroup sysGroup = new SysGroup();
+			
+			sysGroup.setGroupDesc(groupDesc);
+			sysGroup.setGroupName(groupName);
+			sysGroup.setCreateTime(TimeUtil.now());
+			
+			//更新组织
+			groupService.addGroup(sysGroup);
+
+			msg="组织新增成功!";
+		}catch(Exception e){
+			logger.error("controller:GroupController:组织新增异常!"+groupName,e);
+			msg="组织新增出现异常";
+			model.addAttribute("msg", msg);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			
+		}
+		logger.info("controller:GroupController:组织新增结束!");
+		logger.info("..expand:"+expand);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+    }
+	
+	/**
+	 * 组织编辑
+	 * @return
+	 */
+	@RequestMapping(value="/doEditGroup.do")
+    public ResponseEntity<String> groupEdit(HttpServletRequest req,
+			HttpServletResponse resp,
+    		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
+    		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
+    		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
+    		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
+			HttpServletRequest request,HttpServletResponse response,
+			Model model) {		
+		logger.info("controller:GroupController..组织编辑!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
+		try{
+			
+			/* get sysGroup */
+			SysGroup sysGroup = groupService.findSysGroup(groupId);
+			
+			sysGroup.setGroupDesc(groupDesc);
+			sysGroup.setGroupName(groupName);
+			sysGroup.setCreateTime(TimeUtil.now());
+			
+			//更新组织
+			groupService.updateGroupInfo(sysGroup);
+
+			msg="组织编辑成功!";
+		}catch(Exception e){
+			logger.error("controller:GroupController:组织编辑异常!"+groupName,e);
+			msg="组织编辑出现异常";
+			model.addAttribute("msg", msg);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			
+		}
+		logger.info("controller:GroupController:组织编辑结束!");
+		logger.info("..expand:"+expand);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+    }
+	
+	
+	
+	/**
+	 * 组织删除
+	 * @return
+	 */
+	@RequestMapping(value="/doDelGroup.do")
+    public ResponseEntity<String> groupDel(HttpServletRequest req,
+			HttpServletResponse resp,
+    		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
+    		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
+			HttpServletRequest request,HttpServletResponse response,
+			Model model) {		
+		logger.info("controller:GroupController..组织删除!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
+		try{
+			
+			/* get sysGroup */
+			SysGroup sysGroup = groupService.findSysGroup(groupId);
+			
+			//删除组织
+			groupService.delGroup(sysGroup);
+
+			msg="组织删除成功!";
+		}catch(Exception e){
+			logger.error("controller:GroupController:组织删除异常!"+groupId,e);
+			msg="组织删除出现异常";
+			model.addAttribute("msg", msg);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			
+		}
+		logger.info("controller:GroupController:组织删除结束!");
+		logger.info("..expand:"+expand);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+    }
+	
+	
+	
 	
 	/**
 	 * 跳转客服组管理页面

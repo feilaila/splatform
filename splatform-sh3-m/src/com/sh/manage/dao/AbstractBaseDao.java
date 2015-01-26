@@ -523,11 +523,11 @@ public abstract class AbstractBaseDao<T> {
 	 * 分页查询列表
 	 */
 	@SuppressWarnings("unchecked")
-	public List<T> queryForList(final String sqlStr, final Object[] paras,
+	public List<T> queryForList(final String hqlStr, final Object[] paras,
 			final int pageNo, final int pageSize) throws SPlatformDaoException {
 		List<T> objList = new ArrayList<T>();
 		int count = 0;
-		Query query = this.getCurrentSession().createQuery(sqlStr);
+		Query query = this.getCurrentSession().createQuery(hqlStr);
 		if (null != paras && paras.length > 0) {
 			for (Object para : paras) {
 				query.setParameter(count++, para);

@@ -56,6 +56,10 @@ public class SysRole implements Serializable {
 	private String createTime;
 
 	/**
+	 * 是否已经选择
+	 */
+	private boolean checked;
+	/**
 	 * 角色列表
 	 * 
 	 * */
@@ -159,6 +163,14 @@ public class SysRole implements Serializable {
 
 	public void setOperateSet(Set<SysOperate> operateSet) {
 		this.operateSet = operateSet;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 	
 }

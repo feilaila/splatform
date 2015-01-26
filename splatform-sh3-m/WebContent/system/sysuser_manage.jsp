@@ -898,14 +898,10 @@ var submitSuserDelForm = function(){
 	<script src="<%=path %>/static/assets/js/jquery.sparkline.min.js"></script>
 
 
-	<!-- ace scripts -->
 
-	<script src="<%=path %>/static/assets/js/ace-elements.min.js"></script>
-	<script src="<%=path %>/static/assets/js/ace.min.js"></script>
-	<script
-		src="<%=path %>/static/assets/js/date-time/bootstrap-datepicker.js"></script>
+	<script src="<%=path %>/static/assets/js/date-time/bootstrap-datepicker.js"></script>
 
-<script type="text/javascript"	src="<%=path %>/static/js/bootstrap-select.js"></script>
+	<script type="text/javascript"	src="<%=path %>/static/js/bootstrap-select.js"></script>
 	<!-- inline scripts related to this page -->
 
 <script type="text/javascript">

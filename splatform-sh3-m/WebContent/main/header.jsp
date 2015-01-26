@@ -22,7 +22,6 @@ String hpath=this.getServletContext().getContextPath();
     <!--END GLOBAL STYLES -->
 
     <!-- PAGE LEVEL STYLES -->
-    <link rel="stylesheet" href="<%=hpath %>/static/assets/css/layout2.css" />
     <link rel="stylesheet" href="<%=hpath %>/static/assets/plugins/flot/examples/examples.css" />
     <link rel="stylesheet" href="<%=hpath %>/static/assets/plugins/timeline/timeline.css" />
     
@@ -39,6 +38,15 @@ String hpath=this.getServletContext().getContextPath();
     	.navbar-brand:hover{
     		color:#36BEF1;
     	}
+    	.page_c {
+			text-align: right;
+		}
+		._formm15{
+			margin:15px 0 0 15px;
+		}   	
+		table {
+		    max-width: 100%;
+		}
     </style>
     
     <!-- END PAGE LEVEL  STYLES -->

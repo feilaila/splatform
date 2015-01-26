@@ -3,7 +3,6 @@
  */
 package com.sh.manage.module.page;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.mysql.jdbc.ResultSet;
@@ -24,6 +23,7 @@ public class ZTreeNode {
     private String parentName;
     private String iconTag;//图标
     private String menuUrl;//资源url
+    private boolean checked;//是否已经选择
     private int hasChild;//1 存在，0 不存在
     private List<ZTreeNode> children;
     
@@ -255,4 +255,13 @@ public class ZTreeNode {
 	public void setCode(String code) {
 		this.code = code;
 	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+	
 }

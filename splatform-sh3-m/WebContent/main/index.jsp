@@ -22,7 +22,6 @@
     <!--END GLOBAL STYLES -->
 
     <!-- PAGE LEVEL STYLES -->
-    <link href="../static/assets/css/layout2.css" rel="stylesheet" />
        <link href="../static/assets/plugins/flot/examples/examples.css" rel="stylesheet" />
        <link rel="stylesheet" href="../static/assets/plugins/timeline/timeline.css" />
     <!-- END PAGE LEVEL  STYLES -->
@@ -51,14 +50,29 @@
 
         <!--PAGE CONTENT -->
         <div id="content">
+
             <div class="inner" style="min-height:1200px;">
                 <div class="row">
                     <div class="col-lg-12">
+
+
                         <h2>Blank Page One</h2>
+
+
+
                     </div>
                 </div>
+
                 <hr />
+
+
+
+
             </div>
+
+
+
+
         </div>
        <!--END PAGE CONTENT -->
 	</div>

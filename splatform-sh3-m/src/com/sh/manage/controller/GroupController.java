@@ -108,7 +108,8 @@ public class GroupController {
     public ModelAndView groupManagePage(HttpServletRequest req,
 			HttpServletResponse resp,
     		@RequestParam(value = "gIndex", required = false, defaultValue = "") Integer gIndex,
-    		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
+    		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
+    		@RequestParam(value = "expand", required = false, defaultValue = "false") Boolean expand,
     		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
 		
 		HttpSession session = req.getSession();
@@ -120,7 +121,7 @@ public class GroupController {
 		ModelAndView model = new ModelAndView("/group/g_manage");
 		/**获取组列表*/
 		
-		page = groupService.getGroups(pageNo, pageSize);
+		page = groupService.getGroups(groupName,pageNo, pageSize);
 		List<SysGroup> groupList = (List<SysGroup>) page.getList();//groupService.findAll();
 		
 		
@@ -141,10 +142,11 @@ public class GroupController {
 		
 		//获取一级菜单和系统菜单，用于添加新菜单
 		
-		//expand = 1;
+		expand = true;
 		model.addObject("expand",expand);
 		model.addObject("groupList", groupList);
 		model.addObject("groupIndex", groupIndex);
+		model.addObject("groupName",groupName);
 		model.addObject("nodeList", _nodeList);
 		
 		model.addObject("pageSize", pageSize);
@@ -227,7 +229,7 @@ public class GroupController {
 	 * @return
 	 */
 	@RequestMapping(value="/doAddGroup.do")
-    public ResponseEntity<String> groupAdd(HttpServletRequest req,
+    public ResponseEntity<String> doGroupAdd(HttpServletRequest req,
 			HttpServletResponse resp,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
@@ -254,7 +256,7 @@ public class GroupController {
 			logger.info("选择的角色:"+roleStr);
 			
 			//更新组织
-			groupService.addGroup(sysGroup);
+			groupService.addGroup(sysGroup,roleStr);
 			
 
 
@@ -276,12 +278,13 @@ public class GroupController {
 	 * @return
 	 */
 	@RequestMapping(value="/doEditGroup.do")
-    public ResponseEntity<String> groupEdit(HttpServletRequest req,
+    public ResponseEntity<String> doGroupEdit(HttpServletRequest req,
 			HttpServletResponse resp,
     		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
     		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
+    		@RequestParam(value = "roleStr", required = false, defaultValue = "") String roleStr,
 			HttpServletRequest request,HttpServletResponse response,
 			Model model) {		
 		logger.info("controller:GroupController..组织编辑!");
@@ -301,7 +304,7 @@ public class GroupController {
 			sysGroup.setCreateTime(TimeUtil.now());
 			
 			//更新组织
-			groupService.updateGroupInfo(sysGroup);
+			groupService.updateGroupInfo(sysGroup,roleStr);
 
 			msg="组织编辑成功!";
 		}catch(Exception e){
@@ -424,7 +427,7 @@ public class GroupController {
     		@RequestParam(value = "gName", required = false, defaultValue = "") String gName,
     		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
 		//groupIndex = 1;
-		ModelAndView model = new ModelAndView("/system/g_manage_auser");
+		ModelAndView model = new ModelAndView("/appuser/appuser_manage");
 		/**获取组列表*/
 		List<SysGroup> groupList = groupService.findAll();
 
@@ -462,6 +465,7 @@ public class GroupController {
 			@RequestParam(value = "groupId", required = false, defaultValue = "0") int groupId,
 			@RequestParam(value = "groupName", required = false, defaultValue = "0") String groupName,
 			@RequestParam(value = "groupDesc", required = false, defaultValue = "0") String groupDesc,
+			@RequestParam(value = "roleStr", required = false, defaultValue = "") String roleStr,
 			HttpServletRequest request,HttpServletResponse response,
 			Model model) {
 		logger.info("controller:..组织信息修改!");
@@ -478,7 +482,7 @@ public class GroupController {
 		group.setGroupDesc(groupDesc);
 		
 		try{
-			groupService.updateGroupInfo(group);
+			groupService.updateGroupInfo(group,roleStr);
 			msg="组织信息修改成功!";
 		}catch(Exception e){
 			logger.error("controller:组织信息修改异常!"+groupName,e);
@@ -506,6 +510,7 @@ public class GroupController {
 	public ResponseEntity<String> gMenuEdit(
 			@RequestParam(value = "groupId", required = false, defaultValue = "0") Integer groupId,
 			@RequestParam(value = "menuStr", required = false, defaultValue = "") String menuStr,
+			@RequestParam(value = "roleStr", required = false, defaultValue = "") String roleStr,
 			HttpServletRequest request,HttpServletResponse response,
 			Model model) {
 		logger.info("controller:..菜单设置!");
@@ -559,7 +564,7 @@ public class GroupController {
 			sysGroup.setMenuSet(newMenuSet);//设置组织对应的菜单
 			
 			//更新组织
-			groupService.updateGroupInfo(sysGroup);
+			groupService.updateGroupInfo(sysGroup,roleStr);
 			
 			msg="菜单设置成功!";
 		}catch(Exception e){
@@ -583,6 +588,7 @@ public class GroupController {
     public ModelAndView toGroupManagePage(HttpServletRequest req,
 			HttpServletResponse resp,
     		@RequestParam(value = "gIndex", required = false, defaultValue = "") Integer gIndex,
+    		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
     		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
 		
 		groupIndex = 1;//默认为系统管理组
@@ -593,7 +599,7 @@ public class GroupController {
 		ModelAndView model = new ModelAndView("/group/group_manage");
 
 		//返回的page对象
-		page = groupService.getGroups(pageNo, pageSize);
+		page = groupService.getGroups(groupName,pageNo, pageSize);
 		
 		
 		

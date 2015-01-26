@@ -53,7 +53,7 @@ public class UserController {
 	private int initPageNo = 1;
 
 	/** 页面大小 */
-	private int pageSize = 3;
+	private int pageSize = 5;
 
 	/** Page对象 */
 	private Page page;

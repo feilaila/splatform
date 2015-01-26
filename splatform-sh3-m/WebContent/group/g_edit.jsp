@@ -40,6 +40,8 @@
 		<form class="_formm15" action="<%=path%>/doEditGroup.do" method="post" id="editForm" name="editForm">
 								<input type="hidden" id="groupId" name="groupId"
 											value="${group.id }" />
+								<input type="hidden" id="roleStr" name="roleStr"
+											value="" >
 								<table width="98%" border="0" align="center" cellpadding="4"
 									cellspacing="4" bordercolor="#666666">
 									<tr>
@@ -66,11 +68,11 @@
 									   			<c:choose>
 									   				<c:when test="${role.checked==true }">
 										   				<li class="wrap-li">
-										   					<input name="roleName" type="checkbox" checked="checked">${role.roleName}</li>
+										   					<input name="gRole" type="checkbox" value="${role.id}" checked="checked">${role.roleName}</li>
 										   			</c:when>
 										   			<c:otherwise>
 										   				<li class="wrap-li">
-										   					<input name="roleName" type="checkbox" > ${role.roleName}</li>
+										   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
 										   			</c:otherwise>	
 									   			</c:choose>					   			
 									   		</c:forEach>

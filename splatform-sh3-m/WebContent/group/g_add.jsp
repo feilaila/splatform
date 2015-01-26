@@ -40,7 +40,7 @@
 								<input type="hidden" id="groupId" name="groupId"
 											value="" />
 								<input type="hidden" id="roleStr" name="roleStr"
-											value="1122" >
+											value="" >
 								<table width="100%" border="0" align="center" cellpadding="4"
 									cellspacing="4" bordercolor="#666666">
 									<tr>

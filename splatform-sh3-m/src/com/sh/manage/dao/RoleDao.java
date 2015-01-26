@@ -16,6 +16,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.sh.manage.entity.SysGroupRole;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.exception.SPlatformDaoException;
 import com.sh.manage.utils.SQLPagingUtils;
@@ -47,6 +48,28 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 	@Override
 	public void addObject(SysRole role) {
 		this.getCurrentSession().save(role);
+		this.getCurrentSession().flush();
+	}
+	
+	//保存组织和角色关系
+	public void addGroupRole(SysGroupRole sysGroupRole) {
+		this.getCurrentSession().save(sysGroupRole);
+	}
+	//获取组织角色
+	public SysGroupRole getGroupRole(int groupId ,int roleId) {
+		String hql = "from SysGroupRole where 1=1 ";
+		if(groupId>0){
+			hql +=" and groupId = "+groupId;
+		}
+		if(roleId>0){
+			hql +=" and roleId = "+roleId;
+		}
+		Query query = this.getCurrentSession().createQuery(hql);
+		return (SysGroupRole) query.list().get(0);
+	}
+	//删除组织和角色关系
+	public void delGroupRole(SysGroupRole sysGroupRole) {
+		this.getCurrentSession().delete(sysGroupRole);
 		this.getCurrentSession().flush();
 	}
 

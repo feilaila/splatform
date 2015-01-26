@@ -5,6 +5,8 @@ package com.sh.manage.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
@@ -104,10 +106,14 @@ public class GroupDao extends AbstractBaseDao<SysGroup> {
 	 * @param pageSize
 	 * @return
 	 */
-	public Page getGroups(Integer pageNo, int pageSize) {
-		String hql = "from SysGroup g where 1=1";
-		
+	public Page getGroups(String groupName,Integer pageNo, int pageSize) {
+		StringBuffer hql = new StringBuffer();
+		hql.append("from SysGroup g where 1=1");
 		Object[] paras = new Object[]{};
-		return this.queryList(hql, paras,pageNo,pageSize);
+		if(!StringUtils.isEmpty(groupName)){
+			paras = ArrayUtils.add(paras, groupName);
+			hql.append(" and g.groupName = ?");
+		}
+		return this.queryList(hql.toString(), paras,pageNo,pageSize);
 	}
 }

@@ -49,6 +49,7 @@
 				<value>com.sh.manage.entity.SysRole</value>
 				<value>com.sh.manage.entity.SysMenu</value>
 				<value>com.sh.manage.entity.SysOperate</value>
+				<value>com.sh.manage.entity.SysGroupRole</value>
 			</list>
 		</property>
 	</bean>

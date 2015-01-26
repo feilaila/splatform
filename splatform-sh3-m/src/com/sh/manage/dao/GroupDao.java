@@ -105,7 +105,7 @@ public class GroupDao extends AbstractBaseDao<SysGroup> {
 	 * @return
 	 */
 	public Page getGroups(Integer pageNo, int pageSize) {
-		String hql = "from SysGroup where 1=1 ";
+		String hql = "from SysGroup g where 1=1";
 		
 		Object[] paras = new Object[]{};
 		return this.queryList(hql, paras,pageNo,pageSize);

@@ -232,7 +232,7 @@ public class GroupController {
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
     		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
-    		@RequestParam(value = "createTime", required = false, defaultValue = "") String createTime,
+    		@RequestParam(value = "roleStr", required = false, defaultValue = "") String roleStr,
 			HttpServletRequest request,HttpServletResponse response,
 			Model model) {		
 		logger.info("controller:GroupController..组织新增!");
@@ -251,8 +251,12 @@ public class GroupController {
 			sysGroup.setGroupName(groupName);
 			sysGroup.setCreateTime(TimeUtil.now());
 			
+			logger.info("选择的角色:"+roleStr);
+			
 			//更新组织
 			groupService.addGroup(sysGroup);
+			
+
 
 			msg="组织新增成功!";
 		}catch(Exception e){

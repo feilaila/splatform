@@ -61,8 +61,7 @@
 															 <fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm:ss"/>
 														</td>
 														<td>
-															<c:forEach items="${sysGroup.roles}" var="role"
-													varStatus="status">
+															<c:forEach items="${sysGroup.roles}" var="role" varStatus="status">
 																${role.roleName}
 															</c:forEach>
 														</td>
@@ -125,13 +124,53 @@
     
     <script type="text/javascript">
     
+    
   	//组织新增
     var addSgroup = function(){
     		var diag = new zDialog();
     		diag.Height = 400;
         	diag.Title = "系统管理-组织新增";
         	diag.URL = "<%=path %>/toAddGroup.do";
-        	diag.OKEvent = function(){diag.innerDoc.getElementById('addForm').submit();diag.submited=true;};//点击确定后调用的方法
+        	diag.OKEvent = function(){
+        		//参数校验
+        		var groupName = diag.innerDoc.getElementById('groupName').value;
+        		var groupDesc = diag.innerDoc.getElementById('groupDesc').value;
+        		if(groupDesc=='' || groupName == ''){
+        			zDialog.alert('请填写组织名称和对应描述!');
+        			return;
+        		}
+        		
+        		//处理角色选择
+        		var roleArr = new Array();
+        		//alert(e.value);
+        		//alert(e.checked);
+        		//传入后台的字符串
+        		var roleStr = diag.innerDoc.getElementById("roleStr").value;
+        		
+        		roleStr="";
+        		roleArr=diag.innerDoc.getElementsByName("gRole");
+        		for(var i=0;i<roleArr.length;i++){
+        			if(roleArr[i].checked){
+        				roleStr+= roleArr[i].value+",";  
+        			}
+        		}
+        		//去掉最后一个逗号
+        		if(roleStr.charAt(roleStr.length - 1)==","){
+        			roleStr=roleStr.substring(0,roleStr.length-1);
+        		}
+        		//设置以及选择的角色id
+        		if(diag.innerDoc.getElementById("roleStr").value==""){										
+        			diag.innerDoc.getElementById("roleStr").value = roleStr;
+        		}else{
+        			//先清空表单的值
+        			diag.innerDoc.getElementById("roleStr").value="";
+        		}
+        		diag.innerDoc.getElementById("roleStr").value = roleStr;
+        		
+        		//提交表单
+        		diag.innerDoc.getElementById('addForm').submit();
+        		diag.submited=true;
+        	};//点击确定后调用的方法
         	diag.OnLoad=function(){
         		if(diag.submited){
         			diag.openerWindow.location.reload();

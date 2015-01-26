@@ -75,6 +75,13 @@ public class SysRole implements Serializable {
 	@Column(name = "group_id",length=8)
 	private int groupId;
 	
+	/**
+	 * 组织列表
+	 * 
+	 * */
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+	@OrderBy("id ASC")
+	private List<SysGroup> groupList;
 	
 	/**
 	 * 组的会员关系

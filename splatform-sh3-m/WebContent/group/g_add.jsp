@@ -39,6 +39,8 @@
 		<form class="_formm15" action="<%=path%>/doAddGroup.do" method="post" id="addForm" name="addForm">
 								<input type="hidden" id="groupId" name="groupId"
 											value="" />
+								<input type="hidden" id="roleStr" name="roleStr"
+											value="1122" >
 								<table width="100%" border="0" align="center" cellpadding="4"
 									cellspacing="4" bordercolor="#666666">
 									<tr>
@@ -60,11 +62,11 @@
 									   			<c:choose>
 									   				<c:when test="${role.checked==true }">
 										   				<li class="wrap-li">
-										   					<input name="roleName" type="checkbox" checked="checked">${role.roleName}</li>
+										   					<input name="gRole" type="checkbox" checked="checked" value="${role.id}">${role.roleName}</li>
 										   			</c:when>
 										   			<c:otherwise>
 										   				<li class="wrap-li">
-										   					<input name="roleName" type="checkbox" > ${role.roleName}</li>
+										   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
 										   			</c:otherwise>	
 									   			</c:choose>					   			
 									   		</c:forEach>
@@ -72,9 +74,17 @@
 									  </td>
 							        </tr>
 								</table>
-							</form>
+		</form>
 	</div>
 	<!--END MAIN WRAPPER -->
 </body>
+<!-- GLOBAL SCRIPTS -->
+<script src="<%=path%>/static/assets/plugins/jquery-2.0.3.min.js"></script>
 
+<script type="text/javascript">
+var checkStr = function(){
+	
+	return true;
+}
+</script>
 </html>

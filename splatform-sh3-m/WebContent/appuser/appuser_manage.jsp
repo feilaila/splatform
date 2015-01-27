@@ -144,7 +144,7 @@
 								<!-- /row -->
 							<div
 								style="display: inline-block; background-repeat: no-repeat; border-width: 4px; font-size: 13px; line-height: 1.39; padding: 4px 9px;">
-								<a onclick="addSgroup();" href="javascript:;" class="btn btn-success btn-sm">添加</a>
+								<a onclick="addAppUser();" href="javascript:;" class="btn btn-success btn-sm">添加</a>
 							</div>
 							<div class="hr hr-18 dotted hr-double"></div>
                     </div>
@@ -185,11 +185,11 @@
     
 
   	//组织新增
-    var addSgroup = function(){
+    var addAppUser = function(){
     		var diag = new zDialog();
     		diag.Height = 400;
-        	diag.Title = "系统管理-组织新增";
-        	diag.URL = "<%=path %>/toAddGroup.do";
+        	diag.Title = "系统管理-会员新增";
+        	diag.URL = "<%=path %>/toAddAppUser.do";
         	diag.OKEvent = function(){
         		//参数校验
         		var groupName = diag.innerDoc.getElementById('groupName').value;

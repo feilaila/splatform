@@ -52,18 +52,10 @@
         <div id="content">
 
             <div class="inner" style="min-height:1200px;">
-                <div class="row">
-                    <div class="col-lg-12">
-
-
-                        <h2>Blank Page One</h2>
-
-
-
-                    </div>
-                </div>
-
-                <hr />
+                <div class="page-content">
+						<h3>欢迎<%=session.getAttribute("usercode") %>登陆管理系统，现在您可以维护本平台下您拥有的功能了!</h3>
+					</div>
+				<!-- /.page-content -->
 
 
 

@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sh.manage.entity.AppUser;
+import com.sh.manage.entity.SysGroup;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.Page;
+import com.sh.manage.service.GroupService;
 import com.sh.manage.service.RoleService;
 import com.sh.manage.service.UserService;
 import com.sh.manage.utils.WebUtils;
@@ -48,6 +50,11 @@ public class UserController {
 	 */
 	@Autowired
 	private RoleService roleService;
+	/**
+	 * 注入groupSerice
+	 */
+	@Autowired
+	private GroupService groupService;
 
 	/** 当前页 */
 	private int initPageNo = 1;
@@ -116,6 +123,21 @@ public class UserController {
 		return model;
 	}
 
+	
+	/**
+	 * 跳转会员新增页面
+	 * @return
+	 */
+	@RequestMapping(value="/toAddAppUser.do")
+    public ModelAndView groupAddPage(HttpServletRequest req,
+			HttpServletResponse resp) {
+		ModelAndView model = new ModelAndView("/appuser/appuser_add");
+		List<SysGroup> dbGroupList = groupService.getAllGroupList();
+		model.addObject("groupList", dbGroupList);
+        return model;
+    }
+	
+	
 	/**
 	 * 当前组织下的会员添加
 	 * @return

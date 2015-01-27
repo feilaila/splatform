@@ -20,13 +20,33 @@
 
 
 	<!-- 配置数据源 -->
-	<bean id="dataSource"
+	<!-- <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">		
 		<property name="driverClassName" value="${driver_mysql_class}"></property>
 		<property name="url" value="jdbc:mysql://localhost/splatform_db?useUnicode=true&amp;characterEncoding=UTF-8"></property>
 		<property name="username" value="${database_mysql_user}"></property>
 		<property name="password" value="${database_mysql_password}"></property>
+	</bean> -->
+	
+	<bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="driver" value="${driver_mysql_class}" />
+		<property name="driverUrl" value="${driver_mysql_url}" />
+		<!-- <property name="driverUrl" value="jdbc:oracle:thin:@192.168.0.126:1521:jiagulun" /> -->
+		<property name="user" value="${database_mysql_user}" />
+		<property name="alias" value="pool_dbname" />
+		<property name="password" value="${database_mysql_password}" />
+		<property name="maximumActiveTime" value="300000" />
+		<property name="prototypeCount" value="4" />
+		<property name="maximumConnectionCount" value="25" />
+		<property name="minimumConnectionCount" value="2" />
+		<property name="simultaneousBuildThrottle" value="30" />
+		<property name="trace" value="true" />
+		<property name="houseKeepingTestSql" value="select sysdate from dual" />
 	</bean>
+	
+	
+	
+	
 
 	<!-- 配置SessionFactory -->
 	<bean id="sessionFactory"
@@ -64,16 +84,6 @@
 
 
 	<!-- 配置一个事务管理器 -->
-	<!-- <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"> 
-		<property name="sessionFactory" ref="sessionFactory" /> </bean> -->
-
-	<!-- 配置事务，使用代理的方式 -->
-	<!-- <bean id="transactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" 
-		abstract="true"> <property name="transactionManager" ref="transactionManager"></property> 
-		<property name="transactionAttributes"> <props> <prop key="add*">PROPAGATION_REQUIRED,-Exception</prop> 
-		<prop key="modify*">PROPAGATION_REQUIRED,-myException</prop> <prop key="del*">PROPAGATION_REQUIRED</prop> 
-		<prop key="*">PROPAGATION_REQUIRED</prop> </props> </property> </bean> -->
-
 	<!-- 配置事务管理器bean,使用HibernateTransactionManager事务管理器 -->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
@@ -86,7 +96,7 @@
 		proxy-target-class="true" />
 
 
-	<!-- <aop:aspectj-autoproxy expose-proxy="true" /> -->
+	<aop:aspectj-autoproxy expose-proxy="true" />
 	<!-- 实现@AspectJ注解的，默认使用AnnotationAwareAspectJAutoProxyCreator进行AOP代理，它是BeanPostProcessor的子类，在容器启动时Bean初始化开始和结束时调用进行AOP代理的创建，因此只对当容器启动时有效，使用时注意此处。 -->
 
 

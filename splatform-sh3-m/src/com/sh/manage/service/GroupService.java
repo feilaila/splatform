@@ -3,6 +3,7 @@
  */
 package com.sh.manage.service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -178,5 +179,17 @@ public class GroupService extends BaseService{
 	public Page getGroups(String groupName,Integer pageNo, int pageSize) {
 		Page page = groupDao.getGroups(groupName,pageNo,pageSize);
 		return page;
+	}
+
+	/**
+	 * 获取所有组织
+	 * @return
+	 */
+	public List<SysGroup> getAllGroupList() {
+		List<SysGroup> groups = groupDao.getAllGroups();
+		if(null != groups && groups.size() > 0){
+			return groups;
+		}
+		return new ArrayList<SysGroup>();
 	}
 }

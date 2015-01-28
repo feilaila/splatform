@@ -49,7 +49,9 @@ public class SysGroup implements Serializable {
 	@Column(name = "group_desc", length = 50)
 	private String groupDesc;
 
-	
+	/**
+	 * 组织的角色关系
+	 */
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_sys_group_role", joinColumns = { @JoinColumn(name = "group_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	@OrderBy("id ASC")

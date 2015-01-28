@@ -12,11 +12,12 @@
 	}
 	div.left {
 	    float: left;
-	    width: 250px;
 	}
 	div.zTreeDemoBackground {
+	    border: 1px solid #9fa0a3;
+	    height: 210px;
 	    text-align: left;
-	    width: 250px;
+	    width: 400px;
 	}
 	#wrap ul{
 		text-align: left;
@@ -55,22 +56,26 @@
 									</tr>
 									<tr>
 							          <td width="100" align="left">角色选择:</td>
-							          <td width="400" class="role—area">
-									   	<ul class="wrap-ul">
-									   		<c:forEach items="${roleList}" var="role"
-													varStatus="status">
-									   			<c:choose>
-									   				<c:when test="${role.checked==true }">
-										   				<li class="wrap-li">
-										   					<input name="gRole" type="checkbox" checked="checked" value="${role.id}">${role.roleName}</li>
-										   			</c:when>
-										   			<c:otherwise>
-										   				<li class="wrap-li">
-										   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
-										   			</c:otherwise>	
-									   			</c:choose>					   			
-									   		</c:forEach>
-									   	</ul>
+							          <td width="400" class="">
+							          	<div class="content_wrap">
+											<div class="zTreeDemoBackground left">
+											   	<ul class="wrap-ul">
+											   		<c:forEach items="${roleList}" var="role"
+															varStatus="status">
+											   			<c:choose>
+											   				<c:when test="${role.checked==true }">
+												   				<li class="wrap-li">
+												   					<input name="gRole" type="checkbox" checked="checked" value="${role.id}">${role.roleName}</li>
+												   			</c:when>
+												   			<c:otherwise>
+												   				<li class="wrap-li">
+												   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
+												   			</c:otherwise>	
+											   			</c:choose>					   			
+											   		</c:forEach>
+											   	</ul>
+										   	</div>
+									   	</div>
 									  </td>
 							        </tr>
 								</table>

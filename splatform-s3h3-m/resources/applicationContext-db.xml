@@ -30,7 +30,7 @@
 	
 	<bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
 		<property name="driver" value="${driver_mysql_class}" />
-		<property name="driverUrl" value="${driver_mysql_url}" />
+		<property name="driverUrl" value="jdbc:mysql://localhost/splatform_db?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<!-- <property name="driverUrl" value="jdbc:oracle:thin:@192.168.0.126:1521:jiagulun" /> -->
 		<property name="user" value="${database_mysql_user}" />
 		<property name="alias" value="pool_dbname" />

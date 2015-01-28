@@ -63,19 +63,23 @@
 							          <td width="100" align="left">角色选择:</td>
 							          <td width="400" class="role—area">
 									   	<ul class="wrap-ul">
-									   		<c:forEach items="${roleList}" var="role"
-													varStatus="status">
-									   			<c:choose>
-									   				<c:when test="${role.checked==true }">
-										   				<li class="wrap-li">
-										   					<input name="gRole" type="checkbox" value="${role.id}" checked="checked">${role.roleName}</li>
-										   			</c:when>
-										   			<c:otherwise>
-										   				<li class="wrap-li">
-										   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
-										   			</c:otherwise>	
-									   			</c:choose>					   			
-									   		</c:forEach>
+									   		<div class="content_wrap">
+											<div class="zTreeDemoBackground left">
+										   		<c:forEach items="${roleList}" var="role"
+														varStatus="status">
+										   			<c:choose>
+										   				<c:when test="${role.checked==true }">
+											   				<li class="wrap-li">
+											   					<input name="gRole" type="checkbox" value="${role.id}" checked="checked">${role.roleName}</li>
+											   			</c:when>
+											   			<c:otherwise>
+											   				<li class="wrap-li">
+											   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
+											   			</c:otherwise>	
+										   			</c:choose>					   			
+										   		</c:forEach>
+										   		</div>
+										   	</div>
 									   	</ul>
 									  </td>
 							        </tr>

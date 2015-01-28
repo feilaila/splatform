@@ -236,7 +236,7 @@ public class GroupController {
     		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
     		@RequestParam(value = "roleStr", required = false, defaultValue = "") String roleStr,
 			HttpServletRequest request,HttpServletResponse response,
-			Model model) {		
+			Model model) {
 		logger.info("controller:GroupController..组织新增!");
 		String msg="";
 		boolean isCorrect = true;

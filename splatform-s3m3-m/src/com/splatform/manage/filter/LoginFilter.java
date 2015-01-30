@@ -43,7 +43,8 @@ public class LoginFilter implements Filter {
 				"/unite/tologin", "/unite/tologin.do",
 				"/unite/checkPassword.do", "authImage",
 				"/unite/user_login.do","/unite/app_login.do",
-				"/unite/face_login.do","/unite/toFacelogin.do","facepay/callback.do"};
+				"/unite/face_login.do","/unite/toFacelogin.do","facepay/callback.do"
+				,"product.html"};
 		// 请求的uri
 		String uri = httpRequest.getRequestURI();
 		String contextPath = httpRequest.getContextPath();
@@ -58,7 +59,7 @@ public class LoginFilter implements Filter {
 		// 是否过滤
 		boolean doFilter = true;
 		for (String s : notFilter) {
-			if (uri.contains(s)) {
+			if (uri.contains(s)||uri.contains("facepay")) {
 				// 如果uri中包含不过滤的uri，则不进行过滤
 				doFilter = false;
 				break;

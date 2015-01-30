@@ -1,5 +1,6 @@
 package com.splatform.manage.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,7 +82,10 @@ public class FacebookController {
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		
 		resp.setContentType("text/html;charset=UTF-8");
+		resp.setHeader("property", "content");
+		resp.setHeader("og:type", "og:product");
 		
 		String msg = "";
 		
@@ -94,11 +98,52 @@ public class FacebookController {
 	}
 	
 	
-	// 跳转登陆页
-	@RequestMapping(value = "/tologin.do")
+	
+	
+	
+	
+	
+	// 跳转购买页
+	@RequestMapping(value = "/toBuy.do")
 	public ModelAndView loginPage() {
-		return new ModelAndView("/main/login");
+		return new ModelAndView("/facepay/facepay-buy");
 	}
+	
+	// 实现购买
+	@RequestMapping(value = "/doBuy.do")
+	public @ResponseBody String doFacepayBuy(HttpServletRequest request,
+			HttpServletResponse resp) {
+		
+		logger.info("Controller... doFacepayBuy");
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+		
+//		
+//		
+//		responseHeaders.set("property", "content");
+//		resp.setHeader("og:type", "og:product");
+//		resp.setHeader("og:title", "Friend Smash Coin");
+//		resp.setHeader("og:image", "http://www.friendsmash.com/images/coin_600.png");
+//		resp.setHeader("og:description", "Friend Smash Coins to purchase upgrades and items!");
+		
+		String msg = "";
+		
+		do{
+			try {
+				resp.getWriter().print("123");
+				resp.getWriter().flush();
+				resp.getWriter().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}  
+			}while(false);
+		
+		return ResponseUtils.newJsonOKResp("成功！", msg);
+	}
+	
+	
 	
 	
 	// 跳转登陆页

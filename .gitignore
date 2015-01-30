@@ -1,0 +1,5 @@
+# Built application files
+Cache
+
+*.svn
+*.class

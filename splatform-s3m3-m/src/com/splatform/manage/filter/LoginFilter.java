@@ -42,7 +42,8 @@ public class LoginFilter implements Filter {
 				"/static/font", "/static/images", "/static/assets",
 				"/unite/tologin", "/unite/tologin.do",
 				"/unite/checkPassword.do", "authImage",
-				"/unite/user_login.do","/unite/app_login.do" };
+				"/unite/user_login.do","/unite/app_login.do",
+				"/unite/face_login.do","/unite/toFacelogin.do","facepay/callback.do"};
 		// 请求的uri
 		String uri = httpRequest.getRequestURI();
 		String contextPath = httpRequest.getContextPath();

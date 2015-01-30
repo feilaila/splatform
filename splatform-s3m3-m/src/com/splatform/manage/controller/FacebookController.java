@@ -30,15 +30,15 @@ import com.splatform.manage.utils.ResponseUtils;
 import com.splatform.manage.utils.SafeUtil;
 
 /**
- * 后台登陆管理
+ * facebook支付管理
  * @author
  */
 @Controller
-@RequestMapping("unite")
-public class LoginController {
+@RequestMapping("facepay")
+public class FacebookController {
 	
 	
-	private Logger logger = Logger.getLogger(LoginController.class);
+	private Logger logger = Logger.getLogger(FacebookController.class);
 
 	
 
@@ -60,6 +60,40 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 
+	
+	/**
+	 * 执行App登陆请求
+	 * 
+	 * @param req
+	 * @param resp
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	@RequestMapping(value = "/callback", method = RequestMethod.GET)
+	public @ResponseBody String doFacepayCallback(HttpServletRequest request,
+			HttpServletResponse resp,
+			@RequestParam("hub.mode") String mode,
+			@RequestParam("hub.challenge") String challenge) {
+		
+		logger.info("Controller... doFacepayCallback");
+		HttpSession session = request.getSession();
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+		
+		String msg = "";
+		
+		do{
+			logger.info("hub.mode:"+mode);
+			logger.info("hub.challenge:"+challenge);
+			}while(false);
+		
+		return ResponseUtils.newJsonOKResp("成功！", msg);
+	}
+	
+	
 	// 跳转登陆页
 	@RequestMapping(value = "/tologin.do")
 	public ModelAndView loginPage() {
@@ -83,26 +117,12 @@ public class LoginController {
 		
 		//获取缓存中用户的数据
 		LoginUser _loginUser = (LoginUser) session.getAttribute(Constants.LOGIN_USER);
-		List<SysMenu> userMenuList = _loginUser.getMenuList();
 		
 		
 		/**缓存中用户的数据*/
 		List<ZTreeNode> _nodeList = _loginUser.getNodeList();
 		model.addObject("nodeList", _nodeList);
 		
-//		String allDtree = menuService.getAllDTree((LoginUser)session.getAttribute(SessionConstants.LOGIN_USER));
-//		
-//		model.addObject("allDtree",allDtree);
-		
-		//ZTree节点集合
-		 //List<ZTreeNode> nodes = loginService.generUserZtreeNode(userMenuList);
-		
-		//JSONArray jsonArr = JSONArray.fromObject(nodes);
-		//model.addObject("ztreeNodes",jsonArr);
-		//设置缓存
-		//session.setAttribute("ztreeNodes", jsonArr);
-		
-		//logger.info(jsonArr);
 		return model;
 	}
 
@@ -243,48 +263,6 @@ public class LoginController {
 		
 		return ResponseUtils.newJsonOKResp("成功！", msg);
 		
-		
-		
-		
-		
-		/* 判断session是否存在登陆信息 */
-//		if (null == session.getAttribute(SessionConstants.LOGIN_USER)) {
-//
-//			SysUser sysUser = new SysUser();
-//			sysUser.setUsername(username);
-//			sysUser.setPassword(password);
-//
-//			SysUser loginUser = systemService.getUserInfoByUsername(sysUser);
-//			/* 判断用户名和密码 */
-//			if (null != loginUser) {
-//
-//				// 默认登陆人员为Admin
-//				session.setAttribute(SessionConstants.LOGIN_USER, loginUser);
-//				session.setAttribute("username", username);
-//				
-//				//判断验证码是否正确
-//				String verifyCode = (String) session.getAttribute("rand");
-//				
-//				
-//				// 查询用户对应菜单权限,除Admin之外
-//				List<SysMenu> menuList = new ArrayList<SysMenu>();
-//				menuList = systemService.getUserMenu(loginUser);
-//				
-//				// 登陆成功跳转主页
-//				return new ModelAndView("/main/index");
-//				
-//				return new ResponseEntity<String>("",responseHeaders, HttpStatus.CREATED);
-//			}
-//			// 用户名密码不对
-//			return new ModelAndView("redirect:/system/tologin.do");
-//		} else {
-//			// 登陆成功跳转主页
-//			return new ModelAndView("/main/index");
-//			
-//			
-//		}
-//		
-//		return ResponseUtils.newJsonOKResp("成功！", msg);
 	}
 
 	

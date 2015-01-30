@@ -112,7 +112,7 @@
    	  } else {
    	    // use data.currency.user_currency and data.currency.usd_exchange 
    	    // fields to calculate local pricing
-   		 console.log(data);
+   		console.log(data);
    	    console.log(data.currency.user_currency);
 	   	console.log(data.currency.usd_exchange);
    	  }

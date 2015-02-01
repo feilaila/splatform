@@ -33,10 +33,10 @@ public class AppUserDao extends AbstractBaseDao<AppUser> {
 	 * 
 	 * @return
 	 */
-	public Page getAllAppUser(Integer roleId,String username,String startDate,String endDate,int status,int pageNo, int pageSize) {
+	public Page getAllAppUser(Integer groupId,String username,String startDate,String endDate,int status,int pageNo, int pageSize) {
 		StringBuffer sbf = new StringBuffer();
-		sbf.append("select rt.* from (select s.auid,s.email,s.name,s.username,s.password,s.terminal_id,r.role_name roleName,s.status,s.start_date,s.end_date,r.id role_id,s.last_login_ip,s.limit_year,s.remark from t_sh_user s,t_sys_role r ");
-		sbf.append(" where 1 = 1 and s.role_id = r.id ");
+		sbf.append("select rt.* from (select s.auid,s.email,s.name,s.username,s.password,s.terminal_id,g.group_name groupName,s.status,s.start_date,s.end_date,s.group_id,s.last_login_ip,s.limit_year,s.remark from t_sh_user s,t_sys_group g ");
+		sbf.append(" where 1 = 1 and s.group_id = g.id ");
 		
 		Object[] params = new Object[]{};
 		
@@ -56,9 +56,9 @@ public class AppUserDao extends AbstractBaseDao<AppUser> {
 			params = ArrayUtils.add(params, status);
 			sbf.append(" and s.status = ?");
 		}
-		if(roleId > 0){
-			params = ArrayUtils.add(params, roleId);
-			sbf.append(" and s.role_id = ?");
+		if(groupId > 0){
+			params = ArrayUtils.add(params, groupId);
+			sbf.append(" and s.group_id = ?");
 		}
 		sbf.append(") as rt");
 		return this.queryModelListByPage(sbf.toString(), params, pageNo, pageSize, AppUser.class);
@@ -82,7 +82,7 @@ public class AppUserDao extends AbstractBaseDao<AppUser> {
 		
 		if(!StringUtils.isEmpty(usercode)){
 			//params = ArrayUtils.add(params, username);
-			sbf.append(" and s.username like '%"+usercode+"%'");
+			sbf.append(" and s.usercode like '%"+usercode+"%'");
 		}
 		if(!StringUtils.isEmpty(startDate)){
 			params = ArrayUtils.add(params, startDate);
@@ -103,8 +103,8 @@ public class AppUserDao extends AbstractBaseDao<AppUser> {
 	
 	
 	@Override
-	public void addObject(AppUser user) {
-		this.getCurrentSession().save(user);
+	public Integer addObject(AppUser user) {
+		return (Integer) this.getCurrentSession().save(user);
 	}
 
 	@Override

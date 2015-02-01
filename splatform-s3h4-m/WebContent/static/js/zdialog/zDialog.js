@@ -5,9 +5,9 @@
  **/
 
 var webroot=window.parent.document.location.href;
-if(webroot.contains('#')){
+if(webroot.indexOf('#') > 0){
 	webroot=webroot.substring(0,webroot.indexOf('#'));
-}else if(webroot.contains('?')){
+}else if(webroot.indexOf('?') > 0){
 	webroot=webroot.substring(0,webroot.indexOf('?'));
 }
 webroot=webroot.substring(0,webroot.lastIndexOf('/'));

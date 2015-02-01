@@ -30,6 +30,12 @@
 		transition-property: transform, opacity;
 		transition-duration: 0.4s;
 	}
+	.box_l_h_c li{
+
+    display:block;
+    float:left;
+    margin:20px 0 0 20px;
+}
 </style>
 <!-- END HEAD -->
 
@@ -40,8 +46,8 @@
 						action="<spring:url value='/auserAdd.do' htmlEscape='true'/>" target="_self">
 						<ul class="box_l_h_c">
 							<li class="box_l_h_c_li">
-								<select id="auRoleId" name="auRoleId"
-									style="height:28px;width: 192px; background: none repeat scroll 0 0 #f5f5f5 !important;">
+								<select id="groupId" name="groupId"
+									style="width: 159px; background: none repeat scroll 0 0 #f5f5f5 !important;">
 										<option value="0" selected>请选择组织</option>
 										<c:forEach items="${groupList}" var="group">
 											<option value="${group.id }">${group.groupName }</option>												onclick="setAuRoleId('${role.id }');">${role.roleName}</option>
@@ -99,23 +105,13 @@
 							</li>
 							<li class="box_l_h_c_li">
 								<select id="status"
-									style="height:28px;width: 192px; background: none repeat scroll 0 0 #f5f5f5 !important;"
+									style="width: 159px; background: none repeat scroll 0 0 #f5f5f5 !important;"
 									name="status">
 										<option value="0" selected>状态</option>
 									<option value="1" onclick="setAuStatus('1');" <c:if test="${status == 1}">selected</c:if>>有效</option>
 									<option value="9" onclick="setAuStatus('9');" <c:if test="${status == 9}">selected</c:if>>失效</option>
 								</select>
 							</li>
-							<div style="text-align: center;clear:both;">
-									<button class="btn btn-sm btn-danger"
-										aria-hidden="true" data-dismiss="modal" type="button">
-										<i class="icon-remove"></i> 取消
-									</button>
-									<button type="button" class="btn btn-sm btn-success"
-										onClick="submitAuserAddForm();">
-										确认 <i class="icon-arrow-right icon-on-right"></i>
-									</button>
-							</div>
 						</ul>
 						
 					</form>

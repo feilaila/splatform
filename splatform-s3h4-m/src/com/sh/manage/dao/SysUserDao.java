@@ -19,9 +19,9 @@ import com.sh.manage.pojo.LoginUser;
 public class SysUserDao extends AbstractBaseDao<SysUser>{
 
 	@Override
-	public void addObject(SysUser clazz) {
+	public Integer addObject(SysUser clazz) {
 		// TODO Auto-generated method stub
-		
+		return (Integer) this.getCurrentSession().save(clazz);
 	}
 
 	@Override

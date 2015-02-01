@@ -74,7 +74,7 @@ public class UserController {
 	@RequestMapping(value = "/aumanage")
 	public ModelAndView appUserManagePage(
 			@RequestParam(value = "status", required = false, defaultValue = "") Integer status,
-			@RequestParam(value = "auRoleId", required = false, defaultValue = "") Integer auRoleId,
+			@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "endDate", required = false, defaultValue = "") String endDate,
@@ -86,25 +86,25 @@ public class UserController {
 		//返回会员列表页
 		ModelAndView model = new ModelAndView("/appuser/appuser_manage");
 		model.addObject("status", status);
-		model.addObject("auRoleId", auRoleId);
+		model.addObject("groupId", groupId);
 		model.addObject("usercode", usercode);
 		model.addObject("startDate", startDate);
 		model.addObject("endDate", endDate);
 		//返回的page对象
-		page = userService.findAllAppUser(auRoleId == null ? 0 : auRoleId,
+		page = userService.findAllAppUser(groupId == null ? 0 : groupId,
 				usercode, startDate.replaceAll("-", ""), endDate.replaceAll("-", ""), status == null ? 0 : status,
 				pageNo, pageSize);
 		// 会员列表
 		List<AppUser> appUserList = (List<AppUser>) page.getList();
 
-		// 会员等级
-		List<SysRole> roleList = roleService.findAppUserRole(4);
+		// 会员组织
+		List<SysGroup> groupList = groupService.findAll();
 		// 翻页带参数
 		if(null!=status && status>0){
 			page.addParam("status",""+status);
 		}
-		if(null!=auRoleId && auRoleId>0){
-			page.addParam("auRoleId",""+auRoleId);
+		if(null!=groupId && groupId>0){
+			page.addParam("groupId",""+groupId);
 		}
 		if(null != usercode){
 			page.addParam("usercode",""+usercode);
@@ -119,7 +119,7 @@ public class UserController {
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		model.addObject("appUserList", appUserList);
-		model.addObject("roleList", roleList);
+		model.addObject("groupList", groupList);
 		return model;
 	}
 
@@ -144,7 +144,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/auserAdd.do", method = RequestMethod.POST)
 	public ResponseEntity<String> auserAdd(
-			@RequestParam(value = "auRoleId", required = false, defaultValue = "0") Integer auRoleId,
+			@RequestParam(value = "groupId", required = false, defaultValue = "0") Integer groupId,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
 			@RequestParam(value = "endDate", required = false, defaultValue = "") String endDate,
@@ -170,7 +170,7 @@ public class UserController {
 		aUser.setEndDate(endDate.replaceAll("-", ""));//时间格式化，去掉-
 		aUser.setName(name);
 		aUser.setPassword(password);
-		aUser.setRoleId(auRoleId);
+		aUser.setGroupId(groupId);
 		aUser.setStartDate(startDate.replaceAll("-", ""));//时间格式化，去掉-
 		aUser.setStatus(status);
 		aUser.setUserName(usercode);
@@ -199,7 +199,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/auserEdit.do", method = RequestMethod.POST)
 	public ResponseEntity<String> auserEdit(
-			@RequestParam(value = "auRoleId", required = false, defaultValue = "0") Integer auRoleId,
+			@RequestParam(value = "groupId", required = false, defaultValue = "0") Integer groupId,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
 			@RequestParam(value = "endDate", required = false, defaultValue = "") String endDate,
@@ -226,7 +226,7 @@ public class UserController {
 			aUser.setEmail(email);
 			aUser.setEndDate(endDate);
 			aUser.setName(name);
-			aUser.setRoleId(auRoleId);
+			aUser.setGroupId(groupId);
 			aUser.setStartDate(startDate);
 			aUser.setStatus(status);
 			aUser.setUserName(usercode);
@@ -322,7 +322,7 @@ public class UserController {
 		List<SysUser> sysUserList = (List<SysUser>) page.getList();
 
 		// 会员等级
-		List<SysRole> roleList = roleService.findSysUserRole(4);
+		//List<SysRole> roleList = roleService.findSysUserRole(4);
 		// 翻页带参数
 		if(null != usercode){
 			page.addParam("usercode",usercode);
@@ -337,7 +337,7 @@ public class UserController {
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		model.addObject("sysUserList", sysUserList);
-		model.addObject("roleList", roleList);
+		//model.addObject("roleList", roleList);
 		return model;
 	}
 

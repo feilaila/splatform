@@ -88,6 +88,20 @@ public class GroupService extends BaseService{
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = {SPlatformServiceException.class})
 	public boolean delGroup(SysGroup group) throws SPlatformServiceException {
+		
+		//删除组织
+		
+		Set<SysRole> delRoleSet = group.getRoles();
+		List delList = new ArrayList();
+		for(SysRole role:delRoleSet){
+			//清除引用
+			delList.add(role);
+			role.getGroups().remove(group);
+//			group.getRoles().remove(role);
+			
+		}
+		delRoleSet.removeAll(delList);
+		
 		groupDao.delete(group);
 		return false;
 	};

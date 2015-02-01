@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -52,8 +53,8 @@ public class SysGroup implements Serializable {
 	/**
 	 * 组织的角色关系
 	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "t_sys_group_role", joinColumns = { @JoinColumn(name = "group_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
+	@ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	@OrderBy("id ASC")
 	private Set<SysRole> roles = new HashSet<SysRole>();
 
@@ -64,6 +65,14 @@ public class SysGroup implements Serializable {
 	@JoinTable(name = "t_sys_group_menu", joinColumns = { @JoinColumn(name = "group_id") }, inverseJoinColumns = { @JoinColumn(name = "menu_id") })
 	@OrderBy("id ASC")
 	private Set<SysMenu> menuSet = new HashSet<SysMenu>();
+	
+	
+	/**
+	 * 组的会员关系
+	 */
+	@OneToMany(mappedBy = "groupId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<AppUser> aUsers = new HashSet<AppUser>();
+	
 	
 	public int getId() {
 		return id;
@@ -114,4 +123,11 @@ public class SysGroup implements Serializable {
 	}
 	
 
+	public Set<AppUser> getaUsers() {
+		return aUsers;
+	}
+
+	public void setaUsers(Set<AppUser> aUsers) {
+		this.aUsers = aUsers;
+	}
 }

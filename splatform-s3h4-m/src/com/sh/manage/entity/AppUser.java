@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -46,8 +47,8 @@ public class AppUser implements Serializable {
 	@Column(name = "terminal_id", length = 20)
 	private String terminalId;
 
-	@Column(name = "role_id", length = 8)
-	private Integer roleId;
+	@Column(name = "group_id", length = 8)
+	private Integer groupId;
 
 	@Column(name = "status", length = 1)
 	private Integer status;
@@ -75,7 +76,7 @@ public class AppUser implements Serializable {
 		this.lastLoginIP = lastLoginIP;
 	}
 
-	private String roleName;
+	private String groupName;
 
 	public String getUserName() {
 		return userName;
@@ -125,20 +126,23 @@ public class AppUser implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getRoleId() {
-		return roleId;
+	
+	public Integer getGroupId() {
+		return groupId;
 	}
 
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
 
-	public String getRoleName() {
-		return roleName;
+
+    @Transient
+	public String getGroupName() {
+		return groupName;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public Integer getStatus() {

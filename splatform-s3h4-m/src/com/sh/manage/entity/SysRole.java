@@ -19,9 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 
@@ -56,17 +54,6 @@ public class SysRole implements Serializable {
 
 	@Column(name = "create_time", length = 20)
 	private String createTime;
-	
-	private String operateName;
-	
-	@Transient
-	public String getOperateName() {
-		return operateName;
-	}
-
-	public void setOperateName(String operateName) {
-		this.operateName = operateName;
-	}
 
 	/**
 	 * 是否已经选择
@@ -81,34 +68,33 @@ public class SysRole implements Serializable {
 	@OrderBy("id ASC")
 	private List<SysUser> userList = new ArrayList<SysUser>();
 
-////	@ManyToOne(cascade = CascadeType.ALL, optional = false)
-////	//@JoinTable(name = "t_sys_group_role",joinColumns={@JoinColumn(name="role_id")},inverseJoinColumns = { @JoinColumn(name = "group_id") })
-////	@JoinColumn(name = "id", referencedColumnName = "group_id")
-//	// 外键为id，与t_sys_group_role中的group_id关联
-//	@Column(name = "group_id",length=8)
-//	private int groupId;
+//	@ManyToOne(cascade = CascadeType.ALL, optional = false)
+//	//@JoinTable(name = "t_sys_group_role",joinColumns={@JoinColumn(name="role_id")},inverseJoinColumns = { @JoinColumn(name = "group_id") })
+//	@JoinColumn(name = "id", referencedColumnName = "group_id")
+	// 外键为id，与t_sys_group_role中的group_id关联
+	@Column(name = "group_id",length=8)
+	private int groupId;
 	
 	/**
 	 * 组织列表
 	 * 
 	 * */
-	
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
-	@JoinTable(name = "t_sys_group_role", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "group_id") })
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
 	@OrderBy("id ASC")
-	private Set<SysGroup> groups;
+	private List<SysGroup> groupList;
 	
-	
+	/**
+	 * 组的会员关系
+	 */
+	@OneToMany(mappedBy = "roleId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<AppUser> aUsers = new HashSet<AppUser>();
 
 	
 	
 	/**
 	 * 角色操作多对多
 	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
 	@JoinTable(name = "t_sys_role_operate", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "operate_id") })
 	@OrderBy("id ASC")
 	private Set<SysOperate> operateSet = new HashSet<SysOperate>();
@@ -162,15 +148,21 @@ public class SysRole implements Serializable {
 		this.createTime = createTime;
 	}
 
-//	public int getGroupId() {
-//		return groupId;
-//	}
-//
-//	public void setGroupId(int groupId) {
-//		this.groupId = groupId;
-//	}
+	public int getGroupId() {
+		return groupId;
+	}
 
-	
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
+
+	public Set<AppUser> getaUsers() {
+		return aUsers;
+	}
+
+	public void setaUsers(Set<AppUser> aUsers) {
+		this.aUsers = aUsers;
+	}
 
 	public Set<SysOperate> getOperateSet() {
 		return operateSet;
@@ -186,14 +178,6 @@ public class SysRole implements Serializable {
 
 	public void setChecked(boolean checked) {
 		this.checked = checked;
-	}
-
-	public Set<SysGroup> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<SysGroup> groups) {
-		this.groups = groups;
 	}
 	
 }

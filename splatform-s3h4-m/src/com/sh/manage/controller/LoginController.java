@@ -1,6 +1,5 @@
 package com.sh.manage.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,6 @@ import com.sh.manage.service.LoginService;
 import com.sh.manage.service.MenuService;
 import com.sh.manage.service.SystemService;
 import com.sh.manage.service.UserService;
-import com.sh.manage.utils.JsonUtils;
 import com.sh.manage.utils.ResponseUtils;
 import com.sh.manage.utils.SafeUtil;
 
@@ -68,14 +66,6 @@ public class LoginController {
 	 */
 	@Autowired
 	private LoginService loginService;
-	
-	
-	/**
-	 * 所有菜单数据串
-	 * 格式：{ id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
-	 */
-	private String menuStrs = "";
-	
 
 	// 跳转登陆页
 	@RequestMapping(value = "/tologin.do")
@@ -241,33 +231,13 @@ public class LoginController {
 			//代替nodeList
 			_loginUser.setNodeList(loginService.getNodeList(_loginUser));
 			
-			/**
-			 * 所有菜单节点  加入缓存
-			 */
-			List<SysMenu> menuList = (List<SysMenu>) loginService.getAllMenuList();
-			//所有菜单数据串 格式：{ id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
-			List<String> items = new ArrayList<String>();
-			String _temp = "{ id:'0', pId:'-1', name:"+"'全选'"+",iconOpen:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/1_open.png'"+", iconClose:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/1_close.png'"+",open:true}";
-			items.add(_temp);
-	    	for(SysMenu menu:menuList){
-	    		_temp = "{id:'"+menu.getId()+"',pId:'"+menu.getMenuPid()+"',name:'"+
-	    		menu.getMenuName()+"'"+",icon:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/2.png'";
-	    		if(menu.getHasChild() == 1){
-	    			//存在子菜单默认打开
-	    			_temp+=",icon:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/4.png'"+",open:true";
-	    		}
-	    		_temp +="}";
-	    		items.add(_temp);
-	    	}
-			menuStrs = JsonUtils.toJson(items);
-			menuStrs = menuStrs.replaceAll("\"", "");
-	    	logger.info("menuStrs:"+menuStrs.toString());
+			//String allDtree = menuService.getAllDTree((SysUser)session.getAttribute(SessionConstants.LOGIN_USER));
 
 			
 			// 默认登陆人员为Admin
 			session.setAttribute(SessionConstants.LOGIN_USER, _loginUser);
 			session.setAttribute("usercode", usercode);
-			session.setAttribute("menuStrs", menuStrs);
+			
 			msg = "0";//都校验通过，跳转主页
 		}while(false);
 		
@@ -339,7 +309,7 @@ public class LoginController {
 			session.removeAttribute(SessionConstants.LOGIN_USER);//清楚session
 			//SysUser loginUser = (SysUser) session.getAttribute(SessionConstants.LOGIN_USER);
 			
-			return new ModelAndView("redirect:unite/tologin.do");
+			return new ModelAndView("redirect:/login/tologin.do");
 		} else {
 			// 登陆成功跳转主页
 			return new ModelAndView("/main/index");

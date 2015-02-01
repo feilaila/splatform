@@ -67,13 +67,13 @@
 										placeholder="结束日期" readonly> 
 									<select id="auRoleId" name="auRoleId"
 										style="height: 33px; width: 120px; background: none repeat scroll 0 0 #f5f5f5 !important;"
-										class="form-control" id="form-field-select-3" data-placeholder="选择组织">
-										<option value="0">请选择组织</option>
-										<c:forEach items="${groupList}" var="role">
-											<option value="${group.id }"
-												onclick="setAuRoleId('${group.id }');" 
-												<c:if test="${group.id == groupId}">selected</c:if>	
-											>${group.groupName}
+										class="form-control" id="form-field-select-3" data-placeholder="选择等级">
+										<option value="0">请选择等级</option>
+										<c:forEach items="${roleList}" var="role">
+											<option value="${role.id }"
+												onclick="setAuRoleId('${role.id }');" 
+												<c:if test="${role.id == auRoleId}">selected</c:if>	
+											>${role.roleName}
 											</option>
 										</c:forEach>
 									</select> 
@@ -103,7 +103,7 @@
 													<th class="center">序号</th>
 													<th>用户名</th>
 													<th>姓名</th>
-													<th>组织</th>
+													<th>级别</th>
 													<th>添加时间</th>
 													<th>有效期</th>
 													<th>上次访问IP</th>
@@ -118,14 +118,14 @@
 														<td>${appUser.auid}</td>
 														<td>${appUser['userName']}</td>
 														<td>${appUser.name}</td>
-														<td>${appUser.groupName}</td>
+														<td>${appUser.roleName}</td>
 														<td>${appUser.startDate}</td>
 														<td>${appUser.endDate}</td>
 														<td>${appUser.lastLoginIP}</td>
 														<td>
 															<a data-toggle="modal" href="#auserEdit" 
-																onClick="editAuser('');" class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
-															<a data-toggle="modal" href="#auserDel"  onClick="delAuser('${appUser.auid}'');" class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
+																onClick="editAuser('${appUser.roleId}','${appUser.startDate}','${appUser.userName}','${appUser.endDate}','${appUser.terminalId}','${appUser.email}','${appUser.name}','${appUser.limitYear}','${appUser.remark}','${appUser.status}','${appUser.auid}');" class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
+															<a data-toggle="modal" href="#auserDel"  onClick="delAuser('${appUser.auid}','${appUser.userName}');" class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
 														</td>
 													</tr>
 												</c:forEach>
@@ -187,7 +187,7 @@
   	//组织新增
     var addAppUser = function(){
     		var diag = new zDialog();
-    		diag.Height = 360;
+    		diag.Height = 400;
         	diag.Title = "系统管理-会员新增";
         	diag.URL = "<%=path %>/toAddAppUser.do";
         	diag.OKEvent = function(){

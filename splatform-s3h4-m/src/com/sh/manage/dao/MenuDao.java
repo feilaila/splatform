@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import com.sh.manage.constants.Constants;
 import com.sh.manage.constants.SessionConstants;
 import com.sh.manage.entity.SysMenu;
-import com.sh.manage.entity.SysRole;
 import com.sh.manage.pojo.LoginUser;
 
 /**
@@ -34,10 +33,10 @@ public class MenuDao extends AbstractBaseDao<SysMenu> {
 		return query.list();
 	}
 
-	public Integer addObject(SysMenu menu) {
-		Integer resultId = (Integer) this.getCurrentSession().save(menu);
+	@Override
+	public void addObject(SysMenu menu) {
+		this.getCurrentSession().save(menu);
 		this.getCurrentSession().flush();
-		return resultId;
 	}
 
 	@Override
@@ -110,21 +109,4 @@ public class MenuDao extends AbstractBaseDao<SysMenu> {
 		
 		return (List<SysMenu>) queryModelSqlList(sql.toString(),params,SysMenu.class);
 	}
-
-	/**
-	 * 获取所有菜单
-	 */
-	@SuppressWarnings("unchecked")
-	public List<SysMenu> getAllMenuList() {
-		StringBuffer sql = new StringBuffer();
-		Object[] params = new Object[] {};
-		sql.append("select m.id,m.menu_name,m.menu_code,m.menu_pid,m.menu_url,m.leaf_yn,m.menu_btns,m.icon_tag,m.has_child");
-		sql.append(" from t_sys_menu m");
-		sql.append(" where 1=1");
-		//后台菜单
-
-		return (List<SysMenu>) queryModelSqlList(sql.toString(),params,SysMenu.class);
-	}
-
-
 }

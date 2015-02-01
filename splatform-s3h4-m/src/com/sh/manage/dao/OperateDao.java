@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.sh.manage.entity.SysOperate;
-import com.sh.manage.entity.SysRole;
 
 /**
  * 角色数据访问类
@@ -39,10 +38,10 @@ public class OperateDao extends AbstractBaseDao<SysOperate> {
 
 
 
-	public Integer addObject(SysOperate clazz) {
-		Integer resultId = (Integer) this.getCurrentSession().save(clazz);
-		this.getCurrentSession().flush();
-		return resultId;
+	@Override
+	public void addObject(SysOperate clazz) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

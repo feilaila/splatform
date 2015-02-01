@@ -11,15 +11,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sh.manage.dao.RoleDao;
-import com.sh.manage.dao.SysRoleDao;
 import com.sh.manage.entity.SysRole;
-import com.sh.manage.entity.SysRoleMenu;
 import com.sh.manage.exception.SPlatformServiceException;
-import com.sh.manage.module.page.Page;
 
 /**
  * 
@@ -35,10 +31,6 @@ public class RoleService extends BaseService {
 
 	@Autowired
 	private RoleDao roleDao;
-	
-	@Autowired
-	private SysRoleDao sRoleDao;
-	
 
 	/** 每页显示行数 */
 	private static final int ROW_CNT_PER_PAGE = 20;
@@ -57,10 +49,10 @@ public class RoleService extends BaseService {
 	 */
 	public SysRole findSysRole(Integer suRoleId)throws SPlatformServiceException {
 		try {
-			SysRole sysRole = roleDao.getRoleById(suRoleId);
+			List<SysRole> sysRoleList = roleDao.findSysRole(suRoleId);
 			//找到了角色
-			if(null != sysRole){
-				return sysRole;
+			if(null != sysRoleList){
+				return sysRoleList.get(0);
 			}
 			//找不到角色
 			return new SysRole();
@@ -106,7 +98,6 @@ public class RoleService extends BaseService {
 	public void delRole(SysRole role) throws SPlatformServiceException {
 		try {
 			roleDao.delete(role);
-			//sRoleDao.delete(o);
 		} catch (Exception e) {
 			logger.error("service:删除角色信息出现异常", e);
 			throw new SPlatformServiceException("删除角色信息出现异常");
@@ -216,44 +207,6 @@ public class RoleService extends BaseService {
 	 * @param newBtnStr
 	 */
 	public void editRoleBtns(String newBtnStr) {
-		
-	}
-
-	/**
-	 * 获取角色列表页面
-	 * @param roleName
-	 * @param pageNo
-	 * @param pageSize
-	 * @return
-	 */
-	public Page getRoles(String roleName, Integer pageNo, int pageSize) {
-		Page page = roleDao.getRoles(roleName,pageNo,pageSize);
-		return page;
-	}
-
-	/**
-	 * 
-	 * @param newSysRole
-	 * @param roleMenuStr
-	 * @throws SPlatformServiceException
-	 */
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = {SPlatformServiceException.class})
-	public void addSysRole(SysRole newSysRole, String roleMenuStr) throws SPlatformServiceException{
-		try {
-			Integer result = roleDao.addObject(newSysRole);//角色添加
-			
-			String[] roleMenuArr = roleMenuStr.split(",");
-			if(roleMenuArr.length > 0){
-				for(String roleMenu : roleMenuArr){
-					SysRoleMenu sRoleMenu = new SysRoleMenu();
-					sRoleMenu.setMenuCode(roleMenu);
-					sRoleMenu.setRoleId(result);
-					sRoleDao.addSysRoleMenu(sRoleMenu);
-				}
-			}
-		} catch (Exception e) {
-			throw new SPlatformServiceException();
-		}
 		
 	}
 

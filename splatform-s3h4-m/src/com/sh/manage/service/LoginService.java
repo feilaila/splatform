@@ -524,13 +524,4 @@ public class LoginService {
 			}
 		}
 	}
-
-	/**
-	 * 所有菜单列表
-	 */
-	public List<SysMenu> getAllMenuList() {
-		//所有菜单
-		List<SysMenu> _m_List = menuDao.getAllMenuList();
-		return _m_List;
-	}
 }

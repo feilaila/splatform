@@ -344,8 +344,7 @@ public class GroupController {
 			/* get sysGroup */
 			SysGroup sysGroup = groupService.findSysGroup(groupId);
 			
-			
-			
+			//删除组织
 			groupService.delGroup(sysGroup);
 
 			msg="组织删除成功!";

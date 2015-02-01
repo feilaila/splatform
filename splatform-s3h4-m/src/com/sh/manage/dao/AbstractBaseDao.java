@@ -45,7 +45,7 @@ public abstract class AbstractBaseDao<T> {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	public abstract Integer addObject(T clazz);
+	public abstract void addObject(T clazz);
 
 	public abstract void updateObject(T clazz);
 

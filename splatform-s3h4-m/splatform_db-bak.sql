@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50508
 File Encoding         : 65001
 
-Date: 2015-02-01 04:33:02
+Date: 2015-01-27 01:05:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,12 +26,12 @@ CREATE TABLE `t_sh_user` (
   `password` varchar(60) DEFAULT NULL,
   `terminal_id` varchar(20) DEFAULT NULL,
   `name` varchar(32) DEFAULT NULL,
-  `group_id` varchar(8) DEFAULT NULL,
+  `role_id` varchar(8) DEFAULT NULL,
   `status` int(1) DEFAULT NULL,
   `start_date` varchar(20) DEFAULT NULL,
   `end_date` varchar(20) DEFAULT NULL,
   `last_login_ip` varchar(100) DEFAULT NULL,
-  `groupName` varchar(255) DEFAULT NULL,
+  `roleName` varchar(255) DEFAULT NULL,
   `limit_year` int(3) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`auid`)
@@ -78,24 +78,21 @@ CREATE TABLE `t_sys_group` (
   `create_time` varchar(20) DEFAULT NULL,
   `group_desc` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of t_sys_group
 -- ----------------------------
-INSERT INTO `t_sys_group` VALUES ('1', '系统管理组2', '20150131204906', '测试的');
-INSERT INTO `t_sys_group` VALUES ('2', '客服A组', '20150131204916', '客服A组的111');
-INSERT INTO `t_sys_group` VALUES ('3', '客服B组', '20150201035924', '客服B组');
+INSERT INTO `t_sys_group` VALUES ('1', '系统管理组1', '20141222101200', '测试的');
+INSERT INTO `t_sys_group` VALUES ('2', '客服A组', '20150126120359', '客服A组的113');
+INSERT INTO `t_sys_group` VALUES ('3', '客服B组', '20141025101200', '客服B组');
 INSERT INTO `t_sys_group` VALUES ('4', '会员组', '20141118111200', '会员组');
-INSERT INTO `t_sys_group` VALUES ('7', '测试22', '20150201040034', '测试22');
+INSERT INTO `t_sys_group` VALUES ('7', '测试22', '20150126230216', '测试22');
 INSERT INTO `t_sys_group` VALUES ('10', '客服A1组', '20150126230112', '客服A1组嗯');
 INSERT INTO `t_sys_group` VALUES ('12', '测试0126', '20150126175146', '测试0126');
 INSERT INTO `t_sys_group` VALUES ('13', '测试0126-1', '20150126224616', '测试0126-1');
 INSERT INTO `t_sys_group` VALUES ('14', '测试0126-2', '20150126175552', '测试0126-2');
 INSERT INTO `t_sys_group` VALUES ('19', '测试0126-7', '20150127001959', '测试0126-7');
-INSERT INTO `t_sys_group` VALUES ('20', '测试0128-1', '20150131213702', '测试0128-1');
-INSERT INTO `t_sys_group` VALUES ('21', '测试0131-1', '20150131235153', '测试0131-1');
-INSERT INTO `t_sys_group` VALUES ('23', '测试0131-03', '20150201033803', '测试0131-03');
 
 -- ----------------------------
 -- Table structure for `t_sys_group_menu`
@@ -115,6 +112,9 @@ CREATE TABLE `t_sys_group_menu` (
 -- ----------------------------
 -- Records of t_sys_group_menu
 -- ----------------------------
+INSERT INTO `t_sys_group_menu` VALUES ('1', '1', null);
+INSERT INTO `t_sys_group_menu` VALUES ('2', '1', null);
+INSERT INTO `t_sys_group_menu` VALUES ('3', '1', null);
 
 -- ----------------------------
 -- Table structure for `t_sys_group_role`
@@ -127,21 +127,36 @@ CREATE TABLE `t_sys_group_role` (
   PRIMARY KEY (`id`),
   KEY `FKAD532673105BF75B` (`group_id`),
   KEY `FKAD5326738330C7D9` (`role_id`),
-  CONSTRAINT `FKAD532673105BF75B` FOREIGN KEY (`group_id`) REFERENCES `t_sys_group` (`id`),
-  CONSTRAINT `FKAD5326738330C7D9` FOREIGN KEY (`role_id`) REFERENCES `t_sys_role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
+  CONSTRAINT `FKAD5326738330C7D9` FOREIGN KEY (`role_id`) REFERENCES `t_sys_role` (`id`),
+  CONSTRAINT `FKAD532673105BF75B` FOREIGN KEY (`group_id`) REFERENCES `t_sys_group` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_group_role
 -- ----------------------------
+INSERT INTO `t_sys_group_role` VALUES ('1', '1', '1');
+INSERT INTO `t_sys_group_role` VALUES ('2', '3', '1');
+INSERT INTO `t_sys_group_role` VALUES ('3', '2', '3');
+INSERT INTO `t_sys_group_role` VALUES ('4', '2', '4');
+INSERT INTO `t_sys_group_role` VALUES ('5', '1', '5');
 INSERT INTO `t_sys_group_role` VALUES ('6', '4', '6');
 INSERT INTO `t_sys_group_role` VALUES ('7', '4', '7');
 INSERT INTO `t_sys_group_role` VALUES ('8', '4', '8');
 INSERT INTO `t_sys_group_role` VALUES ('9', '4', '9');
-INSERT INTO `t_sys_group_role` VALUES ('85', '3', '14');
-INSERT INTO `t_sys_group_role` VALUES ('86', '3', '16');
-INSERT INTO `t_sys_group_role` VALUES ('90', '7', '16');
-INSERT INTO `t_sys_group_role` VALUES ('91', '7', '21');
+INSERT INTO `t_sys_group_role` VALUES ('10', '1', '13');
+INSERT INTO `t_sys_group_role` VALUES ('11', '1', '14');
+INSERT INTO `t_sys_group_role` VALUES ('12', '3', '16');
+INSERT INTO `t_sys_group_role` VALUES ('13', '2', '18');
+INSERT INTO `t_sys_group_role` VALUES ('14', '2', '19');
+INSERT INTO `t_sys_group_role` VALUES ('15', '2', '20');
+INSERT INTO `t_sys_group_role` VALUES ('16', '3', '21');
+INSERT INTO `t_sys_group_role` VALUES ('17', '1', '24');
+INSERT INTO `t_sys_group_role` VALUES ('23', '10', '3');
+INSERT INTO `t_sys_group_role` VALUES ('31', '7', '13');
+INSERT INTO `t_sys_group_role` VALUES ('32', '7', '14');
+INSERT INTO `t_sys_group_role` VALUES ('33', '7', '20');
+INSERT INTO `t_sys_group_role` VALUES ('51', '19', '3');
+INSERT INTO `t_sys_group_role` VALUES ('52', '19', '13');
 
 -- ----------------------------
 -- Table structure for `t_sys_menu`
@@ -173,8 +188,8 @@ INSERT INTO `t_sys_menu` VALUES ('8', '商品列表', 'goodslist_menu', '7', '/g
 INSERT INTO `t_sys_menu` VALUES ('9', '商品审核', 'goodsaudit_menu', '7', '/goods/toAuditList.do', '1', null, null, '0');
 INSERT INTO `t_sys_menu` VALUES ('10', '商品报表', 'goodsreport_menu', '7', '/goods/toReportList.do', '1', null, null, '0');
 INSERT INTO `t_sys_menu` VALUES ('11', '订单管理', 'order_menu', '0', null, '0', null, null, '1');
-INSERT INTO `t_sys_menu` VALUES ('12', '订单审核', 'order_audit', '11', '/order/oaudit.do', '1', null, null, '0');
-INSERT INTO `t_sys_menu` VALUES ('13', '订单报表', 'order_export', '11', '/order/export.do', '1', null, null, '0');
+INSERT INTO `t_sys_menu` VALUES ('12', '订单审核', 'order_audit', '6', '/order/oaudit.do', '1', null, null, '0');
+INSERT INTO `t_sys_menu` VALUES ('13', '订单报表', 'order_export', '6', '/order/export.do', '1', null, null, '0');
 
 -- ----------------------------
 -- Table structure for `t_sys_operate`
@@ -207,7 +222,6 @@ CREATE TABLE `t_sys_role` (
   `create_time` varchar(20) DEFAULT NULL,
   `group_id` int(8) DEFAULT NULL,
   `checked` tinyint(1) NOT NULL,
-  `operateName` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKD28DE253105BF75B` (`group_id`),
   KEY `FKD28DE2534F4DA930` (`group_id`),
@@ -218,36 +232,23 @@ CREATE TABLE `t_sys_role` (
 -- ----------------------------
 -- Records of t_sys_role
 -- ----------------------------
-INSERT INTO `t_sys_role` VALUES ('1', '超级管理员', '测试', '1', null, '1', '0', null);
-INSERT INTO `t_sys_role` VALUES ('2', '普通管理员', '普通管理员', '1', '20140520120015', '3', '0', null);
-INSERT INTO `t_sys_role` VALUES ('3', '客服1', '客服1', '2', '20140510110015', '2', '0', null);
-INSERT INTO `t_sys_role` VALUES ('4', '客服22', '测试', '1', null, '2', '0', null);
-INSERT INTO `t_sys_role` VALUES ('5', 'super管理员', 'super管理员', '1', '20140505120015', '1', '0', null);
-INSERT INTO `t_sys_role` VALUES ('6', '初级会员', '初级会员', '1', '20140505121115', '4', '0', null);
-INSERT INTO `t_sys_role` VALUES ('7', '普通会员', '普通会员', '1', '20140505121115', '4', '0', null);
-INSERT INTO `t_sys_role` VALUES ('8', '高级会员', '测试', '1', null, '4', '0', null);
-INSERT INTO `t_sys_role` VALUES ('9', 'VIP会员', 'VIP会员', '1', '20140505121115', '4', '0', null);
-INSERT INTO `t_sys_role` VALUES ('13', '测试角色', '测试', '1', '20141130120816', '1', '0', null);
-INSERT INTO `t_sys_role` VALUES ('14', '测试的', '测试', '1', '20141130131825', '1', '0', null);
-INSERT INTO `t_sys_role` VALUES ('16', '测试23', '测试', '1', '20141130131959', '3', '0', null);
-INSERT INTO `t_sys_role` VALUES ('20', '测试是是是', '测试', '1', '20141130152254', '2', '0', null);
-INSERT INTO `t_sys_role` VALUES ('21', 'AAAXX', '测试', '1', null, '3', '0', null);
-
--- ----------------------------
--- Table structure for `t_sys_role_menu`
--- ----------------------------
-DROP TABLE IF EXISTS `t_sys_role_menu`;
-CREATE TABLE `t_sys_role_menu` (
-  `id` int(8) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `role_id` int(8) NOT NULL,
-  `menu_id` int(8) NOT NULL,
-  `menu_btn` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_sys_role_menu
--- ----------------------------
+INSERT INTO `t_sys_role` VALUES ('1', '超级管理员', '测试', '1', null, '1', '0');
+INSERT INTO `t_sys_role` VALUES ('2', '普通管理员', '普通管理员', '1', '20140520120015', '3', '0');
+INSERT INTO `t_sys_role` VALUES ('3', '客服1', '客服1', '2', '20140510110015', '2', '0');
+INSERT INTO `t_sys_role` VALUES ('4', '客服22', '测试', '1', null, '2', '0');
+INSERT INTO `t_sys_role` VALUES ('5', 'super管理员', 'super管理员', '1', '20140505120015', '1', '0');
+INSERT INTO `t_sys_role` VALUES ('6', '初级会员', '初级会员', '1', '20140505121115', '4', '0');
+INSERT INTO `t_sys_role` VALUES ('7', '普通会员', '普通会员', '1', '20140505121115', '4', '0');
+INSERT INTO `t_sys_role` VALUES ('8', '高级会员', '测试', '1', null, '4', '0');
+INSERT INTO `t_sys_role` VALUES ('9', 'VIP会员', 'VIP会员', '1', '20140505121115', '4', '0');
+INSERT INTO `t_sys_role` VALUES ('13', '测试角色', '测试', '1', '20141130120816', '1', '0');
+INSERT INTO `t_sys_role` VALUES ('14', '测试的', '测试', '1', '20141130131825', '1', '0');
+INSERT INTO `t_sys_role` VALUES ('16', '测试23', '测试', '1', '20141130131959', '3', '0');
+INSERT INTO `t_sys_role` VALUES ('18', '456', '测试', '1', '20141130143506', '2', '0');
+INSERT INTO `t_sys_role` VALUES ('19', '321123', '测试', '1', '20141130150528', '2', '0');
+INSERT INTO `t_sys_role` VALUES ('20', '测试是是是', '测试', '1', '20141130152254', '2', '0');
+INSERT INTO `t_sys_role` VALUES ('21', 'AAAXX', '测试', '1', null, '3', '0');
+INSERT INTO `t_sys_role` VALUES ('24', 'XXX', '测试', '1', null, '1', '0');
 
 -- ----------------------------
 -- Table structure for `t_sys_role_operate`
@@ -269,6 +270,8 @@ CREATE TABLE `t_sys_role_operate` (
 -- ----------------------------
 INSERT INTO `t_sys_role_operate` VALUES ('4', '2', '1');
 INSERT INTO `t_sys_role_operate` VALUES ('5', '2', '3');
+INSERT INTO `t_sys_role_operate` VALUES ('6', '3', '2');
+INSERT INTO `t_sys_role_operate` VALUES ('7', '3', '3');
 
 -- ----------------------------
 -- Table structure for `t_sys_user`

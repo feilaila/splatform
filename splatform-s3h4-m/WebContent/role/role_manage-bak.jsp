@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../WEB-INF/include.jsp"%>
 
@@ -48,25 +48,24 @@
             <div class="inner" style="min-height:1200px;">
                 <div class="row">
                     <div class="col-lg-12">
-	                        <h5>系统管理-用户管理</h5>
+	                        <h5>系统管理-角色管理</h5>
 	                    </div>
 	                </div>
 	                <hr />
 	                <div class="page-header mr0">
-						<form id="suserSearchForm" name="suserSearchForm"
-							action="<spring:url value='/umanage.do' htmlEscape='true'/>"
+						<form id="groupSearchForm" name="groupSearchForm"
+							action="<spring:url value='/gmanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
-							<i class="icon-hand-right"></i><span>搜索</span> 
-							<input type="text" placeholder="输入用户名" class="ui-autocomplete-input" 
-									id="search" name="usercode" value="${usercode }"
-								autocomplete="off" /> 
-							<input id="startDate" class="span2"
-								type="text" name="startDate" value="${startDate }" placeholder="开始日期" readonly>
-							<input id="endDate" class="span2" type="text" name="endDate"
-								value="${endDate }" placeholder="结束日期" readonly> 
-							<button class="btn btn-default" type="button" onClick="submitSearchForm()">
+		            		<div class="form-group">
+								<div class="">
+									<i class="icon-hand-right"></i><span>搜索</span> 
+									<input class="form-control" type="text" name="groupName" value="${groupName }" placeholder="输入组织名">
+									<button class="btn btn-default" type="button" onClick="submitSearchForm()">
 												<i class="icon-search"></i>
-							</button>
+								    </button>
+								</div>
+						
+							</div>
 						</form>
 				</div>
                 
@@ -77,50 +76,37 @@
 											<thead>
 												<tr>
 													<th class="center">序号</th>
-													<th>用户名</th>
-													<th>姓名</th>
-													<th>角色</th>
-													<th>有效性</th>
+													<th>组织名称</th>
+													<th>描述</th>
 													<th>添加时间</th>
-													<th>上次登录时间</th>
-													<th>上次访问IP</th>
+													<th>角色</th>
 													<th>操作</th>
 												</tr>
 											</thead>
 
 											<tbody>
-												<c:forEach items="${sysUserList}" var="sysUser"
+												<c:forEach items="${groupList}" var="sysGroup"
 													varStatus="status">
 													<tr>
-														<td>${sysUser.uid}</td>
-														<td>${sysUser['usercode']}</td>
-														<td>${sysUser.name}</td>
-														<td>${sysUser.roleName}</td>
+														<td>${sysGroup.id}</td>
+														<td>${sysGroup.groupName}</td>
+														<td>${sysGroup.groupDesc}</td>
 														<td>
-															<c:if test="${sysUser.status == 1}">有效</c:if>
-															<c:if test="${sysUser.status == 9}">失效</c:if>
+															<fmt:parseDate value="${sysGroup.createTime}" pattern="yyyyMMddHHmmss" var="date"/>
+															 <fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm:ss"/>
 														</td>
-														<td>${sysUser.createTime}</td>
-														<td>${sysUser.lastLoginTime}</td>
-														<td>${sysUser.lastLoginIP}</td>
+														<td>
+															<c:forEach items="${sysGroup.roles}" var="role" varStatus="status">
+																${role.roleName}
+															</c:forEach>
+														</td>
 														<td>														
-														<c:if test="${sysUser.status == 1}">
-															<a data-toggle="modal" href="#suserEdit"
-															onClick="editSuser('${sysUser.createTime}','${sysUser.usercode}','${sysUser.validTime}','${sysUser.terminalId}','${sysUser.email}','${sysUser.name}','${appUser.status}','${sysUser.uid}','${sysUser.roleId }');"
+															<a 
+															onClick="editSgroup('${sysGroup.id}');"
 															class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
-															<a data-toggle="modal" href="#suserDel"
-																onClick="delSuser('${sysUser.uid}','${sysUser.usercode}','${sysUser.roleId }');"
-																class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
-														</c:if>
-															
-														<c:if test="${sysUser.status == 9}">
-															<a data-toggle="modal" href="#"
-															onClick=""
-															class="btn btn-xs btn-gray"><i class="icon-edit"></i></a>
-															<a data-toggle="modal" href="#"
-																onClick=""
-																class="btn btn-xs btn-gray"><i class="icon-trash"></i></a>
-														</c:if>
+															<a 
+																onClick="delSgroup('${sysGroup.id}','${sysGroup.groupName}');"
+																class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>			
 														</td>
 													</tr>
 												</c:forEach>
@@ -139,7 +125,7 @@
 								<!-- /row -->
 							<div
 								style="display: inline-block; background-repeat: no-repeat; border-width: 4px; font-size: 13px; line-height: 1.39; padding: 4px 9px;">
-								<a onclick="addAppUser();" href="javascript:;" class="btn btn-success btn-sm">添加</a>
+								<a onclick="addSgroup();" href="javascript:;" class="btn btn-success btn-sm">添加</a>
 							</div>
 							<div class="hr hr-18 dotted hr-double"></div>
                     </div>
@@ -170,21 +156,22 @@
     <!-- zDialog -->
 	<script src="<%=path %>/static/js/zdialog/zDialog.js"></script>
 	<script src="<%=path %>/static/js/zdialog/zDrag.js"></script>
-    
-    
-    <script type="text/javascript"	src="<%=path %>/static/js/date-time/bootstrap-datepicker.js"></script>
+    <!-- zDialog-->
 </body>
     <!-- END BODY -->
     
     <script type="text/javascript">
     
-
+    var submitSearchForm = function(){
+		document.getElementById("groupSearchForm").submit();
+	}
+    
   	//组织新增
-    var addAppUser = function(){
+    var addSgroup = function(){
     		var diag = new zDialog();
-    		diag.Height = 360;
-        	diag.Title = "系统管理-会员新增";
-        	diag.URL = "<%=path %>/toAddAppUser.do";
+    		diag.Height = 400;
+        	diag.Title = "系统管理-组织新增";
+        	diag.URL = "<%=path %>/toAddGroup.do";
         	diag.OKEvent = function(){
         		//参数校验
         		var groupName = diag.innerDoc.getElementById('groupName').value;
@@ -305,24 +292,7 @@
     	});
     }
     </script>
-
-
-
-<iframe name="targetFrame" style="width: 0%; display: none;"></iframe>
-<script type="text/javascript">
-				$('#startDate').datepicker({format:"yyyy-mm-dd"});
-				$('#endDate').datepicker({format:"yyyy-mm-dd"});
-				$('#createDate').datepicker({format:"yyyy-mm-dd"});
-				$('#validDate').datepicker({format:"yyyy-mm-dd"});
-				$('#createDateEdit').datepicker({format:"yyyy-mm-dd"});
-				$('#validDateEdit').datepicker({format:"yyyy-mm-dd"});
-				//提交搜索
-				
-				var submitSearchForm = function(){
-					document.getElementById("suserSearchForm").submit();
-				}
-</script>    
-
+    
 <form id="delForm" name="delForm" method="post" action="doDelGroup.do" target="thisFrame">
 	<input type="hidden" id="del-groupId" name="groupId">
 </form>

@@ -17,9 +17,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.sh.manage.entity.AppUser;
 import com.sh.manage.entity.SysGroupRole;
 import com.sh.manage.entity.SysRole;
+import com.sh.manage.entity.SysRoleMenu;
 import com.sh.manage.exception.SPlatformDaoException;
+import com.sh.manage.module.page.Page;
 import com.sh.manage.utils.SQLPagingUtils;
 
 /**
@@ -45,10 +48,10 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 		return query.list();
 	}
 
-	@Override
-	public void addObject(SysRole role) {
-		this.getCurrentSession().save(role);
-		this.getCurrentSession().flush();
+	
+	public Integer addObject(SysRole role) {
+		Integer resultId = (Integer) this.getCurrentSession().save(role);
+		return resultId;
 	}
 	
 	//保存组织和角色关系
@@ -85,10 +88,13 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 
 	@Override
 	public SysRole getObject(SysRole role) {
-		String hql = "from SysRole where id = ";
-		hql += role.getId();
-		Query query = this.getCurrentSession().createQuery(hql);
-		return (SysRole) query.list().get(0);
+		
+		return (SysRole) this.getCurrentSession().load(SysRole.class, role.getId());
+	}
+		
+	public SysRole getRoleById(Integer id) {
+		
+		return (SysRole) this.getCurrentSession().load(SysRole.class, id);
 	}
 
 	/**
@@ -286,7 +292,7 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 							role.setRemark(rs.getString("remark"));
 							role.setOperateId(Integer.parseInt(rs.getString("operate_id")));
 							role.setCreateTime(rs.getString("create_time"));
-							role.setGroupId(rs.getInt("group_id"));
+							//role.setGroupId(rs.getInt("group_id"));
 							return role;
 						}
 					});
@@ -319,7 +325,29 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 		Object[] params = new Object[]{roleId};
 		return this.querysqlList(sql, params);
 	}
-	
-	
+
+	/**
+	 * 获取角色列表页面
+	 * @param roleName
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	public Page getRoles(String roleName, Integer pageNo, int pageSize) {
+
+		StringBuffer sbf = new StringBuffer();
+		sbf.append("select rt.* from (select r.id,r.role_name,r.remark,r.operate_id,r.create_time,r.group_id,r.checked,u.name operateName from t_sys_role r,t_sys_user u ");
+		sbf.append(" where 1 = 1 and r.operate_id = u.uid ");
+		
+		Object[] params = new Object[]{};
+		
+		if(!StringUtils.isEmpty(roleName)){
+			params = ArrayUtils.add(params, roleName);
+			sbf.append(" and r.roleName = ?");
+		}
+		
+		sbf.append(") as rt");
+		return this.queryModelListByPage(sbf.toString(), params, pageNo, pageSize, SysRole.class);
+	}
 
 }

@@ -39,7 +39,7 @@ String lpath=this.getServletContext().getContextPath();
                     </a>
                     <ul class="in" id="component-nav" style="height:auto">                       
                         <li class=""><a href="<%=lpath %>/gmanage.do"><i class="icon-angle-right"></i> 组织管理 </a></li>
-                        <li class=""><a href="<%=lpath %>/rmanage.do"><i class="icon-angle-right"></i> 角色管理 </a></li>
+                        <li class=""><a href="<%=lpath %>/romanage.do"><i class="icon-angle-right"></i> 角色管理 </a></li>
                         <li class=""><a href="<%=lpath %>/umanage.do"><i class="icon-angle-right"></i> 用户管理 </a></li>
                         <li class=""><a href="<%=lpath %>/aumanage.do"><i class="icon-angle-right"></i> 会员管理 </a></li>
                     </ul>

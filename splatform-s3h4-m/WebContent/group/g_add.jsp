@@ -85,11 +85,4 @@
 </body>
 <!-- GLOBAL SCRIPTS -->
 <script src="<%=path%>/static/assets/plugins/jquery-2.0.3.min.js"></script>
-
-<script type="text/javascript">
-var checkStr = function(){
-	
-	return true;
-}
-</script>
 </html>

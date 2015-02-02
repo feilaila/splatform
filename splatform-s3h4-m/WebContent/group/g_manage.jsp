@@ -154,6 +154,7 @@
     <!-- END GLOBAL SCRIPTS -->
     
     <!-- zDialog -->
+    <script src="<%=path%>/static/js/jquery-1.7.2.min.js"></script>
 	<script src="<%=path %>/static/js/zdialog/zDialog.js"></script>
 	<script src="<%=path %>/static/js/zdialog/zDrag.js"></script>
     <!-- zDialog-->

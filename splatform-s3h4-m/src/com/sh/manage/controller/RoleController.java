@@ -4,10 +4,12 @@ package com.sh.manage.controller;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.sh.manage.constants.Constants;
+import com.sh.manage.constants.SessionConstants;
+import com.sh.manage.entity.SysGroup;
 import com.sh.manage.entity.SysOperate;
 import com.sh.manage.entity.SysRole;
+import com.sh.manage.exception.SPlatformServiceException;
+import com.sh.manage.module.page.Page;
+import com.sh.manage.module.page.ZTreeNode;
+import com.sh.manage.pojo.LoginUser;
 import com.sh.manage.service.OperateService;
 import com.sh.manage.service.RoleService;
 import com.sh.manage.service.UserService;
@@ -57,6 +67,215 @@ public class RoleController {
 	@Autowired
 	private OperateService operateService;
 	
+	/** 当前页 */
+	private int initPageNo = 1;
+
+	/** 页面大小 */
+	private int pageSize = 5;
+
+	/** Page对象 */
+	private Page page;
+	
+	/**
+	 * 所有菜单数据串
+	 * 格式：{ id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
+	 */
+	private String menuStrs = "";
+	
+	/**
+	 * 是否展开
+	 */
+	private int expand;
+	
+	
+	public int getExpand() {
+		return expand;
+	}
+
+	public void setExpand(int expand) {
+		this.expand = expand;
+	}
+	/**
+	 * 跳转组织管理页面
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/romanage.do")
+    public ModelAndView roleManagePage(HttpServletRequest req,
+			HttpServletResponse resp,
+    		@RequestParam(value = "gIndex", required = false, defaultValue = "") Integer gIndex,
+    		@RequestParam(value = "roleName", required = false, defaultValue = "") String roleName,
+    		@RequestParam(value = "expand", required = false, defaultValue = "false") Boolean expand,
+    		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
+		
+		HttpSession session = req.getSession();
+		//获取角色列表
+		if (null == pageNo) {
+			pageNo = initPageNo;
+		}
+		ModelAndView model = new ModelAndView("/role/role_manage");
+		/**获取组列表*/
+		
+		page = roleService.getRoles(roleName,pageNo, pageSize);
+		List<SysRole> roleList = (List<SysRole>) page.getList();//
+		
+		
+
+		
+		expand = true;
+		model.addObject("expand",expand);
+
+		model.addObject("roleList", roleList);
+		model.addObject("pageSize", pageSize);
+		model.addObject("page", page);		
+		logger.info("..expand:"+expand);
+        return model;
+    }
+	
+	
+	/**
+	 * 跳转角色添加页面
+	 */
+	@RequestMapping(value="/addRole.do")
+    public ModelAndView roleAddPage(HttpServletRequest req,
+			HttpServletResponse resp) {
+		HttpSession session = req.getSession();
+		ModelAndView model = new ModelAndView("/role/role_add");
+		
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+		if (null != _loginUser) {
+			//获取菜单列表
+			menuStrs = (String) session.getAttribute("menuStrs");
+			model.addObject("menuStrs", menuStrs);
+			logger.info("menuStrs:"+menuStrs);
+		}
+        return model;
+    }
+	
+	
+	/***
+	 * 角色新增
+	 * @param request
+	 * @param resp
+	 * @param roleName
+	 * @param remark
+	 * @param roleMenuStr
+	 * @return
+	 */
+	@RequestMapping(value = "/doAddRole.do", method = RequestMethod.POST)
+	public ResponseEntity<String> doAddRole(HttpServletRequest request,
+			HttpServletResponse resp,
+			@RequestParam(value = "roleName", required = false, defaultValue = "0") String roleName,
+			@RequestParam(value = "remark", required = false, defaultValue = "0") String remark,
+			@RequestParam(value = "roleMenuStr", required = false, defaultValue = "0") String roleMenuStr) {
+		HttpSession session = request.getSession();
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+    	logger.info("controller:CentralAction..角色新增!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+    	try {
+			
+			if (null != _loginUser) {
+				SysRole newSysRole = new SysRole();
+				newSysRole.setOperateId(_loginUser.getId());
+				newSysRole.setRemark(remark);
+				newSysRole.setRoleName(roleName);
+				newSysRole.setCreateTime(TimeUtil.now());
+				
+				roleService.addSysRole(newSysRole, roleMenuStr);
+				msg = "角色添加成功!";
+			}else{
+				msg = "用户未登录!";
+			}
+		} catch (SPlatformServiceException e) {
+			e.printStackTrace();
+			msg = "新增出现异常,请稍等..";
+			return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		}
+    	logger.info("controller:添加角色结束!");
+		return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+	}
+
+	
+	/**
+	 * 当前的角色删除
+	 * @return
+	 */
+	@RequestMapping(value = "/doDelRole.do", method = RequestMethod.POST)
+	public ResponseEntity<String> doDelRole(
+			@RequestParam(value = "roleId", required = false, defaultValue = "0") int roleId,
+			@RequestParam(value = "roleName", required = false, defaultValue = "0") String roleName,
+			HttpServletRequest request,HttpServletResponse response,
+			Model model) {
+		logger.info("controller:..组织角色删除!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
+		try{
+			//get role
+			SysRole role = roleService.findSysRole(roleId);
+
+			if(null != role){
+				roleService.delRole(role);
+				msg="角色删除成功!";
+			}else{
+				msg="角色不存在!";
+			}
+			
+		}catch(Exception e){
+			logger.error("controller:删除角色异常!"+roleName,e);
+			msg="删除角色出现异常";
+			model.addAttribute("msg", msg);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			
+		}
+		logger.info("controller:删除角色结束!");
+		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+	}
+	
+	/**
+	 * 跳转角色编辑页面
+	 */
+	@RequestMapping(value="/editRole.do")
+    public ModelAndView roleEditPage(HttpServletRequest req,
+			HttpServletResponse resp) {
+		HttpSession session = req.getSession();
+		ModelAndView model = new ModelAndView("/role/role_add");
+		
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+		if (null != _loginUser) {
+			//获取菜单列表
+			menuStrs = (String) session.getAttribute("menuStrs");
+			model.addObject("menuStrs", menuStrs);
+			logger.info("menuStrs:"+menuStrs);
+		}
+        return model;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
     /**
 	 * 当前组织下的角色添加
 	 * @return
@@ -76,7 +295,7 @@ public class RoleController {
 
 		//new role
 		SysRole role = new SysRole();
-		role.setGroupId(groupId);
+		////role.setGroupId(groupId);
 		role.setCreateTime(TimeUtil.getTime(14));
 		role.setRoleName(roleName);
 		role.setRemark("测试");
@@ -117,7 +336,7 @@ public class RoleController {
 		//new role
 		SysRole role = new SysRole();
 		role.setId(roleId);
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setRoleName(roleName);
 		role.setRemark("测试");
 		role.setOperateId(1);//操作人员id，可以通过session获取
@@ -158,7 +377,7 @@ public class RoleController {
 		//new role
 		SysRole role = new SysRole();
 		role.setId(roleId);
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setRoleName(roleName);
 		role.setRemark("测试");
 		role.setOperateId(1);//操作人员id，可以通过session获取
@@ -201,7 +420,7 @@ public class RoleController {
 
 		//new role
 		SysRole role = new SysRole();
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setCreateTime(TimeUtil.getTime(14));
 		role.setRoleName(roleName);
 		role.setRemark("测试");
@@ -243,7 +462,7 @@ public class RoleController {
 		//new role
 		SysRole role = new SysRole();
 		role.setId(roleId);
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setRoleName(roleName);
 		role.setRemark("测试");
 		role.setOperateId(1);//操作人员id，可以通过session获取
@@ -285,7 +504,7 @@ public class RoleController {
 		//new role
 		SysRole role = new SysRole();
 		role.setId(roleId);
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setRoleName(roleName);
 		role.setRemark("测试");
 		role.setOperateId(1);//操作人员id，可以通过session获取
@@ -326,7 +545,7 @@ public class RoleController {
 
 		//new role
 		SysRole role = new SysRole();
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setCreateTime(TimeUtil.getTime(14));
 		role.setRoleName(roleName);
 		role.setRemark("测试");
@@ -368,7 +587,7 @@ public class RoleController {
 		//new role
 		SysRole role = new SysRole();
 		role.setId(roleId);
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setRoleName(roleName);
 		role.setRemark("测试");
 		role.setOperateId(1);//操作人员id，可以通过session获取
@@ -410,7 +629,7 @@ public class RoleController {
 		//new role
 		SysRole role = new SysRole();
 		role.setId(roleId);
-		role.setGroupId(groupId);
+		//role.setGroupId(groupId);
 		role.setRoleName(roleName);
 		role.setRemark("测试");
 		role.setOperateId(1);//操作人员id，可以通过session获取

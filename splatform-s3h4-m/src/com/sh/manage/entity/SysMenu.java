@@ -60,9 +60,8 @@ public class SysMenu implements Serializable {
 	
 	@Column(name = "has_child", length = 1)
 	private int hasChild;
-	
-	
 
+	
 
 	/**
 	 * 菜单列表
@@ -71,6 +70,7 @@ public class SysMenu implements Serializable {
 	@ManyToMany(mappedBy = "menuSet", fetch = FetchType.LAZY)
 	@OrderBy("id ASC")
 	private List<SysGroup> groupList;
+	
 	
 	public List<SysGroup> getGroupList() {
 		return groupList;

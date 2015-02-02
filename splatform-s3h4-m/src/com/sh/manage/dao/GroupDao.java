@@ -36,8 +36,8 @@ public class GroupDao extends AbstractBaseDao<SysGroup> {
 	}
 
 	@Override
-	public void addObject(SysGroup group) {
-		this.getCurrentSession().save(group);
+	public Integer addObject(SysGroup group) {
+		return (Integer) this.getCurrentSession().save(group);
 	}
 
 	@Override

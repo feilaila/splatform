@@ -106,17 +106,19 @@
 <body>
 <div class="content" >
 	<div id="forlogin">
-      <form class="_formm15" action="<%=path%>/doAddRole.do" method="post" id="addForm" name="addForm" target="targetFrame">
+      <form class="_formm15" action="<%=path%>/doEditRole.do" method="post" id="editForm" name="editForm" target="targetFrame">
 		<input type="hidden" id="roleStr" name="roleMenuStr"
 					value="" >
+		<input type="hidden" id="roleId" name="roleId"
+					value="${sysRole.id }" >			
 	      <table width="100%" border="0" align="center" cellpadding="4" cellspacing="4" bordercolor="#666666">
 	        <tr>
 	          <td width="100" align="left">角色名称：</td>
-	          <td ><input type="text" id="roleName" name="roleName"/></td>
+	          <td ><input type="text" id="roleName" name="roleName" value="${sysRole.roleName }"/></td>
 	        </tr>
 	        <tr>
 	          <td width="100" align="left">描述：</td>
-	          <td ><input type="text" id="remark" name="remark"/></td>
+	          <td ><input type="text" id="remark" name="remark" value="${sysRole.remark }"/></td>
 	        </tr>
 	        <tr>
 	          <td width="100" align="left">权限选择:</td>
@@ -226,9 +228,7 @@
 		});
 		
 	</SCRIPT>
-  <form id="hd-form" method="post" target="_self">
-  	<input type="hidden" id="muCode" name="muCode">
-  </form>
+
   <iframe name="targetFrame" style="display: none"></iframe>
 </body>
 </html>

@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -112,6 +111,22 @@ public class SysRole implements Serializable {
 	private Set<SysOperate> operateSet = new HashSet<SysOperate>();
 	
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+	@JoinTable(name = "t_sys_role_menu", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "menu_id") })
+	@OrderBy("id ASC")
+	private Set<SysMenu> menuSet;
+	
+	
+	
+	public Set<SysMenu> getMenuSet() {
+		return menuSet;
+	}
+
+	public void setMenuSet(Set<SysMenu> menuSet) {
+		this.menuSet = menuSet;
+	}
+
 	public List<SysUser> getUserList() {
 		return userList;
 	}

@@ -5,7 +5,7 @@ package com.sh.manage.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sh.manage.dao.RoleDao;
 import com.sh.manage.dao.SysRoleDao;
+import com.sh.manage.entity.SysGroupRole;
 import com.sh.manage.entity.SysMenu;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysRoleMenu;
 import com.sh.manage.exception.SPlatformServiceException;
 import com.sh.manage.module.page.Page;
+import com.sh.manage.utils.StringUtil;
 
 /**
  * 
@@ -265,7 +267,7 @@ public class RoleService extends BaseService {
 			if(roleMenuArr.length > 0){
 				for(String roleMenu : roleMenuArr){
 					SysRoleMenu sRoleMenu = new SysRoleMenu();
-					sRoleMenu.setMenuCode(roleMenu);
+					sRoleMenu.setMenuId(Integer.parseInt(roleMenu));
 					sRoleMenu.setRoleId(result);
 					sRoleDao.addSysRoleMenu(sRoleMenu);
 				}
@@ -274,6 +276,81 @@ public class RoleService extends BaseService {
 			throw new SPlatformServiceException();
 		}
 		
+	}
+
+	/**
+	 * 通过roleId获取对应的菜单
+	 * @param roleId
+	 * @return
+	 */
+	public List<SysMenu> getRoleMenuList(int roleId) {
+		
+		if (logger.isDebugEnabled()) {
+			logger.info("根据角色id，获取菜单列表开始!");
+		}
+		//登录用户的菜单集合
+		List<SysMenu> menuList = new ArrayList<SysMenu>();
+		List<Map<String,Object>> mapList = roleDao.getRoleMenuList(roleId);
+		
+		for (Map<String, Object> object : mapList) {
+			SysMenu bean = new SysMenu();
+			bean.setId(StringUtil.getInt(object.get("id"),0));
+			bean.setMenuCode(StringUtil.getString(object.get("menu_code")));
+			bean.setMenuName(StringUtil.getString(object.get("menu_name")));
+			bean.setMenuPid(StringUtil.getInt(object.get("menu_pid"),0));
+			bean.setMenuUrl(StringUtil.getString(object.get("menu_url")));
+			bean.setLeafYn(StringUtil.getInt(object.get("leaf_yn"),0));
+			bean.setMenuBtns(StringUtil.getString(object.get("menu_btns")));
+			bean.setIconTag(StringUtil.getString(object.get("icon_tag")));
+			bean.setHasChild(StringUtil.getInt(object.get("has_child"),0));
+			menuList.add(bean);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.info("根据角色id，获取菜单列表开始!");
+		}
+		return menuList;
+	}
+
+	/**
+	 * 角色编辑
+	 * @param role
+	 * @param roleMenuStr
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = {SPlatformServiceException.class})
+	public void updateRoleInfo(SysRole role, String roleMenuStr) throws SPlatformServiceException{
+		try {
+			//更新组织信息
+			roleDao.update(role);
+			//处理组织对应角色
+			String[] roleMenuArr = roleMenuStr.split(",");
+			if(roleMenuArr.length>0){
+				//清除之前的数据
+				Set<SysMenu> roleMenus = role.getMenuSet();
+				Iterator<SysMenu> iter = roleMenus.iterator();
+				while (iter.hasNext()) {
+					SysMenu menu = (SysMenu)iter.next();
+					SysRoleMenu sysRoleMenu = new SysRoleMenu();
+					sysRoleMenu.setRoleId(role.getId());
+					sysRoleMenu.setMenuId(menu.getId());
+					SysRoleMenu dbSysRoleMenu = roleDao.getRoleMenu(menu.getId(), role.getId());
+					if(null != dbSysRoleMenu){
+						//删除数据库中的关系
+						roleDao.delRoleMenu(dbSysRoleMenu);
+					}
+				}
+				
+				//保存提交的
+				for(String menuId : roleMenuArr){
+					SysRoleMenu sysRoleMenu = new SysRoleMenu();
+					sysRoleMenu.setRoleId(role.getId());
+					sysRoleMenu.setMenuId(Integer.parseInt(menuId));
+					sRoleDao.addSysRoleMenu(sysRoleMenu);
+				}
+			}
+		} catch (Exception e) {
+			throw new SPlatformServiceException();
+		}
 	}
 
 	

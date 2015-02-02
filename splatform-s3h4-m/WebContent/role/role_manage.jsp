@@ -212,7 +212,9 @@
     			diag.openerWindow.location.reload();
                 try{
     				diag.close();
-                }catch(e){}
+                }catch(e){
+                	
+                }
     		}
     	};
     	diag.CancelEvent=function(){diag.close();};
@@ -225,53 +227,28 @@
     		var diag = new zDialog();
     		diag.Height = 400;
     		diag.Title = "系统管理-角色编辑";
-        	diag.URL = "<%=path %>/toEditRole.do?gid="+id;
+        	diag.URL = "<%=path %>/toEditRole.do?roleId="+id;
         	diag.OKEvent = function(){
         		
         		//参数校验
-        		var groupName = diag.innerDoc.getElementById('groupName').value;
-        		var groupDesc = diag.innerDoc.getElementById('groupDesc').value;
-        		if(groupDesc=='' || groupName == ''){
+        		var roleName = diag.innerDoc.getElementById('roleName').value;
+        		var remark = diag.innerDoc.getElementById('remark').value;
+        		if(roleName=='' || remark == ''){
         			zDialog.alert('请填写角色名称和对应描述!');
         			return;
-        		}
+        		};
         		
-        		//处理角色选择
-        		var roleArr = new Array();
-        		//alert(e.value);
-        		//alert(e.checked);
-        		//传入后台的字符串
-        		var roleStr = diag.innerDoc.getElementById("roleMenuStr").value;
-        		
-        		roleStr="";
-        		roleArr=diag.innerDoc.getElementsByName("treeDemo");
-        		for(var i=0;i<roleArr.length;i++){
-        			if(roleArr[i].checked){
-        				roleStr+= roleArr[i].value+",";  
-        			}
-        		}
-        		//去掉最后一个逗号
-        		if(roleStr.charAt(roleStr.length - 1)==","){
-        			roleStr=roleStr.substring(0,roleStr.length-1);
-        		}
-        		//设置以及选择的角色id
-        		if(diag.innerDoc.getElementById("roleMenuStr").value==""){										
-        			diag.innerDoc.getElementById("roleMenuStr").value = roleStr;
-        		}else{
-        			//先清空表单的值
-        			diag.innerDoc.getElementById("roleMenuStr").value="";
-        		}
-        		diag.innerDoc.getElementById("roleMenuStr").value = roleStr;
-        		alert(roleStr);
         		diag.innerDoc.getElementById('editForm').submit();
-        		//diag.submited=true;
+        		diag.submited=true;
         	};//点击确定后调用的方法
         	diag.OnLoad=function(){
         		if(diag.submited){
         			diag.openerWindow.location.reload();
                     try{
         				diag.close();
-                    }catch(e){}
+                    }catch(e){
+                    	
+                    }
         		}
         	};
         	diag.CancelEvent = function(){diag.close();};
@@ -282,7 +259,7 @@
     //组织删除
     var delRole= function(id,roleName){
     	$('#del-roleId').val(id);
-    	zDialog.confirm('警告：您确认要删除组织['+roleName+']吗？',function(){
+    	zDialog.confirm('警告：您确认要删除角色['+roleName+']吗？',function(){
     		document.getElementById('delForm').submit();diag.close();
     	});
     }

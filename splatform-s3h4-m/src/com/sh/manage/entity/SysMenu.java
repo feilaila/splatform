@@ -1,8 +1,11 @@
 package com.sh.manage.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -61,7 +64,21 @@ public class SysMenu implements Serializable {
 	@Column(name = "has_child", length = 1)
 	private int hasChild;
 
-	
+	/**
+	 * 操作角色多对多
+	 */
+	@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST}, fetch = FetchType.EAGER,
+			mappedBy = "menuSet")
+	@OrderBy("id ASC")
+	private Set<SysRole> roleSet = new HashSet<SysRole>();
+
+	public Set<SysRole> getRoleSet() {
+		return roleSet;
+	}
+
+	public void setRoleSet(Set<SysRole> roleSet) {
+		this.roleSet = roleSet;
+	}
 
 	/**
 	 * 菜单列表

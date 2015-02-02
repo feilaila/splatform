@@ -13,12 +13,16 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.sh.manage.constants.SessionConstants;
 import com.sh.manage.entity.AppUser;
 import com.sh.manage.entity.SysGroupRole;
+import com.sh.manage.entity.SysMenu;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysRoleMenu;
 import com.sh.manage.exception.SPlatformDaoException;
@@ -35,6 +39,13 @@ import com.sh.manage.utils.SQLPagingUtils;
 public class RoleDao extends AbstractBaseDao<SysRole> {
 
 	private Logger logger = Logger.getLogger(RoleDao.class);
+	/** JDBC模板 */
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
 
 	/**
 	 * 获取全部用户
@@ -73,6 +84,11 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 	//删除组织和角色关系
 	public void delGroupRole(SysGroupRole sysGroupRole) {
 		this.getCurrentSession().delete(sysGroupRole);
+		this.getCurrentSession().flush();
+	}
+	//删除角色和菜单关系
+	public void delRoleMenu(SysRoleMenu sysGroupMenu) {
+		this.getCurrentSession().delete(sysGroupMenu);
 		this.getCurrentSession().flush();
 	}
 
@@ -349,5 +365,70 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 		sbf.append(") as rt");
 		return this.queryModelListByPage(sbf.toString(), params, pageNo, pageSize, SysRole.class);
 	}
+
+
+	/**
+	 * 通过roleId获取菜单列表
+	 * @param roleId
+	 * @return
+	 */
+	public List<Map<String, Object>> getRoleMenuList(int roleId) {
+		StringBuilder sqlBuff = new StringBuilder();
+		Object[] params = new Object[] {};
+
+		sqlBuff.append("select id,");
+		sqlBuff.append("       menu_name,");
+		sqlBuff.append("       menu_code,");
+		sqlBuff.append("       menu_pid,");
+		sqlBuff.append("       menu_url,");
+		sqlBuff.append("       leaf_yn,");
+		sqlBuff.append("       menu_btns,");
+		sqlBuff.append("       icon_tag,");
+		sqlBuff.append("       has_child ");
+		sqlBuff.append("  from t_sys_menu");
+		sqlBuff.append(" where 1=1 ");// 获得后台管理菜单
+
+		if(roleId > 0){
+			sqlBuff.append(" and id in (select menu_id from t_sys_role_menu where role_id = ?)");
+			params = ArrayUtils.add(params, roleId);
+		}
+
+		sqlBuff.append("order by id ");
+		
+		//oracle使用
+//		sqlBuff.append("  start with   menu_pcode = '0' ");
+//		sqlBuff.append("connect by  menu_pcode=PRIOR menu_code ");
+//		sqlBuff.append("order by menu_code ");
+
+		return jdbcTemplate.queryForList(sqlBuff.toString(), params);
+	}
+
+	/**
+	 * 
+	 * @param menuId
+	 * @param roleId
+	 * @return
+	 */
+	public SysRoleMenu getRoleMenu(Integer menuId, int roleId) {
+		String hql = "from SysRoleMenu where 1=1 ";
+		if(menuId>0){
+			hql +=" and menuId = "+menuId;
+		}
+		if(roleId>0){
+			hql +=" and roleId = "+roleId;
+		}
+		Query query = this.getCurrentSession().createQuery(hql);
+		return (SysRoleMenu) query.list().get(0);
+	}
+
+	/**
+	 * 添加角色菜单
+	 * @param sysRoleMenu
+	 */
+	public void addRoleMenu(SysRoleMenu sysRoleMenu) {
+		this.getCurrentSession().save(sysRoleMenu);
+	}
+	
+	
 
 }

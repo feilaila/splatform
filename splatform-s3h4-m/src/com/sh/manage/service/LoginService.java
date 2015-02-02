@@ -148,6 +148,7 @@ public class LoginService {
 			bean.setMenuUrl(StringUtil.getString(object.get("menu_url")));
 			bean.setLeafYn(StringUtil.getInt(object.get("leaf_yn"),0));
 			bean.setMenuBtns(StringUtil.getString(object.get("menu_btns")));
+			bean.setIconTag(StringUtil.getString(object.get("icon_tag")));
 			bean.setHasChild(StringUtil.getInt(object.get("has_child"),0));
 			menuList.add(bean);
 		}

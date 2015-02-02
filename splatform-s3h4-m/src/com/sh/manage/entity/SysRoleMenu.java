@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -45,8 +44,8 @@ public class SysRoleMenu implements Serializable {
 	@Column(name = "role_id", length = 14)
 	private Integer roleId;
 
-	@Column(name = "menu_code", length = 14)
-	private String menuCode;
+	@Column(name = "menu_id", length = 14)
+	private Integer menuId;
 	
 	@Column(name = "menu_btn", length = 30)
 	private String menuBtn;
@@ -67,12 +66,12 @@ public class SysRoleMenu implements Serializable {
 		this.roleId = roleId;
 	}
 
-	public String getMenuCode() {
-		return menuCode;
+	public Integer getMenuId() {
+		return menuId;
 	}
 
-	public void setMenuCode(String menuCode) {
-		this.menuCode = menuCode;
+	public void setMenuId(Integer menuId) {
+		this.menuId = menuId;
 	}
 
 	public String getMenuBtn() {

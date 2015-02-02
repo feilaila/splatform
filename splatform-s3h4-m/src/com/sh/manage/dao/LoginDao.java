@@ -83,8 +83,8 @@ public class LoginDao {
 		if (!SessionConstants.SUPER_ADMIN_ID_LIST.contains(userId)) {
 			sqlBuff.append(" and id in ( ");
 			sqlBuff.append("select distinct menu_id");
-			sqlBuff.append("  from t_sys_group_menu");
-			sqlBuff.append(" where group_id in (select group_id from t_sys_user_role tur,t_sys_role tr where tur.role_id = tr.id and tur.user_id = ?) ");
+			sqlBuff.append("  from t_sys_role_menu");
+			sqlBuff.append(" where role_id in (select role_id from t_sys_user_role tur,t_sys_role tr where tur.role_id = tr.id and tur.user_id = ?) ");
 			sqlBuff.append(" ) ");
 
 			params = ArrayUtils.add(params, userId);

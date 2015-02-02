@@ -268,6 +268,7 @@ public class LoginController {
 			session.setAttribute(SessionConstants.LOGIN_USER, _loginUser);
 			session.setAttribute("usercode", usercode);
 			session.setAttribute("menuStrs", menuStrs);
+			session.setAttribute("menuList", menuList);
 			msg = "0";//都校验通过，跳转主页
 		}while(false);
 		

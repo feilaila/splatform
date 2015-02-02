@@ -3,6 +3,7 @@ package com.sh.manage.controller;
 
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,18 +25,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sh.manage.constants.Constants;
 import com.sh.manage.constants.SessionConstants;
-import com.sh.manage.entity.SysGroup;
+import com.sh.manage.entity.SysMenu;
 import com.sh.manage.entity.SysOperate;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.exception.SPlatformServiceException;
 import com.sh.manage.module.page.Page;
-import com.sh.manage.module.page.ZTreeNode;
 import com.sh.manage.pojo.LoginUser;
 import com.sh.manage.service.OperateService;
 import com.sh.manage.service.RoleService;
 import com.sh.manage.service.UserService;
+import com.sh.manage.utils.JsonUtils;
 import com.sh.manage.utils.ResponseUtils;
 import com.sh.manage.utils.TimeUtil;
 import com.sh.manage.utils.WebUtils;
@@ -244,26 +244,118 @@ public class RoleController {
 	/**
 	 * 跳转角色编辑页面
 	 */
-	@RequestMapping(value="/editRole.do")
-    public ModelAndView roleEditPage(HttpServletRequest req,
-			HttpServletResponse resp) {
-		HttpSession session = req.getSession();
-		ModelAndView model = new ModelAndView("/role/role_add");
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/toEditRole.do")
+    public ModelAndView roleEditPage(@RequestParam(value = "roleId", required = false, defaultValue = "0") int roleId,
+    		HttpServletRequest request,
+			HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		ModelAndView model = new ModelAndView("/role/role_edit");
 		
 		//获取用户信息
-    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
-		if (null != _loginUser) {
-			//获取菜单列表
-			menuStrs = (String) session.getAttribute("menuStrs");
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);		
+		try {
+			if(null == _loginUser){
+				//用户未登录
+				return null;
+			}
+			/**
+			 * 所有菜单节点  缓存获取
+			 */
+			List<SysMenu> allMenuList = (List<SysMenu>) session.getAttribute("menuList");		
+			List<SysMenu> roleMenuList = roleService.getRoleMenuList(roleId);
+			SysRole sysRole = roleService.findSysRole(roleId);
+			
+			//所有菜单数据串 格式：{ id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
+			List<String> items = new ArrayList<String>();
+			String _temp = "{ id:'0', pId:'-1', name:"+"'全选'"+",iconOpen:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/1_open.png'"+", iconClose:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/1_close.png'"+",open:true}";
+			items.add(_temp);
+			String checked = "";
+			//处理菜单选择列表
+	    	for(SysMenu menu:allMenuList){
+	    		
+	    		for(SysMenu roleMenu : roleMenuList){
+	    			if(roleMenu.getId() == menu.getId()){
+	    				//logger.info("存在此菜单..."+menu.getId()+menu.getMenuName());
+	    				checked=", checked:true";
+	    			}
+	    		}
+	    		_temp = "{id:'"+menu.getId()+"',pId:'"+menu.getMenuPid()+"',name:'"+
+	    		menu.getMenuName()+"'"+",icon:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/2.png'";
+	    		if(menu.getHasChild() == 1){
+	    			//存在子菜单默认打开
+	    			_temp+=",icon:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/4.png'"+",open:true"+checked;
+	    		}else{
+	    			_temp += checked;
+	    		}
+	    		_temp += "}";
+	    		
+	    		items.add(_temp);//节点追加
+	    		checked = "";//清空复选内容
+	    	}
+	    	
+	    	//格式转换
+			menuStrs = JsonUtils.toJson(items);
+			menuStrs = menuStrs.replaceAll("\"", "");
+			
 			model.addObject("menuStrs", menuStrs);
-			logger.info("menuStrs:"+menuStrs);
+			model.addObject("sysRole", sysRole);
+	    	logger.info("menuStrs:"+menuStrs.toString());
+		} catch (Exception e) {
+			logger.error("跳转角色编辑页面error...");
 		}
         return model;
     }
 	
 	
 	
-	
+	/***
+	 * 角色编辑
+	 * @param request
+	 * @param resp
+	 * @param roleName
+	 * @param remark
+	 * @param roleMenuStr
+	 * @return
+	 */
+	@RequestMapping(value = "/doEditRole.do", method = RequestMethod.POST)
+	public ResponseEntity<String> doEditRole(HttpServletRequest request,
+			HttpServletResponse resp,
+			@RequestParam(value = "roleId", required = false, defaultValue = "") Integer roleId,
+			@RequestParam(value = "roleName", required = false, defaultValue = "0") String roleName,
+			@RequestParam(value = "remark", required = false, defaultValue = "0") String remark,
+			@RequestParam(value = "roleMenuStr", required = false, defaultValue = "0") String roleMenuStr) {
+		HttpSession session = request.getSession();
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+    	logger.info("controller:CentralAction..角色编辑!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+    	try {
+			
+			if (null != _loginUser) {//get role
+				SysRole role = roleService.findSysRole(roleId);
+				role.setOperateId(_loginUser.getId());
+				role.setRemark(remark);
+				role.setRoleName(roleName);
+				role.setCreateTime(TimeUtil.now());
+				
+				roleService.updateRoleInfo(role, roleMenuStr);
+				msg = "角色编辑成功!";
+			}else{
+				msg = "用户未登录!";
+			}
+		} catch (SPlatformServiceException e) {
+			e.printStackTrace();
+			msg = "编辑出现异常,请稍等..";
+			return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		}
+    	logger.info("controller:添加角色结束!");
+		return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+	}
 	
 	
 	

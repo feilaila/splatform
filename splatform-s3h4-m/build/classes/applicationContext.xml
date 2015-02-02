@@ -19,7 +19,10 @@
 	</mvc:annotation-driven>
 
 	<!-- 注解扫描包 -->
-	<context:component-scan base-package="com.sh" />
+	<context:component-scan base-package="com.sh" >
+	    <!-- 忽略@Service的annotion,解决注解事务回滚失败的问题 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />    
+	</context:component-scan>
 
 	<!-- 开启注解 -->
 	<mvc:annotation-driven />

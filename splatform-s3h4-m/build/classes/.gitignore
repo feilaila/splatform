@@ -1,5 +1,5 @@
 /applicationContext-db.xml
 /applicationContext.xml
-/com
+/com/
 /db.properties
 /log4j.properties

@@ -74,12 +74,14 @@ public class MenuDao extends AbstractBaseDao<SysMenu> {
 		params = ArrayUtils.add(params, Constants.SYS_TYPE_0);
 		
 		//不是超级管理员需要查询属于自己权限的菜单
-		if(!SessionConstants.SUPER_ADMIN_ID_LIST.contains(""+loginUser.getId())){
-			sql.append(" and m.id in(");
-			sql.append(" select distinct menu_id from t_sys_group_menu");
-			sql.append(" where group_id is not null and group_id in(");
-			sql.append(" select tr.group_id from t_sys_user_role tur,t_sys_role tr where tur.role_id = tr.id and tur.user_id = ?)");
-			sql.append(" )");
+		// 如果是超级管理员则可以查看到所有菜单权限
+		if (!SessionConstants.SUPER_ADMIN_ID_LIST.contains(""+loginUser.getId())) {
+			sql.append(" and m.id in ( ");
+			sql.append("select distinct menu_id");
+			sql.append("  from t_sys_role_menu");
+			sql.append(" where role_id in (select gr.role_id from t_sys_group_role gr,t_sys_user u WHERE gr.group_id = u.group_id AND u.uid = ? ) ");
+			sql.append(" ) ");
+
 			params = ArrayUtils.add(params, loginUser.getId());
 		}else{
 			//logger.info("超级管理员...");

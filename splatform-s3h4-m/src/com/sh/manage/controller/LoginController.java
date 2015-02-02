@@ -239,7 +239,8 @@ public class LoginController {
 			
 			
 			//代替nodeList
-			_loginUser.setNodeList(loginService.getNodeList(_loginUser));
+			 List<ZTreeNode> treeNodeList = loginService.getNodeList(_loginUser);
+			_loginUser.setNodeList(treeNodeList);
 			
 			/**
 			 * 所有菜单节点  加入缓存
@@ -266,9 +267,11 @@ public class LoginController {
 			
 			// 默认登陆人员为Admin
 			session.setAttribute(SessionConstants.LOGIN_USER, _loginUser);
+			session.setAttribute("name", _loginUser.getName());
 			session.setAttribute("usercode", usercode);
 			session.setAttribute("menuStrs", menuStrs);
 			session.setAttribute("menuList", menuList);
+			session.setAttribute("treeNodeList", treeNodeList);
 			msg = "0";//都校验通过，跳转主页
 		}while(false);
 		
@@ -340,7 +343,7 @@ public class LoginController {
 			session.removeAttribute(SessionConstants.LOGIN_USER);//清楚session
 			//SysUser loginUser = (SysUser) session.getAttribute(SessionConstants.LOGIN_USER);
 			
-			return new ModelAndView("redirect:unite/tologin.do");
+			return new ModelAndView("/main/login");
 		} else {
 			// 登陆成功跳转主页
 			return new ModelAndView("/main/index");

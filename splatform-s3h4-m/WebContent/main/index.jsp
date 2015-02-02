@@ -31,15 +31,7 @@
 						<h3>欢迎<%=session.getAttribute("usercode") %>登陆管理系统，现在您可以维护本平台下您拥有的功能了!</h3>
 					</div>
 				<!-- /.page-content -->
-
-
-
-
             </div>
-
-
-
-
         </div>
        <!--END PAGE CONTENT -->
 	</div>

@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%
 String tpath=this.getServletContext().getContextPath();
-//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
 %>
 <!-- HEADER SECTION -->
         <div id="top">
@@ -247,7 +246,7 @@ String tpath=this.getServletContext().getContextPath();
                             <li><a href="#"><i class="icon-gear"></i> 设置 </a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="user_logout.do"><i class="icon-signout"></i> 退出 </a>
+                            <li><a href="<%=tpath %>/unite/user_logout.do"><i class="icon-signout"></i> 退出 </a>
                             </li>
                         </ul>
 

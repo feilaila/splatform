@@ -129,7 +129,7 @@ public class UserService extends BaseService {
 	 */
 	public Page findAllSysUser(String usercode, String startDate,
 			String endDate, Integer pageNo, int pageSize) {
-		return appUserDao.getAllSysUser(usercode,startDate,endDate,pageNo,pageSize);
+		return sysUserDao.getAllSysUser(usercode,startDate,endDate,pageNo,pageSize);
 	}
 
 	/**
@@ -172,8 +172,8 @@ public class UserService extends BaseService {
 	 * 系统用户添加
 	 * @param sUser
 	 */
-	public void addSysUser(SysUser sUser) {
-		sysUserDao.save(sUser);
+	public Integer addSysUser(SysUser sUser) {
+		return (Integer) sysUserDao.save(sUser);
 	}
 	/**
 	 * 系统用户修改

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sh.manage.constants.Constants;
+import com.sh.manage.constants.SessionConstants;
 import com.sh.manage.entity.AppUser;
 import com.sh.manage.entity.SysGroup;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.Page;
+import com.sh.manage.pojo.LoginUser;
 import com.sh.manage.service.GroupService;
 import com.sh.manage.service.RoleService;
 import com.sh.manage.service.UserService;
@@ -341,13 +345,36 @@ public class UserController {
 		return model;
 	}
 
+	
+	
+	/**
+	 * 跳转用户添加页面
+	 */
+	@RequestMapping(value="/toAddSysUser.do")
+    public ModelAndView userAddPage(HttpServletRequest req,
+			HttpServletResponse resp) {
+		HttpSession session = req.getSession();
+		ModelAndView model = new ModelAndView("/system/sysuser_add");
+		
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+		if (null != _loginUser) {
+			// 组织列表
+			List<SysGroup> groupList = groupService.findAll();
+			model.addObject("groupList", groupList);
+			logger.info("groupList.size:"+groupList.size());
+		}
+        return model;
+    }
+	
+	
 	/**
 	 * 用户添加
 	 * @return
 	 */
-	@RequestMapping(value = "/suserAdd.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/doAddsuser.do", method = RequestMethod.POST)
 	public ResponseEntity<String> suserAdd(
-			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
+			@RequestParam(value = "suGroupId", required = false, defaultValue = "0") Integer suGroupId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "") String roleName,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
@@ -371,7 +398,7 @@ public class UserController {
 			SysUser sUser = new SysUser();
 			
 			// get|new role
-			SysRole role = roleService.findSysRole(suRoleId);
+			//SysGroup group = groupService.findSysGroup(suGroupId);
 			
 			sUser.setEmail(email);
 			sUser.setValidTime(endDate.replaceAll("-", ""));//时间格式化，去掉-
@@ -379,20 +406,26 @@ public class UserController {
 			sUser.setPassword(password);
 			sUser.setCreateTime(startDate.replaceAll("-", ""));//时间格式化，去掉-
 			sUser.setStatus(status);//默认有效
+			sUser.setLockStatus(Constants.USER_LOCK_NO);//默认为未锁定 0
 			sUser.setUsercode(usercode);
 			sUser.setTerminalId(terminalId);
-			sUser.getRoleList().add(role);//添加关联关系
+			sUser.setGroupId(suGroupId);
 			
-			role.getUserList().add(sUser);//添加关联关系
+//			sUser.getRoleList().add(role);//添加关联关系
+//			
+//			role.getUserList().add(sUser);//添加关联关系
 			
-			userService.addSysUser(sUser);
-			msg="用户添加成功!";
+			int result = userService.addSysUser(sUser);
+			if(result > 0){
+				msg="用户添加成功!";
+			}else{
+				msg="用户添加失败!";
+			}
 		}catch(Exception e){
 			logger.error("controller:用户添加异常!"+usercode,e);
 			msg="用户添加出现异常";
 			model.addAttribute("msg", msg);
 			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
-			
 		}
 		logger.info("controller:用户添加结束!");
 		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);

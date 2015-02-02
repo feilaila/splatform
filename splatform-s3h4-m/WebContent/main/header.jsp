@@ -1,6 +1,5 @@
 <%
 String hpath=this.getServletContext().getContextPath();
-//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
 %>
 <!DOCTYPE html>
 <html>

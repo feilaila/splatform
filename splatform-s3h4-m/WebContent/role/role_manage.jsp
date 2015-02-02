@@ -59,7 +59,7 @@
 		            		<div class="form-group">
 								<div class="">
 									<i class="icon-hand-right"></i><span>搜索</span> 
-									<input class="form-control" type="text" name="roleName" value="${roleName }" placeholder="输入会员名">
+									<input class="form-control" type="text" name="roleName" value="${roleName }" placeholder="输入角色名">
 									<input id="startDate" class="form-control"
 										type="text" name="startDate" value="${startDate }"
 										placeholder="开始日期" readonly> 

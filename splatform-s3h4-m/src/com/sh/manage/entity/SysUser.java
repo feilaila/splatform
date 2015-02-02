@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -98,28 +99,30 @@ public class SysUser implements Serializable {
 	 */
 	@Column(name = "status", length = 1)
 	private Integer status;
-	
+
 	@Column(name = "last_login_ip", length = 100)
 	private String lastLoginIP;
-	
+
 	@Column(name = "last_login_time", length = 14)
 	private String lastLoginTime;
-	
+
+	/**
+	 * 组织id
+	 */
+	@Column(name = "group_id", length = 8)
+	private Integer groupId;
+
 	/**
 	 * 角色名称
 	 */
-	private String roleName;
-	/**
-	 * 角色id
-	 */
-	private Integer roleId;
-	
-	
-	
+	@Transient
+	private String groupName;
+
+
 	/**
 	 * 用户列表
 	 */
-	@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
 	@JoinTable(name = "t_sys_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	@OrderBy("id ASC")
 	private List<SysRole> roleList = new ArrayList<SysRole>();
@@ -131,8 +134,6 @@ public class SysUser implements Serializable {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
-
-	
 
 	public String getUsercode() {
 		return usercode;
@@ -237,23 +238,26 @@ public class SysUser implements Serializable {
 	public void setLastLoginTime(String lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
-	
-	
 
-	public String getRoleName() {
-		return roleName;
+	/**
+	 * 忽略表字段
+	 * @return
+	 */
+	public String getGroupName() {
+		return groupName;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
-	public Integer getRoleId() {
-		return roleId;
+
+	public Integer getGroupId() {
+		return groupId;
 	}
 
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
-	
+
 }

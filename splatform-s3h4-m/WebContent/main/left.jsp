@@ -1,9 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@page import="com.sh.manage.constants.*"%>
+<%@page import="java.util.*"%>
+<%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 String lpath=this.getServletContext().getContextPath();
-//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
 %>
+
 <!-- MENU SECTION -->
        <div id="left" >
             <div class="media user-media well-small">
@@ -12,7 +15,7 @@ String lpath=this.getServletContext().getContextPath();
                 </a>
                 <br />
                 <div class="media-body">
-                    <h5 class="media-heading"> 超级管理员</h5>
+                    <h5 class="media-heading"><%=session.getAttribute("name")%></h5>
                     <ul class="list-unstyled user-info">
                         <li>
                              <a class="btn btn-success btn-xs btn-circle" style="width: 10px;height: 12px;"></a> 在线
@@ -22,14 +25,8 @@ String lpath=this.getServletContext().getContextPath();
                 <br />
             </div>
 
-            <ul id="menu" class="collapse">                
-                <%-- <li class="panel active">
-                    <a href="<%=lpath %>/unite/index" >
-                        <i class="icon-table"></i> 管理面板
-                    </a>                   
-                </li> --%>
-
-                <li class="panel ">
+            <ul id="menu" class="collapse">
+                 <li class="panel ">
                     <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#component-nav">
                         <i class="icon-tasks"> </i> 系统设置
                         <span class="pull-right">
@@ -45,22 +42,30 @@ String lpath=this.getServletContext().getContextPath();
                     </ul>
                 </li>
                 
-                <li class="panel ">
-                    <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#form-nav">
-                        <i class="icon-pencil"></i> 信息维护
-                        <span class="pull-right">
-                            <i class="icon-angle-left"></i>
-                        </span>
-                          &nbsp; <span class="label label-success">5</span>&nbsp;
-                    </a>
-                    <ul class="collapse" id="form-nav">
-                        <li class=""><a href="forms_general.html"><i class="icon-angle-right"></i> General </a></li>
-                        <li class=""><a href="forms_advance.html"><i class="icon-angle-right"></i> Advance </a></li>
-                        <li class=""><a href="forms_validation.html"><i class="icon-angle-right"></i> Validation </a></li>
-                        <li class=""><a href="forms_fileupload.html"><i class="icon-angle-right"></i> FileUpload </a></li>
-                        <li class=""><a href="forms_editors.html"><i class="icon-angle-right"></i> WYSIWYG / Editor </a></li>
-                    </ul>
-                </li>
+                
+                <c:forEach items="${sessionScope.treeNodeList }" var="treeNode">
+	                <li class="panel ">
+		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" 
+		                data-target="#form-${treeNode.code}-nav">
+		                    <i class="icon-pencil"></i> ${treeNode.name }
+		                    <span class="pull-right">
+		                        <i class="icon-angle-left"></i>
+		                    </span>
+		                    &nbsp; <span class="label label-success">5</span>&nbsp;
+		                </a>
+		                <ul class="collapse" id="form-${treeNode.code}-nav">
+		                	<c:if test="${treeNode.hasChild == 1}">
+		                		<!-- has child nodes -->
+		                		<c:forEach items="${treeNode.children}" var="childNode">
+		                			<li class="">
+		                				<a href="<%=lpath %>/${childNode.menuUrl }"><i class="icon-angle-right"></i> ${childNode.name } </a>
+		                			</li>
+		                		</c:forEach>
+		                	</c:if>
+		                </ul>
+		            </li>
+                </c:forEach>
+                
                 
             </ul>
 

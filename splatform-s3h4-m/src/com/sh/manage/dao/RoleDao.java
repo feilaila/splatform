@@ -359,7 +359,7 @@ public class RoleDao extends AbstractBaseDao<SysRole> {
 		
 		if(!StringUtils.isEmpty(roleName)){
 			params = ArrayUtils.add(params, roleName);
-			sbf.append(" and r.roleName = ?");
+			sbf.append(" and r.role_name = ?");
 		}
 		
 		sbf.append(") as rt");

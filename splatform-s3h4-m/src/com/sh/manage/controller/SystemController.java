@@ -3,38 +3,17 @@ package com.sh.manage.controller;
 
 
 
-import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONArray;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.sh.manage.constants.Constants;
-import com.sh.manage.constants.SessionConstants;
-import com.sh.manage.entity.SysMenu;
-import com.sh.manage.entity.SysUser;
-import com.sh.manage.module.page.ZTreeNode;
-import com.sh.manage.pojo.LoginUser;
-import com.sh.manage.security.MD5;
+
 import com.sh.manage.service.LoginService;
 import com.sh.manage.service.MenuService;
 import com.sh.manage.service.SystemService;
 import com.sh.manage.service.UserService;
-import com.sh.manage.utils.ResponseUtils;
-import com.sh.manage.utils.SafeUtil;
 
 
 /**

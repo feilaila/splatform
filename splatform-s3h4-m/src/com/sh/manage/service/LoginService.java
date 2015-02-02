@@ -60,8 +60,7 @@ public class LoginService {
 		if (logger.isDebugEnabled()) {
 			logger.info("根据用户id，获取菜单列表开始!");
 		}
-		//登录用户的菜单集合
-		List<SysMenu> menuList = new ArrayList<SysMenu>();
+		
 		//节点集合
 		List<ZTreeNode> nodeList = new ArrayList<ZTreeNode>();
 		

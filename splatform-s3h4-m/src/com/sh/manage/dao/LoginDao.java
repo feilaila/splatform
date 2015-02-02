@@ -75,7 +75,9 @@ public class LoginDao {
 		sqlBuff.append("       menu_pid,");
 		sqlBuff.append("       menu_url,");
 		sqlBuff.append("       leaf_yn,");
-		sqlBuff.append("       menu_btns ");
+		sqlBuff.append("       menu_btns, ");
+		sqlBuff.append("       icon_tag,");
+		sqlBuff.append("       has_child ");
 		sqlBuff.append("  from t_sys_menu");
 		sqlBuff.append(" where 1=1 ");// 获得后台管理菜单
 
@@ -84,7 +86,7 @@ public class LoginDao {
 			sqlBuff.append(" and id in ( ");
 			sqlBuff.append("select distinct menu_id");
 			sqlBuff.append("  from t_sys_role_menu");
-			sqlBuff.append(" where role_id in (select role_id from t_sys_user_role tur,t_sys_role tr where tur.role_id = tr.id and tur.user_id = ?) ");
+			sqlBuff.append(" where role_id in (select gr.role_id from t_sys_group_role gr,t_sys_user u WHERE gr.group_id = u.group_id AND u.uid = ? ) ");
 			sqlBuff.append(" ) ");
 
 			params = ArrayUtils.add(params, userId);
@@ -96,7 +98,7 @@ public class LoginDao {
 //		sqlBuff.append("  start with   menu_pcode = '0' ");
 //		sqlBuff.append("connect by  menu_pcode=PRIOR menu_code ");
 //		sqlBuff.append("order by menu_code ");
-
+		logger.info("get userMenus:"+sqlBuff.toString());
 		return jdbcTemplate.queryForList(sqlBuff.toString(), params);
 	}
 

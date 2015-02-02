@@ -83,19 +83,19 @@ public class SysMenu implements Serializable {
 	/**
 	 * 菜单列表
 	 * 
-	 * */
-	@ManyToMany(mappedBy = "menuSet", fetch = FetchType.LAZY)
-	@OrderBy("id ASC")
-	private List<SysGroup> groupList;
+//	 * */
+//	@ManyToMany(mappedBy = "menuSet", fetch = FetchType.LAZY)
+//	@OrderBy("id ASC")
+//	private List<SysGroup> groupList;
 	
-	
-	public List<SysGroup> getGroupList() {
-		return groupList;
-	}
-
-	public void setGroupList(List<SysGroup> groupList) {
-		this.groupList = groupList;
-	}
+//	
+//	public List<SysGroup> getGroupList() {
+//		return groupList;
+//	}
+//
+//	public void setGroupList(List<SysGroup> groupList) {
+//		this.groupList = groupList;
+//	}
 
 	public Integer getId() {
 		return id;

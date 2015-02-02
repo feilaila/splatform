@@ -326,7 +326,7 @@ public class GroupController {
 	 * @return
 	 */
 	@RequestMapping(value="/doDelGroup.do")
-    public ResponseEntity<String> groupDel(HttpServletRequest req,
+    public ResponseEntity<String> doGroupDel(HttpServletRequest req,
 			HttpServletResponse resp,
     		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
@@ -527,42 +527,42 @@ public class GroupController {
 			SysGroup sysGroup = groupService.findSysGroup(groupId);
 			
 			//原有的菜单关系
-			Set<SysMenu> oldMenuSet = sysGroup.getMenuSet();
-			//删除之前的菜单关系
-			Set<SysMenu> delMenuSet = new HashSet<SysMenu>();
-			
-			//Iterator<SysMenu> iter = oldMenuSet.iterator();
-
-			/*拆分菜单id*/
-			String[] menuArr = menuStr.split(",");
-			/*前台传来的组织对应菜单*/
-			Set<SysMenu> newMenuSet = new HashSet<SysMenu>();
-			for(String menuId:menuArr){
-				SysMenu sysMenu = new SysMenu();
-				if(oldMenuSet.size() > 0){
-					//判断原有菜单关系
-					for(SysMenu oSysMenu:oldMenuSet){
-						//新增菜单关系
-						//排除之前存在的但是这次未添加的菜单;准备删除
-						if(Integer.parseInt(menuId) != oSysMenu.getId()){
-							delMenuSet.add(oSysMenu);
-						}else{
-							sysMenu.setId(Integer.parseInt(menuId));
-							//之前不存在，这次新增的菜单
-							newMenuSet.add(sysMenu);
-							continue;
-						}
-					}
-				}
-				sysMenu.setId(Integer.parseInt(menuId));
-				//之前不存在，这次新增的菜单
-				newMenuSet.add(sysMenu);
-			}
-				
-						
-			//操作组织下的菜单，先删后增
-			sysGroup.getMenuSet().removeAll(delMenuSet);
-			sysGroup.setMenuSet(newMenuSet);//设置组织对应的菜单
+//			Set<SysMenu> oldMenuSet = sysGroup.getMenuSet();
+//			//删除之前的菜单关系
+//			Set<SysMenu> delMenuSet = new HashSet<SysMenu>();
+//			
+//			//Iterator<SysMenu> iter = oldMenuSet.iterator();
+//
+//			/*拆分菜单id*/
+//			String[] menuArr = menuStr.split(",");
+//			/*前台传来的组织对应菜单*/
+//			Set<SysMenu> newMenuSet = new HashSet<SysMenu>();
+//			for(String menuId:menuArr){
+//				SysMenu sysMenu = new SysMenu();
+//				if(oldMenuSet.size() > 0){
+//					//判断原有菜单关系
+//					for(SysMenu oSysMenu:oldMenuSet){
+//						//新增菜单关系
+//						//排除之前存在的但是这次未添加的菜单;准备删除
+//						if(Integer.parseInt(menuId) != oSysMenu.getId()){
+//							delMenuSet.add(oSysMenu);
+//						}else{
+//							sysMenu.setId(Integer.parseInt(menuId));
+//							//之前不存在，这次新增的菜单
+//							newMenuSet.add(sysMenu);
+//							continue;
+//						}
+//					}
+//				}
+//				sysMenu.setId(Integer.parseInt(menuId));
+//				//之前不存在，这次新增的菜单
+//				newMenuSet.add(sysMenu);
+//			}
+//				
+//						
+//			//操作组织下的菜单，先删后增
+//			sysGroup.getMenuSet().removeAll(delMenuSet);
+//			sysGroup.setMenuSet(newMenuSet);//设置组织对应的菜单
 			
 			//更新组织
 			groupService.updateGroupInfo(sysGroup,roleStr);

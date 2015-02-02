@@ -94,8 +94,11 @@
 		div.zTreeDemoBackground {
 		    text-align: left;
 		    width: 200px;
-		    height: 280px;
+		    height: 300px;
 		    border:1px solid #9FA0A3;
+		}
+		.wid40{
+			width:40%;
 		}
 	</style>
 	
@@ -114,11 +117,11 @@
 	      <table width="100%" border="0" align="center" cellpadding="4" cellspacing="4" bordercolor="#666666">
 	        <tr>
 	          <td width="100" align="left">角色名称：</td>
-	          <td ><input type="text" id="roleName" name="roleName" value="${sysRole.roleName }"/></td>
+	          <td ><input type="text" id="roleName" name="roleName" class="form-control wid40" value="${sysRole.roleName }"/></td>
 	        </tr>
 	        <tr>
 	          <td width="100" align="left">描述：</td>
-	          <td ><input type="text" id="remark" name="remark" value="${sysRole.remark }"/></td>
+	          <td ><input type="text" id="remark" name="remark" class="form-control wid40" value="${sysRole.remark }"/></td>
 	        </tr>
 	        <tr>
 	          <td width="100" align="left">权限选择:</td>

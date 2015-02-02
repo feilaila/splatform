@@ -36,12 +36,8 @@
         <%@ include file="../main/top.jsp" %>
         <!-- END HEADER SECTION -->
 
-
-
         <%@ include file="../main/left.jsp" %>
         <!--END MENU SECTION -->
-
-
 
         <!--PAGE CONTENT -->
         <div id="content">

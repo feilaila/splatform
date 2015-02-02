@@ -68,7 +68,7 @@
 			<p style="text-indent: 2em; margin-top: 30px;">
 			您要访问的页面，正在开发中... 请稍等!
 			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				系统将在 <span id="time">5</span> 秒钟后自动跳转至首页，如果未能跳转，<a href="<%=path%>/unite/tologin.do" title="点击访问">请点击</a>。</p>
+				系统将在 <span id="time">5</span> 秒钟后自动跳转至首页，如果未能跳转，<a href="<%=path%>/unite/index.do" title="点击访问">请点击</a>。</p>
 			<script type="text/javascript">  
 			    delayURL();    
 			    function delayURL() { 
@@ -79,7 +79,7 @@
 			            document.getElementById("time").innerHTML = delay;
 			        } else {
 			     clearTimeout(t); 
-			            window.location.href = '<%=path%>/'+"unite/tologin.do";
+			            window.location.href = '<%=path%>/'+"unite/index.do";
 			        }        
 			    } 
 			</script>

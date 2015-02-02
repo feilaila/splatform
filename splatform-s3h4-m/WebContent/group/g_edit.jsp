@@ -12,11 +12,9 @@
 	}
 	div.left {
 	    float: left;
-	    width: 250px;
 	}
 	div.zTreeDemoBackground {
-	    text-align: left;
-	    width: 250px;
+	    text-align: left;	    
 	}
 	#wrap ul{
 		text-align: left;
@@ -29,6 +27,9 @@
 	#wrap ul .wrap-li{
 		transition-property: transform, opacity;
 		transition-duration: 0.4s;
+	}
+	.wid40{
+		width:40%;
 	}
 </style>
 <%@ include file="../main/header.jsp"%>
@@ -46,17 +47,17 @@
 									cellspacing="4" bordercolor="#666666">
 									<tr>
 										<td width="100" align="left">组织名称：</td>
-										<td><input type="text" id="groupName" name="groupName"
+										<td><input type="text" id="groupName" name="groupName" class="form-control wid40"
 											value="${group.groupName }" /></td>
 									</tr>
 									<tr>
 										<td width="100" align="left">描述：</td>
-										<td><input type="text" id="groupDesc" name="groupDesc"
+										<td><input type="text" id="groupDesc" name="groupDesc" class="form-control wid40"
 											value="${group.groupDesc }" /></td>
 									</tr>
 									<tr>
 										<td width="100" align="left">创建时间：</td>
-										<td><input type="text" id="createTime" name="createTime"
+										<td><input type="text" id="createTime" name="createTime" class="form-control wid40"
 											value="${group.createTime }" readonly="readonly" /></td>
 									</tr>
 									<tr>

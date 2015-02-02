@@ -26,7 +26,7 @@ String lpath=this.getServletContext().getContextPath();
             </div>
 
             <ul id="menu" class="collapse">
-                 <li class="panel ">
+                 <%-- <li class="panel ">
                     <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#component-nav">
                         <i class="icon-tasks"> </i> 系统设置
                         <span class="pull-right">
@@ -40,20 +40,20 @@ String lpath=this.getServletContext().getContextPath();
                         <li class=""><a href="<%=lpath %>/umanage.do"><i class="icon-angle-right"></i> 用户管理 </a></li>
                         <li class=""><a href="<%=lpath %>/aumanage.do"><i class="icon-angle-right"></i> 会员管理 </a></li>
                     </ul>
-                </li>
+                </li> --%>
                 
                 
                 <c:forEach items="${sessionScope.treeNodeList }" var="treeNode">
 	                <li class="panel ">
-		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" 
+		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" 
 		                data-target="#form-${treeNode.code}-nav">
-		                    <i class="icon-pencil"></i> ${treeNode.name }
+		                    <i class="${treeNode.iconTag }"></i> ${treeNode.name }
 		                    <span class="pull-right">
 		                        <i class="icon-angle-left"></i>
 		                    </span>
 		                    &nbsp; <span class="label label-success">5</span>&nbsp;
 		                </a>
-		                <ul class="collapse" id="form-${treeNode.code}-nav">
+		                <ul class="in" id="form-${treeNode.code}-nav" style="height:auto;">
 		                	<c:if test="${treeNode.hasChild == 1}">
 		                		<!-- has child nodes -->
 		                		<c:forEach items="${treeNode.children}" var="childNode">

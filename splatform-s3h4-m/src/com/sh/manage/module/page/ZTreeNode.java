@@ -3,6 +3,7 @@
  */
 package com.sh.manage.module.page;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.mysql.jdbc.ResultSet;
@@ -14,8 +15,12 @@ import com.sh.manage.module.dbhelper.DBHelper;
  * @author 
  *
  */
-public class ZTreeNode {
+public class ZTreeNode implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2519528536193705791L;
 	private int id;
     private String name;
     private String code;

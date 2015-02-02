@@ -109,7 +109,7 @@
 															onClick="editSuser('${sysUser.uid}'');"
 															class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
 															<a data-toggle="modal" href="#suserDel"
-																onClick="delSuser('${sysUser.uid}');"
+																onClick="delSuser('${sysUser.uid}','${sysUser.name}');"
 																class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
 														</c:if>
 															

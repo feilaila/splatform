@@ -58,13 +58,13 @@ public class SysGroup implements Serializable {
 	@OrderBy("id ASC")
 	private Set<SysRole> roles = new HashSet<SysRole>();
 
-	/**
-	 * 组的菜单关系
-	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "t_sys_group_menu", joinColumns = { @JoinColumn(name = "group_id") }, inverseJoinColumns = { @JoinColumn(name = "menu_id") })
-	@OrderBy("id ASC")
-	private Set<SysMenu> menuSet = new HashSet<SysMenu>();
+//	/**
+//	 * 组的菜单关系
+//	 */
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "t_sys_group_menu", joinColumns = { @JoinColumn(name = "group_id") }, inverseJoinColumns = { @JoinColumn(name = "menu_id") })
+//	@OrderBy("id ASC")
+//	private Set<SysMenu> menuSet = new HashSet<SysMenu>();
 	
 	
 	/**
@@ -114,13 +114,13 @@ public class SysGroup implements Serializable {
 		this.groupDesc = groupDesc;
 	}
 
-	public Set<SysMenu> getMenuSet() {
-		return menuSet;
-	}
-
-	public void setMenuSet(Set<SysMenu> menuSet) {
-		this.menuSet = menuSet;
-	}
+//	public Set<SysMenu> getMenuSet() {
+//		return menuSet;
+//	}
+//
+//	public void setMenuSet(Set<SysMenu> menuSet) {
+//		this.menuSet = menuSet;
+//	}
 	
 
 	public Set<AppUser> getaUsers() {

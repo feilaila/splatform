@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.sh.manage.module.config.ResourceConfig;
 import com.sh.manage.module.page.Page;
@@ -66,7 +67,6 @@ public class UploadController {
 	 */
 	@RequestMapping(value = "/uploadImg")
 	public ResponseEntity<String> uploadImg(
-			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam(value = "userId", required = false, defaultValue = "") Integer userId,
 			HttpServletRequest request,HttpServletResponse response, ModelMap model) {
 		logger.info("controller:..图片上传!");
@@ -76,24 +76,35 @@ public class UploadController {
 		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		
-		//文件原名称
-		String fileName = file.getOriginalFilename();
-		//web文件存放路径
-		String webPath = ResourceConfig.getSysUploadAbsPath();
-		File targetFile = new File(webPath, fileName);  
-        if(!targetFile.exists()){  
-            targetFile.mkdirs();  
-        }
-        
+		
+		String fileName = "";
+		String newFileUrl = "";
+		JSONObject result = new JSONObject();
         //保存  
         try {  
+        	MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request; 
+        	CommonsMultipartFile file = (CommonsMultipartFile) multipartRequest.getFile("Filedata");
+        	//这里是表单的名字，在swfupload.js中this.ensureDefault("file_post_name", "filedata");  
+        	//文件原名称
+    		fileName = file.getOriginalFilename();
+    		//web文件存放路径
+    		String webPath = ResourceConfig.getSysUploadAbsPath();
+    		File targetFile = new File(webPath, fileName);  
+            if(!targetFile.exists()){  
+                targetFile.mkdirs();
+            }
             file.transferTo(targetFile);  
+            
+            newFileUrl = request.getContextPath()+ResourceConfig.getSysUploadWebPath()+fileName;
+            result.put("newFileUrl", newFileUrl);
+            result.put("aid", 55);
         } catch (Exception e) {  
             e.printStackTrace();  
+            return new ResponseEntity<String>("2222",responseHeaders, HttpStatus.CREATED);
         }  
         model.addAttribute("fileUrl", request.getContextPath()+ResourceConfig.getSysUploadWebPath()+fileName);  
 		
-		return new ResponseEntity<String>("1111",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>(result.toString(),responseHeaders, HttpStatus.CREATED);
 	}
 
 	

@@ -268,6 +268,7 @@ public class LoginController {
 			// 默认登陆人员为Admin
 			session.setAttribute(SessionConstants.LOGIN_USER, _loginUser);
 			session.setAttribute("name", _loginUser.getName());
+			session.setAttribute("uid", _loginUser.getId());
 			session.setAttribute("usercode", usercode);
 			session.setAttribute("menuStrs", menuStrs);
 			session.setAttribute("menuList", menuList);

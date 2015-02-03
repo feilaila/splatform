@@ -460,7 +460,6 @@ public class UserController {
 		
 		
 		try{
-			
 			// get/new sysUser
 			SysUser sUser = userService.findSysUser(uid);
 			
@@ -519,9 +518,6 @@ public class UserController {
 		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 
-		//new sysUser
-		
-		
 		try{
 			SysUser sUser 
 			= userService.findSysUser(uid);
@@ -547,6 +543,33 @@ public class UserController {
 		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	
+	
+	
+	/**
+	 * 用户查看
+	 * @return
+	 */
+	@RequestMapping(value = "/suserView.do", method = RequestMethod.GET)
+	public ModelAndView suserView(
+			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
+			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
+			@RequestParam(value = "status", required = false, defaultValue = "9") Integer status,
+			HttpServletRequest request,HttpServletResponse response) {
+		logger.info("controller:..用户查看!");
+		ModelAndView model = new ModelAndView("/system/sysuser_view");
+		HttpSession session = request.getSession();
+		try{
+			//获取用户信息
+	    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+			if (null != _loginUser) {
+				SysUser sUser = userService.findSysUser(uid);
+				model.addObject("sysUser", sUser);
+			}
+		}catch(Exception e){
+			logger.error("controller:用户查看异常!"+uid,e);
+		}
+        return model;
+	}
 	
 	public int getPageSize() {
 		return pageSize;

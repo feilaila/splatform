@@ -3,6 +3,14 @@
 <%
 String tpath=this.getServletContext().getContextPath();
 %>
+<style>
+	.navbar-brand{
+		
+	}
+	.ml20{
+		margin-left:20px;
+	}
+</style>
 <!-- HEADER SECTION -->
         <div id="top">
 
@@ -12,17 +20,15 @@ String tpath=this.getServletContext().getContextPath();
                 </a>
                 <!-- LOGO SECTION -->
                 <header class="navbar-header">
-
-                    <a href="index.html" class="navbar-brand">
-                    H5 管理系统
-                        
-                        </a>
+                    <a href="<%=tpath %>/unite/index.do" class="navbar-brand ml20">
+                    	H5 管理系统
+                    </a>
                 </header>
                 <!-- END LOGO SECTION -->
                 <ul class="nav navbar-top-links navbar-right">
 
                     <!-- MESSAGES SECTION -->
-                    <li class="dropdown">
+                    <!-- <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="label label-success">2</span>    
                             <i class="icon-envelope-alt"></i>&nbsp; 
@@ -84,11 +90,11 @@ String tpath=this.getServletContext().getContextPath();
                             </li>
                         </ul>
 
-                    </li>
+                    </li> -->
                     <!--END MESSAGES SECTION -->
 
                     <!--TASK SECTION -->
-                    <li class="dropdown">
+                    <!-- <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="label label-danger">5</span>   <i class="icon-tasks"></i>&nbsp; <i class="icon-chevron-down"></i>
                         </a>
@@ -166,11 +172,11 @@ String tpath=this.getServletContext().getContextPath();
                             </li>
                         </ul>
 
-                    </li>
+                    </li> -->
                     <!--END TASK SECTION -->
 
                     <!--ALERTS SECTION -->
-                    <li class="chat-panel dropdown">
+                    <!-- <li class="chat-panel dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="label label-info">8</span>   <i class="icon-comments"></i>&nbsp; <i class="icon-chevron-down"></i>
                         </a>
@@ -230,7 +236,7 @@ String tpath=this.getServletContext().getContextPath();
                             </li>
                         </ul>
 
-                    </li>
+                    </li> -->
                     <!-- END ALERTS SECTION -->
 
                     <!--ADMIN SETTINGS SECTIONS -->
@@ -241,7 +247,7 @@ String tpath=this.getServletContext().getContextPath();
                         </a>
 
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#"><i class="icon-user"></i> 个人资料 </a>
+                            <li><a href="<%=path%>/suserView.do?uid=<%=session.getAttribute("uid")%>"><i class="icon-user"></i> 个人资料 </a>
                             </li>
                             <li><a href="#"><i class="icon-gear"></i> 设置 </a>
                             </li>

@@ -45,7 +45,7 @@ String lpath=this.getServletContext().getContextPath();
                 
                 <c:forEach items="${sessionScope.treeNodeList }" var="treeNode">
 	                <li class="panel ">
-		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" 
+		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" 
 		                data-target="#form-${treeNode.code}-nav">
 		                    <i class="${treeNode.iconTag }"></i> ${treeNode.name }
 		                    <span class="pull-right">
@@ -53,7 +53,7 @@ String lpath=this.getServletContext().getContextPath();
 		                    </span>
 		                    &nbsp; <span class="label label-success">5</span>&nbsp;
 		                </a>
-		                <ul class="in" id="form-${treeNode.code}-nav" style="height:auto;">
+		                <ul class="collapse" id="form-${treeNode.code}-nav">
 		                	<c:if test="${treeNode.hasChild == 1}">
 		                		<!-- has child nodes -->
 		                		<c:forEach items="${treeNode.children}" var="childNode">

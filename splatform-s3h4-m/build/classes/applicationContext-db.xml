@@ -77,6 +77,8 @@
 				<value>com.sh.manage.entity.SysGroupRole</value>
 				<value>com.sh.manage.entity.SysRoleMenu</value>
 				<value>com.sh.manage.entity.SysAttachment</value>
+				<value>com.sh.manage.entity.MukeCourse</value>
+				<value>com.sh.manage.entity.MukeCourseType</value>
 			</list>
 		</property>
 	</bean>

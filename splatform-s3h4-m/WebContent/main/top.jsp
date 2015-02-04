@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%
 String tpath=this.getServletContext().getContextPath();
+String ctx = request.getContextPath();
 %>
 <style>
 	.navbar-brand{
@@ -247,7 +248,7 @@ String tpath=this.getServletContext().getContextPath();
                         </a>
 
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="<%=path%>/suserView.do?uid=<%=session.getAttribute("uid")%>"><i class="icon-user"></i> 个人资料 </a>
+                            <li><a href="<%=tpath%>/suserView.do?uid=<%=session.getAttribute("uid")%>"><i class="icon-user"></i> 个人资料 </a>
                             </li>
                             <li><a href="#"><i class="icon-gear"></i> 设置 </a>
                             </li>

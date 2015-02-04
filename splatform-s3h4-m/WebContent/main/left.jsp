@@ -11,7 +11,7 @@ String lpath=this.getServletContext().getContextPath();
        <div id="left" >
             <div class="media user-media well-small">
                 <a class="user-link" href="#">
-                    <img class="media-object img-thumbnail user-img" alt="User Picture" src="<%=lpath %>/static/assets/img/user1.jpg" />
+                    <img id="l_face_img" class="media-object img-thumbnail user-img" width="64" height="64" alt="User Picture" src="${attachment.filepath }" />
                 </a>
                 <br />
                 <div class="media-body">

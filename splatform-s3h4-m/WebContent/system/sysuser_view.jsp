@@ -30,6 +30,7 @@
 	.memlist li{width: 30%; clear:both; overflow:hidden; zoom:1; *padding:1px 0 5px; line-height:160%;border-bottom: 1px dotted #999;}
 	.memlist label{ float:left; width:120px; }
 	.fixwidth{ width: 90%; }
+	.display_none{display: none;}
 </style>
 <!-- END HEAD -->
 
@@ -66,21 +67,31 @@
 		            		<li><label>姓名：</label> ${sysUser.name }</li>
 		            		<li><label>创建时间：</label> ${sysUser.createTime }</li>
 		            		<li><label>所在组织：</label> ${sysUser.groupName }</li>
-		            		<li><label>头像预览：</label>
+		            		<!-- <li><label>头像预览：</label>
 		            			<input type="file" name="picpath" style="display:none;width:0px;">
-								<input type="button" value="上传照片" class="btn btn-primary btn-sm" onclick="document.addForm.picpath.click()">
+								<input type="button" value="上传照片" class="btn btn-primary btn-sm" onclick="document.addForm.spanButtonPlaceHolder.click()">
 								<div id="img-priview">
 									<img alt="" src="" id="userPic">
 								</div>
-		            		</li>
-		            		 <div id="upload_preview" class="upload_div">
-									图片预览：
+		            		</li> -->
+		            		<li>
+		            			<div id="upload_preview" class="upload_div">
+									<label>头像预览：</label>
 									<div id="divFileProgressContainer">
-										<ul id="pic_list" style="margin: 5px;"></ul>
+										<ul id="pic_list" style="margin: 5px;">
+											<c:choose>
+												<c:when test="${sysUser.faceimgAid > 0}">
+													<img id="pic_img" width="64" height="64" src="${attachment.filepath }"></img>
+												</c:when>
+												<c:otherwise>
+													<img id="pic_img" width="64" height="64" src="<%=path %>/static/images/default.jpg"></img>
+												</c:otherwise>
+											</c:choose>											
+										</ul>
 										<div style="clear: both;"></div>
 									</div>
-									<!--需要js控制展示
-									div id="prev_64740" class="prev_a left labelC" draggable="true" mid="64740">
+									<!-- 需要js控制展示 -->
+									<!--div id="prev_64740" class="prev_a left labelC" draggable="true" mid="64740">
 										<div class="width100 labelC">
 											<img class="prev" alt="" src="http://img5.bcyimg.com/party/expo/picture/f/541adae567533.png/w230" onload="updateH()">
 										</div>
@@ -89,41 +100,25 @@
 								</div>
 
 								<div class="upload_tag">
-									<label class="left mgr5" for="etime">上传漫展封面</label>
+									<label class="left mgr5" for="etime">上传头像</label>
 									<div id="pic_upload" class="upload_btn_cs">
 										<div id="pic_upload_button" class="upload_Button">
-											<span id="spanButtonPlaceHolder"></span>
+											<span name="spanButtonPlaceHolder" id="spanButtonPlaceHolder">X</span>
 										</div>
+										<input id="btnCancel" type="button" value=""
+											onclick="cancelUpload();" disabled="disabled" class="display_none"/>
 									</div>
 
 									<input type="hidden" name="faceImg" id="faceImg" value=""/>
 								</div>
+		            		</li>
 		            	</ul>
+		            	
 	            	</form>
 	            </div>			
                  <!-- /row -->
                 </div>
              </div>
-
-	<div id="content">
-	<form>
-		<div
-			style="display: inline; border: solid 1px #7FAAFF; background-color: #C5D9FF; padding: 2px;">
-			<span id="spanButtonPlaceholder"></span>
-			<input id="btnUpload" type="button" value="上  传"
-				onclick="startUploadFile();" class="btn3_mouseout"
-				/>
-			<input id="btnCancel" type="button" value="取消所有上传"
-				onclick="cancelUpload();" disabled="disabled" class="btn3_mouseout"
-				/>
-		</div>
-	</form>
-	<div id="divFileProgressContainer"></div>
-	<div id="thumbnails">
-		<table id="infoTable" border="0" width="530" style="display: inline; border: solid 1px #7FAAFF; background-color: #C5D9FF; padding: 2px;margin-top:8px;">
-		</table>
-	</div>
-</div>
        <!--END PAGE CONTENT -->               
 	</div>
     <!--END MAIN WRAPPER -->	
@@ -148,79 +143,88 @@
     
 </body>
     <!-- END BODY -->
-		<script type="text/javascript" src="<%=path %>/static/js/swfupload/swfupload.js"></script>
-		<script type="text/javascript" src="<%=path %>/static/js/swfupload/handlers.js"></script>
-
-		<script type="text/javascript" src="<%=path %>/static/js/swfupload/swfupload.js"></script>
-		
-		<script type="text/javascript">
-			var swfu;
-			window.onload = function () {
-				swfu = new SWFUpload({
-					upload_url: "<%=path%>/uploadImg.do",
-					post_params: {"userId" : "${sysUser.uid}"},
-					
-					// File Upload Settings
-					file_size_limit : "100 MB",	// 1000MB
+    	
+    	<script src="<%=path %>/static/js/swfupload/js/fileprogress.js" type="text/javascript"></script>
+		<script src="<%=path %>/static/js/swfupload/js/handlers.js" type="text/javascript"></script>
+		<script src="<%=path %>/static/js/swfupload/js/swfupload.queue.js" type="text/javascript"></script>
+		<script src="<%=path %>/static/js/swfupload/swfupload/swfupload.js" type="text/javascript"></script>
+    	<script type="text/javascript" >
+	    	var swfu;
+	
+			window.onload = function() {
+				var settings = {
+					flash_url : "<%=path %>/static/js/swfupload/swfupload/swfupload.swf",
+					upload_url: "<%=path%>/uploadImg.do",	// Relative to the SWF file
+					post_params: {"jsessionid":"<%=request.getSession().getId()%>","userId" : "${sysUser.uid}"},
+					file_size_limit : "100 MB",
 					file_types : "*.*",
-					file_types_description : "所有文件",
-					file_upload_limit : "0",
-									
-					file_queue_error_handler : fileQueueError,
-					file_dialog_complete_handler : fileDialogComplete,//选择好文件后提交
+					file_types_description : "All Files",
+					file_upload_limit : 100,
+					file_queue_limit : 0,
+					custom_settings : {
+						progressTarget : "fsUploadProgress",
+						cancelButtonId : "btnCancel"
+					},
+					debug: false,
+	
+					// Button settings
+					button_image_url: "<%=path %>/static/js/swfupload/images/TestImageNoText_65x29-2.png",	// Relative to the Flash file
+					button_width: "65",
+					button_height: "29",
+					button_placeholder_id: "spanButtonPlaceHolder",
+					button_text: '<span class="btn btn-primary btn-sm theFont">选择图片</span>',
+					button_text_style: ".theFont { font-size: 13; }",
+					button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+					button_cursor: SWFUpload.CURSOR.HAND,
+					button_text_left_padding: 3,
+					button_text_top_padding: 3,
+	
+					// The event handler functions are defined in handlers.js
 					file_queued_handler : fileQueued,
+					file_queue_error_handler : fileQueueError,
+					file_dialog_complete_handler : fileDialogComplete,
+					upload_start_handler : uploadStart,
 					upload_progress_handler : uploadProgress,
 					upload_error_handler : uploadError,
 					upload_success_handler : uploadSuccess,
 					upload_complete_handler : uploadComplete,
+					queue_complete_handler : queueComplete	// Queue plugin event
+				};
 	
-					// Button Settings
-					button_image_url : "<%=path %>/static/js/swfupload/images/SmallSpyGlassWithTransperancy_17x18.png",
-					button_placeholder_id : "spanButtonPlaceholder",
-					button_width: 180,
-					button_height: 18,
-					button_text : '<span class="button">选择图片 <span class="buttonSmall">(10 MB Max)</span></span>',
-					button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 10pt; }',
-					button_text_top_padding: 0,
-					button_text_left_padding: 18,
-					button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
-					button_cursor: SWFUpload.CURSOR.HAND,
-					
-					// Flash Settings
-					flash_url : "<%=path%>/static/js/swfupload/swfupload.swf",
+				swfu = new SWFUpload(settings);
+		     };
 	
-					custom_settings : {
-						upload_target : "divFileProgressContainer",
-						progressTarget : "fsUploadProgress",
-						cancelButtonId : "btnCancel"
-					},
-					// Debug Settings
-					debug: false  //是否显示调试窗口
-				});
-			};
-			function fileQueued(){
+		//预览区域设置
+		function fileQueued(){
 				swfu.startUpload();
-			} 
+		}
+		//上传完成
+		function uploadSuccess(file, serverData){
+			addImage(serverData);
+		}
+		//添加图片
+		function addImage(serverData){
+	
+			var result = new Array();
+	    	result = eval('('+serverData+')');//序列化的json对象
+			//alert(result.response);
+			//alert(result.aid);
+			//var newElement = "图片预览：<br><div style='width:172px;height:225px'><img src=\""+APP+"/"+data.savepath+data['savename']+"\" width=172 height=225/>"+data['savename']+"</div>";
+			//alert('<{$aid}>');
+			//$("#pic_list").empty();
+			//$("#pic_list").append(result.newFileUrl);
+			$("#pic_img").empty();
+			$("#pic_img").attr("src",result.newFileUrl);
+			$("#faceImg").val(result.aid);
+			$('.left .mgr5').html('重新上传图片');
 			
-			function uploadSuccess(file, serverData){
-				addImage(serverData);
-				alert(serverData);
-			}
-			//添加图片
-			function addImage(serverData){
-				var result = new Array();
-		    	result = eval('('+serverData+')');//序列化的json对象
-				//alert(result.response);
-				//alert(result.aid);
-				//var newElement = "图片预览：<br><div style='width:172px;height:225px'><img src=\""+APP+"/"+data.savepath+data['savename']+"\" width=172 height=225/>"+data['savename']+"</div>";
-				//alert('<{$aid}>');
-				$("#pic_list").empty();
-				$("#pic_list").append(result.newFileUrl);
-				$("#faceImg").val(result.aid);
-				$('.left .mgr5').html('重新上传图片');
-				//$("img.button").last().bind("click", del);
-			}
-		</script>    
+			$("#l_face_img").empty();
+			$("#l_face_img").attr("src",result.newFileUrl);
+			//$("img.button").last().bind("click", del);
+		}
+    	</script>
+    
+		    
 
 	
 	

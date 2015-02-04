@@ -3,6 +3,8 @@ package com.sh.manage.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.sh.manage.constants.Constants;
 import com.sh.manage.entity.SysMenu;
 import com.sh.manage.entity.SysOperate;
@@ -108,6 +110,12 @@ public class LoginUser {
 	 */
 	private int userType;
 
+	
+	/**
+	 * 头像id
+	 */
+	private Integer faceimgAid;
+	
 	/**
 	 * 获取 标识
 	 * 
@@ -322,5 +330,14 @@ public class LoginUser {
 	public void setNodeList(List<ZTreeNode> nodeList) {
 		this.nodeList = nodeList;
 	}
+
+	public Integer getFaceimgAid() {
+		return faceimgAid;
+	}
+
+	public void setFaceimgAid(Integer faceimgAid) {
+		this.faceimgAid = faceimgAid;
+	}
+	
 
 }

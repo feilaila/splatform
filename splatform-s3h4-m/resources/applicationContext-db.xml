@@ -76,6 +76,7 @@
 				<value>com.sh.manage.entity.SysOperate</value>
 				<value>com.sh.manage.entity.SysGroupRole</value>
 				<value>com.sh.manage.entity.SysRoleMenu</value>
+				<value>com.sh.manage.entity.SysAttachment</value>
 			</list>
 		</property>
 	</bean>

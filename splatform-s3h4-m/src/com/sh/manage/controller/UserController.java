@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sh.manage.constants.Constants;
 import com.sh.manage.constants.SessionConstants;
 import com.sh.manage.entity.AppUser;
+import com.sh.manage.entity.SysAttachment;
 import com.sh.manage.entity.SysGroup;
 import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysUser;
@@ -29,6 +30,7 @@ import com.sh.manage.module.page.Page;
 import com.sh.manage.pojo.LoginUser;
 import com.sh.manage.service.GroupService;
 import com.sh.manage.service.RoleService;
+import com.sh.manage.service.UploadService;
 import com.sh.manage.service.UserService;
 import com.sh.manage.utils.WebUtils;
 
@@ -59,6 +61,14 @@ public class UserController {
 	 */
 	@Autowired
 	private GroupService groupService;
+	
+	
+	/**
+	 * 上传管理service
+	 */
+	@Autowired
+	private UploadService uploadService;
+	
 
 	/** 当前页 */
 	private int initPageNo = 1;
@@ -563,6 +573,11 @@ public class UserController {
 	    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
 			if (null != _loginUser) {
 				SysUser sUser = userService.findSysUser(uid);
+				SysAttachment sysAttachment = new SysAttachment();
+				sysAttachment.setAid(sUser.getFaceimgAid());//附件id
+				sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型
+				SysAttachment attachment = uploadService.getFile(sysAttachment);
+				model.addObject("attachment", attachment);
 				model.addObject("sysUser", sUser);
 			}
 		}catch(Exception e){

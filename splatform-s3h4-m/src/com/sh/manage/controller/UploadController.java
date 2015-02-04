@@ -4,6 +4,7 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -18,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.sh.manage.constants.Constants;
+import com.sh.manage.entity.SysAttachment;
+import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.config.ResourceConfig;
-import com.sh.manage.module.page.Page;
-import com.sh.manage.service.GroupService;
-import com.sh.manage.service.RoleService;
+import com.sh.manage.service.UploadService;
 import com.sh.manage.service.UserService;
+import com.sh.manage.utils.TimeUtil;
 
 /**
  * 上传文件控制
@@ -36,30 +39,17 @@ public class UploadController {
 
 
 	/**
-	 * 上传文件管理service
+	 * 用户会员管理service
 	 */
 	@Autowired
 	private UserService userService;
-
+	
+	
 	/**
-	 * 会员角色管理service
+	 * 上传管理service
 	 */
 	@Autowired
-	private RoleService roleService;
-	/**
-	 * 注入groupSerice
-	 */
-	@Autowired
-	private GroupService groupService;
-
-	/** 当前页 */
-	private int initPageNo = 1;
-
-	/** 页面大小 */
-	private int pageSize = 5;
-
-	/** Page对象 */
-	private Page page;
+	private UploadService uploadService;
 
 	/**
 	 * 上传文件
@@ -70,9 +60,9 @@ public class UploadController {
 			@RequestParam(value = "userId", required = false, defaultValue = "") Integer userId,
 			HttpServletRequest request,HttpServletResponse response, ModelMap model) {
 		logger.info("controller:..图片上传!");
-		String msg="";
-		boolean isCorrect = true;
+
 		HttpHeaders responseHeaders = new HttpHeaders();
+		HttpSession session = request.getSession();
 		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		
@@ -95,43 +85,34 @@ public class UploadController {
             }
             file.transferTo(targetFile);  
             
-            newFileUrl = request.getContextPath()+ResourceConfig.getSysUploadWebPath()+fileName;
+            newFileUrl = ResourceConfig.getSysUploadWebPath()+fileName;
             result.put("newFileUrl", newFileUrl);
-            result.put("aid", 55);
-        } catch (Exception e) {  
+            
+            //new attach
+            SysAttachment sysAttachment = new SysAttachment();
+            sysAttachment.setFilename(fileName);
+            sysAttachment.setFilepath(newFileUrl);
+            sysAttachment.setNewfilename(fileName);
+            sysAttachment.setUploadtime(TimeUtil.now());
+            sysAttachment.setUid(userId);
+            sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型
+            
+            Integer faceimgAid = uploadService.addFile(sysAttachment);
+            result.put("aid", faceimgAid);
+            //get user
+            SysUser sysUser = userService.findSysUser(userId);
+            sysUser.setFaceimgAid(faceimgAid);
+            userService.editSysUser(sysUser);
+            
+            session.removeAttribute("faceimgPath");
+            session.setAttribute("faceimgPath", newFileUrl);
+            logger.info("controller:..图片上传结束!");
+        } catch (Exception e) {
             e.printStackTrace();  
-            return new ResponseEntity<String>("2222",responseHeaders, HttpStatus.CREATED);
+            return new ResponseEntity<String>("error",responseHeaders, HttpStatus.CREATED);
         }  
-        model.addAttribute("fileUrl", request.getContextPath()+ResourceConfig.getSysUploadWebPath()+fileName);  
-		
+        //model.addAttribute("fileUrl", request.getContextPath()+ResourceConfig.getSysUploadWebPath()+fileName);  
 		return new ResponseEntity<String>(result.toString(),responseHeaders, HttpStatus.CREATED);
-	}
-
-	
-	
-	
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
-
-	public Page getPage() {
-		return page;
-	}
-
-	public int getInitPageNo() {
-		return initPageNo;
-	}
-
-	public void setInitPageNo(int initPageNo) {
-		this.initPageNo = initPageNo;
-	}
-
-	public void setPage(Page page) {
-		this.page = page;
 	}
 
 }

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sh.manage.constants.Constants;
 import com.sh.manage.constants.SessionConstants;
+import com.sh.manage.entity.SysAttachment;
 import com.sh.manage.entity.SysMenu;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.ZTreeNode;
@@ -30,6 +31,7 @@ import com.sh.manage.security.MD5;
 import com.sh.manage.service.LoginService;
 import com.sh.manage.service.MenuService;
 import com.sh.manage.service.SystemService;
+import com.sh.manage.service.UploadService;
 import com.sh.manage.service.UserService;
 import com.sh.manage.utils.JsonUtils;
 import com.sh.manage.utils.ResponseUtils;
@@ -69,6 +71,12 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 	
+	/**
+	 * 上传管理service
+	 */
+	@Autowired
+	private UploadService uploadService;
+	
 	
 	/**
 	 * 所有菜单数据串
@@ -84,7 +92,7 @@ public class LoginController {
 	}
 
 	// 跳转首页
-	@RequestMapping(value = "/index")
+	@RequestMapping(value = "/index.do")
 	public ModelAndView mainPage(HttpServletRequest req,
 			HttpServletResponse resp) {
 		
@@ -112,6 +120,16 @@ public class LoginController {
 		//设置缓存
 		session.setAttribute("ztreeNodes", jsonArr);
 		
+		//取得头像
+    	SysAttachment sysAttachment = new SysAttachment();
+		SysAttachment attachment = null;
+		if(null !=_loginUser.getFaceimgAid() && _loginUser.getFaceimgAid() > 0){
+			sysAttachment.setAid(_loginUser.getFaceimgAid());//附件id
+			sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型
+			attachment = uploadService.getFile(sysAttachment);
+			model.addObject("attachment",attachment);
+		}
+		
 		logger.info(jsonArr);
 		return model;
 	}
@@ -125,7 +143,7 @@ public class LoginController {
 	 * @param password
 	 * @return
 	 */
-	@RequestMapping(value = "/user_login", method = RequestMethod.POST)
+	@RequestMapping(value = "/user_login.do", method = RequestMethod.POST)
 	public @ResponseBody String doLogin(HttpServletRequest request,
 			HttpServletResponse resp,
 			@RequestParam("usercode") String usercode,
@@ -168,9 +186,11 @@ public class LoginController {
 			SysUser sysUser = new SysUser();
 			sysUser.setUsercode(usercode);
 			sysUser.setPassword(password);
-
+			
+			
+			
 			SysUser loginUser = systemService.getUserInfoByUsername(sysUser);
-
+			
 			
 			// 用户名校验
 			if (loginUser == null) {
@@ -231,6 +251,7 @@ public class LoginController {
 			_loginUser.setUserCode(loginUser.getUsercode());
 			_loginUser.setUserPwd(loginUser.getPassword());
 			_loginUser.setName(loginUser.getName());
+			_loginUser.setFaceimgAid(loginUser.getFaceimgAid());
 			
 			//权限菜单列表
 			_loginUser.setMenuList(loginService.getMenuList(_loginUser.getId()));
@@ -263,13 +284,15 @@ public class LoginController {
 			menuStrs = JsonUtils.toJson(items);
 			menuStrs = menuStrs.replaceAll("\"", "");
 	    	logger.info("menuStrs:"+menuStrs.toString());
-
+	    		
+	    	
 			
 			// 默认登陆人员为Admin
 			session.setAttribute(SessionConstants.LOGIN_USER, _loginUser);
 			session.setAttribute("name", _loginUser.getName());
 			session.setAttribute("uid", _loginUser.getId());
 			session.setAttribute("usercode", usercode);
+			
 			session.setAttribute("menuStrs", menuStrs);
 			session.setAttribute("menuList", menuList);
 			session.setAttribute("treeNodeList", treeNodeList);
@@ -333,7 +356,7 @@ public class LoginController {
 	 * @param password
 	 * @return
 	 */
-	@RequestMapping(value = "/user_logout", method = RequestMethod.GET)
+	@RequestMapping(value = "/user_logout.do", method = RequestMethod.GET)
 	public ModelAndView doLogout(HttpServletRequest req,
 			HttpServletResponse resp) {
 		HttpSession session = req.getSession();

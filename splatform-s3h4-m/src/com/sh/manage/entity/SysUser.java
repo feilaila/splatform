@@ -111,6 +111,12 @@ public class SysUser implements Serializable {
 	 */
 	@Column(name = "group_id", length = 8)
 	private Integer groupId;
+	
+	/**
+	 * 头像id
+	 */
+	@Column(name = "faceimg_aid", length = 8)
+	private Integer faceimgAid;
 
 	/**
 	 * 角色名称
@@ -258,6 +264,14 @@ public class SysUser implements Serializable {
 
 	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
+	}
+
+	public Integer getFaceimgAid() {
+		return faceimgAid;
+	}
+
+	public void setFaceimgAid(Integer faceimgAid) {
+		this.faceimgAid = faceimgAid;
 	}
 
 }

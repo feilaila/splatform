@@ -52,6 +52,14 @@ public class Constants {
 
 	public static final Integer SYS_TYPE_0 = 0;
 	
+	/**
+	 * 附件类型  1头像图片 2大图 3 文件  4  音乐  5  视频
+	 */
+	public final static Integer ATTACH_TYPE_FACEIMG = 1;
+	public final static Integer ATTACH_TYPE_BIGIMG = 2;
+	public final static Integer ATTACH_TYPE_FILE = 3;
+	public final static Integer ATTACH_TYPE_MUSIC = 4;
+	public final static Integer ATTACH_TYPE_VIDEO = 5;
 	
 	static {
 		SUPER_ADMIN_ID_LIST.add("0");

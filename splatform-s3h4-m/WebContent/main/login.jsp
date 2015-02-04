@@ -327,7 +327,7 @@ var dologin = function(){
 			var result = eval('(' + data + ')');
 			//alert(result.msg);
 			if(result.data == '0'){
-				window.location='<%=path %>/unite/index';
+				window.location='<%=path %>/unite/index.do';
 			}else{
 				alert(arrTips[result.data]);
 				changeImg();

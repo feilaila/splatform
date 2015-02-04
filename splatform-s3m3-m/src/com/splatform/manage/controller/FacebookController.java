@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.splatform.manage.constants.Constants;
-import com.splatform.manage.entity.SysMenu;
 import com.splatform.manage.entity.SysUser;
 import com.splatform.manage.module.page.ZTreeNode;
 import com.splatform.manage.pojo.LoginUser;

@@ -9,46 +9,63 @@
   <body>
 
     <h2>Purchase a product:</h2>
-    <button id="pay">Buy Product</button>
-    <div class="returndata" id="output"></div>
+    <button onclick="buy()">Buy</button>
+    <div id="fb-ui-return-data"></div>
+    <div id="fb-root"></div>
 
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script> 
+　　　 // 这里初始化FB 的 SDK
+      FB.init({appId: "1540538392868058", status: true, cookie: true});　　
 
-    <script type="text/javascript">
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '1540538392868058',
-          status     : true,
-          cookie     : true,
-          xfbml      : true
-        });
+      // The dialog only opens if you've implemented the
+      // Credits Callback payments_get_items.
+      function buy() {
+        var obj = {
+          method: 'pay', 
+          action: 'buy_item',
+          // You can pass any string, but your payments_get_items must
+          // be able to process and respond to this data.
+          order_info: {'item_id': '1a'},  // 这里是支付信息,这里的信息在支付中心与FB的支付协议中有
+          dev_purchase_params: {'oscif': true}
+        };
+　　　　　
+　　　　 // 调用 支付页面
+        FB.ui(obj, js_callback);
+      }
 
-        function buy() {
-          var obj = {
-            method: 'pay',
-            action: 'purchaseitem',
-            product: 'http://www.friendsmash.com/og/coins.html',
-            quantity: 20,
-            pricepoint_id: "this_is_a_test_pricepoint"
-          };
+　　　 // 反馈函数，作为调试用很好
+      // This JavaScript callback handles FB.ui's return data and differs
+      // from the Credits Callbacks.
+      var js_callback = function(data) {
+        if (data['order_id']) {
+          // Facebook only returns an order_id if you've implemented
+          // the Credits Callback payments_status_update and settled
+          // the user's placed order.
 
-          FB.ui(obj, function(data) {
-              console.log(data);
-            });
+          // Notify the user that the purchased item has been delivered
+          // without a complete reload of the game.
+          write_callback_data(
+                    "<br><b>Transaction Completed!</b> </br></br>"
+                    + "Data returned from Facebook: </br>"
+                    + "Order ID: " + data['order_id'] + "</br>"
+                    + "Status: " + data['status']);
+        } else if (data['error_code']) {
+          // Appropriately alert the user.
+          write_callback_data(
+                    "<br><b>Transaction Failed!</b> </br></br>"
+                    + "Error message returned from Facebook:</br>"
+                    + data['error_code'] + " - "
+                    + data['error_message']);
+        } else {
+          // Appropriately alert the user.
+          write_callback_data("<br><b>Transaction failed!</b>");
         }
-
-        document.getElementById('pay').onclick = function() {buy()};
       };
 
-      // Load the SDK Asynchronously
-      (function(d){
-        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement('script'); js.id = id; js.async = true;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        ref.parentNode.insertBefore(js, ref);
-      }(document));
+      function write_callback_data(str) {
+        document.getElementById('fb-ui-return-data').innerHTML=str;
+      }
     </script>
-    
-    <div id="fb-root"></div>
   </body>
 </html>

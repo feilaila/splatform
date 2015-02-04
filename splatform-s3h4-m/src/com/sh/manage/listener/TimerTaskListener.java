@@ -35,7 +35,8 @@ public class TimerTaskListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		timer = new Timer(true);
-		event.getServletContext().log("定时器已启动"); 
+		event.getServletContext().log("定时器已启动");
+		
 		timer.schedule(new TimerTaskDemo(event.getServletContext()), 0, 60*60*1000);
 		
 		event.getServletContext().log("已经添加任务调度表");

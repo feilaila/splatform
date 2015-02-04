@@ -481,6 +481,40 @@ public abstract class AbstractBaseDao<T> {
 		page.setList(objList);
 		return page;
 	}
+	
+	/**
+	 * 
+	 * @param sqlStr
+	 * @param paras
+	 * @param pageNo
+	 * @param pageSize
+	 * @param clazz
+	 * @return
+	 */
+	public Page queryMoreModelListByPage(final String sqlStr, final Object[] paras,
+			final int pageNo, final int pageSize, @SuppressWarnings("rawtypes") final Class clazz1,final Class clazz2,final Class clazz3) {
+		List<?> objList = new ArrayList<>();
+		int count = 0;
+		Query query = this.getCurrentSession().createSQLQuery(sqlStr)
+				.addEntity(clazz1).addEntity(clazz2).addEntity(clazz3);
+
+		if (null != paras && paras.length > 0) {
+			for (Object para : paras) {
+				query.setParameter(count++, para);
+			}
+		}
+		query.setFirstResult((pageNo - 1) * pageSize);
+		query.setMaxResults(pageSize);
+		objList = query.list();
+
+		int resCount = this.getCountBySql(sqlStr, paras);
+		Page page = new Page();
+		page.setPageSize(pageSize);
+		page.search(resCount);
+		page.turnToPage(pageNo);
+		page.setList(objList);
+		return page;
+	}
 
 	// /**
 	// * 分页查询纯Sql

@@ -58,7 +58,7 @@
 							method="post" target="_self">
 							<i class="icon-hand-right"></i><span>搜索</span> 
 							<input type="text" placeholder="输入课程名" class="form-control" 
-									id="search" name="usercode" value="${name }"
+									id="search" name="name" value="${name }"
 								autocomplete="off" /> 
 							<input id="startDate" class="form-control span2"
 								type="text" name="startDate" value="${startDate }" placeholder="上传日期" readonly>
@@ -81,6 +81,7 @@
 													<th>课程类型</th>
 													<th>有效性</th>
 													<th>添加时间</th>
+													<th>教程截图</th>
 													<th>添加人员</th>
 													<th>操作</th>
 												</tr>
@@ -100,7 +101,7 @@
 
 														<td>${course.createTime}</td>
 														<td>${course.img}</td>
-														<td>${course.videoId}</td>
+														<td>${course.userName}</td>
 														<td>														
 														<c:if test="${course.id > 0}">
 															<a data-toggle="modal" href="#suserEdit"

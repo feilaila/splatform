@@ -1,10 +1,11 @@
-package com.sh.manage.entity;
+package com.sh.manage.pojo;
 
 // default package
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Transient;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -14,9 +15,7 @@ import javax.persistence.Table;
 /**
  * TMzAttachment entity. @author MyEclipse Persistence Tools
  */
-@Entity
-@Table(name="muke_course")
-public class MukeCourse  implements java.io.Serializable {
+public class MukeCoursePojo  implements java.io.Serializable {
 
 
     // Fields    
@@ -49,15 +48,18 @@ public class MukeCourse  implements java.io.Serializable {
 	 */
 	private Integer status;
 	
+	
+	private String userName;
+	
     // Constructors
 
     /** default constructor */
-    public MukeCourse() {
+    public MukeCoursePojo() {
     }
 
     
     /** full constructor */
-    public MukeCourse(Integer id, Integer typeId, Integer uid, String name,
+    public MukeCoursePojo(Integer id, Integer typeId, Integer uid, String name,
 			String info, String img, String createTime,Integer videoId,Integer status) {
 		super();
 		this.id = id;
@@ -72,8 +74,7 @@ public class MukeCourse  implements java.io.Serializable {
 	}
    
     // Property accessors
-    @Id @GeneratedValue(strategy=IDENTITY)
-    @Column(name="id", unique=true, nullable=false)
+
     public Integer getId() {
 		return id;
 	}
@@ -81,7 +82,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.id = id;
 	}
     
-    @Column(name="type_id")
     public Integer getTypeId() {
 		return typeId;
 	}
@@ -89,7 +89,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.typeId = typeId;
 	}
         
-    @Column(name="sys_user_id")
     public Integer getUid() {
         return this.uid;
     }
@@ -98,7 +97,6 @@ public class MukeCourse  implements java.io.Serializable {
         this.uid = uid;
     }
       
-    @Column(name="name", length=100)
 
     public String getName() {
         return this.name;
@@ -108,7 +106,6 @@ public class MukeCourse  implements java.io.Serializable {
         this.name = name;
     }
     
-    @Column(name="title", length=100)
     public String getTitle() {
 		return title;
 	}
@@ -117,7 +114,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.title = title;
 	}
 
-	@Column(name="info")
 	public String getInfo() {
 		return info;
 	}
@@ -126,7 +122,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.info = info;
 	}
 
-	@Column(name="img")
 	public String getImg() {
 		return img;
 	}
@@ -135,7 +130,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.img = img;
 	}
 
-	@Column(name="create_time")
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -144,7 +138,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name="video_id")
 	public Integer getVideoId() {
 		return videoId;
 	}
@@ -153,7 +146,6 @@ public class MukeCourse  implements java.io.Serializable {
 		this.videoId = videoId;
 	}
 
-	@Column(name="status")
 	public Integer getStatus() {
 		return status;
 	}
@@ -161,5 +153,12 @@ public class MukeCourse  implements java.io.Serializable {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}   	
 }

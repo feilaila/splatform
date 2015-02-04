@@ -106,7 +106,8 @@ public class CourseController {
 		if(null != startDate){
 			page.addParam("startDate",startDate);
 		}
-		
+		model.addObject("startDate", startDate);
+		model.addObject("name", name);
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		model.addObject("courseList", courseList);

@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Timing>
+
+        <!--###############################################################################-->
+        <!--#########        辽宁商家联盟统计报表  edited by songyi     ##########-->
+        <!--###############################################################################-->
+        <TaskGroup>
+                <mail-server>mail.c-platform.com</mail-server>
+                <mail-from>jsmobileservice@c-platform.com</mail-from>
+                <mail-pass>cplatform</mail-pass>
+                <mail-to>
+                        songyi@c-platform.com,fuyi@c-platform.com,wangcc@c-platform.com,luoxuan@c-platform.com,zhangyn@c-platform.com,jinping@c-platform.com,wangax@c-platform.com,huangzj@c-platform.com,zhangsi@c-platform.com
+                </mail-to>
+                <taskgroup-name>统计报表</taskgroup-name>
+                <taskgroup-desc>统计报表</taskgroup-desc>
+                <time>00 12 * * *</time>
+                <xls-name>统计报表.xls</xls-name>
+                <xls-temp>./mailtemp/cylm/</xls-temp>
+                <task>
+                        <sheet-name>日报</sheet-name>
+                        <query-sql>
+
+select areainfo.area_name 城市,
+       
+       (select count(1)
+          from t_12580_shop t1
+         where (t1.provides = '1' or t1.provides = '3') --商户来源渠道，1表示地市移动提供
+           and t1.status = '1' --审核通过
+           and t1.audit_time is not null
+           and t1.audit_time &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000' --以商户审核通过时间为统计维度
+           and t1.audit_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.stats_area_code = areainfo.area_code) 新增商户数,
+       
+       (select count(1)
+          from t_12580_shop t1
+         where (t1.provides = '1' or t1.provides = '3')--商户来源渠道，1表示地市移动提供
+           and t1.status = '1' --审核通过
+           and t1.audit_time is not null
+           and t1.audit_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.stats_area_code = areainfo.area_code) 累计商户数,
+       (select cnt as cnt
+          from (select b.region_name as region_name,
+                       count(distinct a.terminal_id) as cnt
+                  from (select terminal_id
+                          from t_12580_user_dz dz
+                         where dz.order_time &gt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'000000'
+                           and dz.order_time &lt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959' -- 结束时间 
+                           and (not exists
+                                (select 1
+                                   from t_12580_user_td td2
+                                  where td2.terminal_id = dz.terminal_id
+                                    and td2.cancel_time &lt; dz.order_time) or
+                                exists
+                                (select 1
+                                   from t_12580_user_td td1
+                                  where td1.terminal_id = dz.terminal_id
+                                    and dz.custom_id != td1.custom_id
+                                    and td1.cancel_time =
+                                        (select max(cancel_time)
+                                           from t_12580_user_td td
+                                          where td.terminal_id = td1.terminal_id
+                                            and td.cancel_time &lt; dz.order_time)))
+                        union
+                        select terminal_id
+                          from t_12580_user_td dz
+                         where dz.order_time  &lt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959' -- 结束时间 
+                           and dz.order_time  &gt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'000000'
+                           and (not exists
+                                (select 1
+                                   from t_12580_user_td td2
+                                  where td2.terminal_id = dz.terminal_id
+                                    and td2.cancel_time &lt; dz.order_time) or
+                                exists
+                                (select 1
+                                   from t_12580_user_td td1
+                                  where td1.terminal_id = dz.terminal_id
+                                    and dz.custom_id != td1.custom_id
+                                    and td1.cancel_time =
+                                        (select max(cancel_time)
+                                           from t_12580_user_td td
+                                          where td.terminal_id = td1.terminal_id
+                                            and td.cancel_time &lt; dz.order_time)))) a
+                  left join ms_isdn_segment b on substr(a.terminal_id, 0, 7) =
+                                                 b.mobile_segment
+                 group by b.region_name) c
+         where c.region_name = areainfo.area_name) 新增高级会员数,
+       
+       (select cnt
+          from (select b.region_name as region_name,
+                       count(distinct a.terminal_id) as cnt
+                  from (select terminal_id
+                          from t_12580_user_dz dz
+                         where dz.order_time &gt; = '20130201000000'
+                           and dz.order_time &lt; =
+                               to_char(trunc(sysdate - 1), 'yyyyMMdd') ||
+                               '235959' -- 结束时间
+                        union
+                        select terminal_id
+                          from t_12580_user_td dz
+                         where dz.cancel_time &gt; = '20130201000000'
+                           and dz.cancel_time &lt; =
+                               to_char(trunc(sysdate - 1), 'yyyyMMdd') ||
+                               '235959' -- 结束时间
+                        union
+                        select terminal_id
+                          from t_12580_user_td dz
+                         where dz.order_time &lt; =
+                               to_char(trunc(sysdate - 1), 'yyyyMMdd') ||
+                               '235959' --结束时间
+                           and dz.cancel_time &gt; =
+                               to_char(trunc(sysdate - 1), 'yyyyMMdd') ||
+                               '235959' --结束时间               
+                        ) a
+                  left join ms_isdn_segment b
+                    on substr(a.terminal_id, 0, 7) = b.mobile_segment
+                 group by b.region_name) c
+         where c.region_name = areainfo.area_name) 累计高级会员数,
+       
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'mall'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 商城新增交易量,
+       
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'mall'
+           and t1.PAY_TIME &gt; = '20130201000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 商城累计交易量,
+       
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2, t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'tuan'
+           and t1.good_id = t3.team_id
+           and t3.award_flag = '0'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 团购新增交易量,
+       
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2, t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'tuan'
+           and t1.good_id = t3.team_id
+           and t3.award_flag = '0'
+           and t1.PAY_TIME &gt; = '20130201000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 团购累计交易量,
+       
+       (select count(1) as cnt
+          from v_order_info t1, t_12580_user_info t2, t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'tuan'
+           and t1.good_id = t3.team_id
+           and t3.award_flag = '1'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 活动类团购新增交易量,
+       
+       (select count(1) as cnt
+          from v_order_info t1, t_12580_user_info t2, t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'tuan'
+           and t1.good_id = t3.team_id
+           and t3.award_flag = '1'
+           and t1.PAY_TIME &gt; = '20130201000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 活动类团购累计交易量,
+       
+       (select sum(t1.buy_cnt) as cnt
+          from v_order_info t1, t_12580_user_info t2, t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'tuan'
+           and t1.good_id = t3.team_id
+           and t3.award_flag = '1'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 活动类团购新增销售量,
+       
+       (select sum(t1.buy_cnt) as cnt
+          from v_order_info t1, t_12580_user_info t2, t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel = 'tuan'
+           and t1.good_id = t3.team_id
+           and t3.award_flag = '1'
+           and t1.PAY_TIME &gt; = '20130201000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 活动类团购累计销售量,
+       
+       (select count(1) cnt
+          from t_12580_yx_order
+         where order_refund_state != 1
+           and order_create_time between
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000' and
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and order_area_code = areainfo.area_code) 营销活动新增交易量,
+       
+        (select count(1) cnt
+          from t_12580_yx_order
+         where order_refund_state != 1
+         and order_area_code = areainfo.area_code) 营销活动累计交易量,
+       
+       (select nvl(sum(v.buy_cnt), 0)
+          from v_order_info v
+         where v.verify_time is not null
+           and v.verify_time &gt;=
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000'
+           and v.verify_time &lt;=
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and v.area_code = areainfo.area_code) 新增商品验证量,
+       
+       (select nvl(sum(v.buy_cnt), 0)
+          from v_order_info v
+         where v.verify_time is not null
+           and v.verify_time &gt;= '20130201000000'
+           and v.verify_time &lt;=
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and v.area_code = areainfo.area_code) 累计商品验证量,
+       
+       nvl((select f.cnt
+             from (select region_name, sum(fee) as cnt
+                     from (select tt2.region_name,
+                                  nvl(count(tt1.terminal_id), 0) as fee
+                             from (select distinct a.terminal_id
+                                     from (select terminal_id
+                          from t_12580_user_dz dz
+                         where dz.order_time &gt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'000000'
+                           and dz.order_time &lt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959' -- 结束时间 
+                           and (not exists
+                                (select 1
+                                   from t_12580_user_td td2
+                                  where td2.terminal_id = dz.terminal_id
+                                    and td2.cancel_time &lt; dz.order_time) or
+                                exists
+                                (select 1
+                                   from t_12580_user_td td1
+                                  where td1.terminal_id = dz.terminal_id
+                                    and dz.custom_id != td1.custom_id
+                                    and td1.cancel_time =
+                                        (select max(cancel_time)
+                                           from t_12580_user_td td
+                                          where td.terminal_id = td1.terminal_id
+                                            and td.cancel_time &lt; dz.order_time)))
+                        union
+                        select terminal_id
+                          from t_12580_user_td dz
+                         where dz.order_time  &lt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959' -- 结束时间 
+                           and dz.order_time  &gt; =to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'000000'
+                           and (not exists
+                                (select 1
+                                   from t_12580_user_td td2
+                                  where td2.terminal_id = dz.terminal_id
+                                    and td2.cancel_time &lt; dz.order_time) or
+                                exists
+                                (select 1
+                                   from t_12580_user_td td1
+                                  where td1.terminal_id = dz.terminal_id
+                                    and dz.custom_id != td1.custom_id
+                                    and td1.cancel_time =
+                                        (select max(cancel_time)
+                                           from t_12580_user_td td
+                                          where td.terminal_id = td1.terminal_id
+                                            and td.cancel_time &lt; dz.order_time)))) a,
+                                          (select terminal_id
+                                             from t_12580_user_info t
+                                            where t.user_brand = 1
+                                              and t.user_level in (1, 2, 3)
+                                              and t.reg_time &lt; = to_char(trunc(sysdate - 1),
+                                                                         'yyyyMMdd') ||
+                                                  '235959' --结束时间，全球通VIP会员是定期导入的，注册时间不准确
+                                           ) b
+                                    where a.terminal_id = b.terminal_id(+)
+                                      and b.terminal_id is null
+                                   
+                                   ) tt1
+                             left join ms_isdn_segment tt2
+                               on substr(tt1.terminal_id, 0, 7) =
+                                  tt2.mobile_segment
+                            group by tt2.region_name)
+                    group by region_name) f
+            where f.region_name = areainfo.area_name),
+           0) 新增付费会员数   ,
+       
+       nvl((select f.cnt
+             from (select region_name, sum(fee) as cnt
+                     from (select tt2.region_name,
+                                  nvl(count(tt1.terminal_id), 0) as fee
+                             from (select distinct a.terminal_id
+                                     from (select terminal_id
+                                             from t_12580_user_dz dz
+                                            where dz.order_time &gt; =
+                                                  '20130201000000'
+                                              and dz.order_time &lt; = to_char(trunc(sysdate - 1),
+                                                                            'yyyyMMdd') ||
+                                                  '235959'
+                                           union
+                                           select terminal_id
+                                             from t_12580_user_td dz
+                                            where dz.cancel_time &gt; =
+                                                  '20130201000000'
+                                              and dz.cancel_time &lt; = to_char(trunc(sysdate - 1),
+                                                                             'yyyyMMdd') ||
+                                                  '235959'
+                                           union
+                                           select terminal_id
+                                             from t_12580_user_td dz
+                                            where dz.order_time &lt; = to_char(trunc(sysdate - 1),
+                                                                            'yyyyMMdd') ||
+                                                  '235959'
+                                              and dz.cancel_time &gt; = to_char(trunc(sysdate - 1),
+                                                                             'yyyyMMdd') ||
+                                                  '235959') a,
+                                          (select terminal_id
+                                             from t_12580_user_info t
+                                            where t.user_brand = 1
+                                              and t.user_level in (1, 2, 3)
+                                              and t.reg_time &lt; = to_char(trunc(sysdate - 1),
+                                                                         'yyyyMMdd') ||
+                                                  '235959' --结束时间，全球通VIP会员是定期导入的，注册时间不准确
+                                           ) b
+                                    where a.terminal_id = b.terminal_id(+)
+                                      and b.terminal_id is null
+                                   
+                                   ) tt1
+                             left join ms_isdn_segment tt2
+                               on substr(tt1.terminal_id, 0, 7) =
+                                  tt2.mobile_segment
+                            group by tt2.region_name)
+                    group by region_name) f
+            where f.region_name = areainfo.area_name),
+           0) 累计付费会员数,
+       
+       (select f.cnt
+          from (select t1.area_name as area_name, nvl(t2.cnt, 0) as cnt
+                  from t_sys_area_info t1
+                  left join (select b.area_code, count(a.terminal_id) as cnt
+                              from (select terminal_id
+                                      from t_12580_web_access_log
+                                     where access_start_time &gt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '000000'
+                                       and access_start_time &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 登录用户
+                                    union
+                                    select terminal_id
+                                      from v_order_info
+                                     where CREATE_TIME &gt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '000000'
+                                       and CREATE_TIME &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 产生支付订单用户，短信购支付无法登录
+                                    ) a,
+                                   t_12580_user_info b
+                             where a.terminal_id = b.terminal_id
+                             group by b.area_code) t2
+                    on t1.area_code = t2.area_code) f
+         where f.area_name = areainfo.area_name) 新增使用用户数,
+       
+       (select f.cnt
+          from (select t1.area_name as area_name, nvl(t2.cnt, 0) as cnt
+                  from t_sys_area_info t1
+                  left join (select b.area_code, count(a.terminal_id) as cnt
+                              from (select terminal_id
+                                      from t_12580_web_access_log
+                                     where access_start_time &gt; =
+                                           '20130201000000'
+                                       and access_start_time &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 登录用户
+                                    union
+                                    select terminal_id
+                                      from v_order_info
+                                     where CREATE_TIME &gt; = '20130201000000'
+                                       and CREATE_TIME &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 产生支付订单用户，短信购支付无法登录
+                                    ) a,
+                                   t_12580_user_info b
+                             where a.terminal_id = b.terminal_id
+                             group by b.area_code) t2
+                    on t1.area_code = t2.area_code) f
+         where f.area_name = areainfo.area_name) 累计使用用户数,
+       
+       (select count(1)
+          from t_12580_o2o_good_search o2o, t_12580_o2o_good_area o2oarea
+         where o2o.id = o2oarea.good_id
+           and o2o.status = '3'
+           and o2o.on_line_time &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000'
+           and o2o.on_line_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and o2oarea.area_code = areainfo.area_code) 新增商城商品数,
+       
+       (select count(1)
+          from t_12580_o2o_good_search o2o, t_12580_o2o_good_area o2oarea
+         where o2o.id = o2oarea.good_id
+           and o2o.status = '3'
+           and o2o.on_line_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and o2oarea.area_code = areainfo.area_code) 累计商城商品数,
+       
+       (select count(1)
+          from t_12580_u_groupbuy tuan
+         where tuan.ug_createtime &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000'
+           and tuan.ug_createtime &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and tuan.good_display = '1'
+           and (tuan.ug_area_code = areainfo.area_code or
+               tuan.ug_area_code = '0')) 新增团购商品数,
+       
+       (select count(1)
+          from t_12580_u_groupbuy tuan
+         where tuan.ug_createtime &gt; = '20130201000000'
+           and tuan.ug_createtime &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and tuan.good_display = '1'
+           and (tuan.ug_area_code = areainfo.area_code or
+               tuan.ug_area_code = '0')) 累计团购商品数,
+       
+       (select count(1)
+          from t_cont_mms mms
+         where mms.status = '1'
+           and mms.update_time &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000'
+           and mms.update_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and mms.end_time &gt; =to_char(sysdate,'yyyyMMddHH24mmss')   
+           and mms.start_time &lt; =to_char(sysdate,'yyyyMMddHH24mmss')              
+           and mms.area_code = areainfo.area_code) 新增优惠券数,
+       
+       (select count(1)
+          from t_cont_mms mms
+         where mms.status = '1'
+           and mms.end_time &gt; =to_char(sysdate,'yyyyMMddHH24mmss')   
+           and mms.start_time &lt; =to_char(sysdate,'yyyyMMddHH24mmss') 
+           and mms.area_code = areainfo.area_code) 累计优惠券数,
+       
+       (select count(1)
+          from sms_mo_log molog, t_sys_segment msarea
+         where molog.get_time &gt; = to_char(trunc(sysdate - 1), 'yyyyMMdd') || '000000'
+           and molog.get_time &lt; = to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and substr(molog.src_terminal_id, 0, 7) = msarea.segment_code(+)
+           and molog.msg_content not in('BOSSTD540001','BOSSTD540001A','BOSSDZ540001')
+           and msarea.area_code = areainfo.area_code) 新增上行短信数,
+       
+       (select count(1)
+          from sms_mo_log molog, t_sys_segment msarea
+         where molog.get_time &gt; = '20130101000000'
+           and molog.get_time &lt; = to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and substr(molog.src_terminal_id, 0, 7) = msarea.segment_code(+)
+           and molog.msg_content not in('BOSSTD540001','BOSSTD540001A','BOSSDZ540001')
+           and msarea.area_code = areainfo.area_code
+           ) 累计上行短信数
+
+  from t_sys_area_info areainfo
+ order by areainfo.id
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>   
+                
+                <task>
+                        <sheet-name>周报</sheet-name>
+                        <query-sql>
+select areainfo.area_name 城市,
+       
+       (select count(1)
+          from t_12580_shop t1
+         where (t1.provides = '1' or t1.provides = '3') --商户来源渠道，1表示地市移动提供
+           and t1.status = '1' --审核通过
+           and t1.audit_time is not null
+           and t1.audit_time &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000' --以商户审核通过时间为统计维度
+           and t1.audit_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.stats_area_code = areainfo.area_code) 新增商户数,              
+              
+       
+       
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='mall'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 商城新增交易量,
+                  
+           
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2,t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='tuan'      
+           and t1.good_id=t3.team_id   
+           and t3.award_flag='0'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id           
+           and t2.area_code = areainfo.area_code) 团购新增交易量, 
+                  
+                  
+       (select count(1) as cnt
+          from v_order_info t1, t_12580_user_info t2,t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='tuan'      
+           and t1.good_id=t3.team_id   
+           and t3.award_flag='1'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id           
+           and t2.area_code = areainfo.area_code) 活动类团购新增交易量,                                                    
+           
+       (select sum(t1.buy_cnt) as cnt
+          from v_order_info t1, t_12580_user_info t2,t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='tuan'      
+           and t1.good_id=t3.team_id   
+           and t3.award_flag='1'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id           
+           and t2.area_code = areainfo.area_code) 活动类团购新增销售量,                                                          
+       
+       (select count(1) cnt
+          from t_12580_yx_order
+         where order_refund_state != 1
+           and order_create_time between
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000' and
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and order_area_code = areainfo.area_code) 营销活动新增交易量,
+       
+       (select nvl(sum(v.buy_cnt), 0)
+          from v_order_info v
+         where v.verify_time is not null
+           and v.verify_time &gt;=
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000'
+           and v.verify_time &lt;=
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and v.area_code = areainfo.area_code) 新增商品验证量,                           
+       
+       (select count(1)
+          from t_12580_o2o_good_search o2o, t_12580_o2o_good_area o2oarea
+         where o2o.id = o2oarea.good_id
+           and o2o.status = '3'
+           and o2o.on_line_time &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000'
+           and o2o.on_line_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and o2oarea.area_code = areainfo.area_code) 新增商城商品数,             
+       
+       (select count(1)
+          from t_12580_u_groupbuy tuan
+         where tuan.ug_createtime &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000'
+           and tuan.ug_createtime &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+               and tuan.good_display='1' 
+               and (tuan.ug_area_code=areainfo.area_code or tuan.ug_area_code='0')
+               ) 新增团购商品数,             
+               
+       (select f.cnt
+          from (select t1.area_name as area_name, nvl(t2.cnt, 0) as cnt
+                  from t_sys_area_info t1
+                  left join (select b.area_code, count(a.terminal_id) as cnt
+                              from (select terminal_id
+                                      from t_12580_web_access_log
+                                     where access_start_time &gt; =
+                                           to_char(trunc(sysdate - 7),
+                                                   'yyyyMMdd') || '000000'
+                                       and access_start_time &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 登录用户
+                                    union
+                                    select terminal_id
+                                      from v_order_info
+                                     where CREATE_TIME &gt; =
+                                           to_char(trunc(sysdate - 7),
+                                                   'yyyyMMdd') || '000000'
+                                       and CREATE_TIME &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 产生支付订单用户，短信购支付无法登录
+                                    ) a,
+                                   t_12580_user_info b
+                             where a.terminal_id = b.terminal_id
+                             group by b.area_code) t2
+                    on t1.area_code = t2.area_code) f
+         where f.area_name = areainfo.area_name) 新增使用用户数,  
+         
+       (select count(1)
+          from t_cont_mms mms
+         where mms.status = '1'
+           and mms.update_time &gt; =
+               to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000'
+           and mms.update_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and mms.end_time &gt; =to_char(sysdate,'yyyyMMddHH24mmss')   
+           and mms.start_time &lt; =to_char(sysdate,'yyyyMMddHH24mmss')     
+           and mms.area_code = areainfo.area_code) 新增优惠券数 ,            
+        
+        (select count(1)
+          from sms_mo_log molog, t_sys_segment msarea
+         where molog.get_time &gt; = to_char(trunc(sysdate - 7), 'yyyyMMdd') || '000000'
+           and molog.get_time &lt; = to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and substr(molog.src_terminal_id, 0, 7) = msarea.segment_code(+)
+           and molog.msg_content not in('BOSSTD540001','BOSSTD540001A','BOSSDZ540001')
+           and msarea.area_code = areainfo.area_code
+           ) 新增上行短信数
+        
+  from t_sys_area_info areainfo
+ order by areainfo.id
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>              
+                
+                <task>
+                        <sheet-name>月报</sheet-name>
+                        <query-sql> 
+
+select areainfo.area_name 城市,
+       
+       (select count(1)
+          from t_12580_shop t1
+         where (t1.provides = '1' or t1.provides = '3') --商户来源渠道，1表示地市移动提供
+           and t1.status = '1' --审核通过
+           and t1.audit_time is not null
+           and t1.audit_time &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000' --以商户审核通过时间为统计维度
+           and t1.audit_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.stats_area_code = areainfo.area_code) 新增商户数,             
+       
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='mall'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id
+           and t2.area_code = areainfo.area_code) 商城新增交易量,
+           
+       (select count(t1.ID) as cnt
+          from v_order_info t1, t_12580_user_info t2,t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='tuan'      
+           and t1.good_id=t3.team_id   
+           and t3.award_flag='0'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id           
+           and t2.area_code = areainfo.area_code) 团购新增交易量, 
+ 
+       (select count(1) as cnt
+          from v_order_info t1, t_12580_user_info t2,t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='tuan'      
+           and t1.good_id=t3.team_id   
+           and t3.award_flag='1'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id           
+           and t2.area_code = areainfo.area_code) 活动类团购新增交易量,                                            
+           
+       (select sum(t1.buy_cnt) as cnt
+          from v_order_info t1, t_12580_user_info t2,t_12580_u_groupbuy t3
+         where t1.STATE = '1' --成功支付订单状态
+           and t1.channel='tuan'      
+           and t1.good_id=t3.team_id   
+           and t3.award_flag='1'
+           and t1.PAY_TIME &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000' --支付成功时间，而不是订单创建时间
+           and t1.PAY_TIME &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and t1.terminal_id = t2.terminal_id           
+           and t2.area_code = areainfo.area_code) 活动类团购新增销售量,                                       
+                      
+       (select count(1) cnt
+          from t_12580_yx_order
+         where order_refund_state != 1
+           and order_create_time between
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000' and
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and order_area_code = areainfo.area_code) 营销活动新增交易量,
+       
+       (select nvl(sum(v.buy_cnt), 0)
+          from v_order_info v
+         where v.verify_time is not null
+           and v.verify_time &gt;=
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+           and v.verify_time &lt;=
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and v.area_code = areainfo.area_code) 新增商品验证量,                                 
+       
+       (select count(1)
+          from t_12580_o2o_good_search o2o, t_12580_o2o_good_area o2oarea
+         where o2o.id = o2oarea.good_id
+           and o2o.status = '3'
+           and o2o.on_line_time &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+           and o2o.on_line_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and o2oarea.area_code = areainfo.area_code) 新增商城商品数,
+       
+       (select count(1)
+          from t_12580_u_groupbuy tuan
+         where tuan.ug_createtime &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+           and tuan.ug_createtime &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+               and tuan.good_display='1' 
+               and (tuan.ug_area_code=areainfo.area_code or tuan.ug_area_code='0')
+               ) 新增团购商品数,
+
+       
+       (select count(1)
+          from t_cont_mms mms
+         where mms.status = '1'
+           and mms.update_time &gt; =
+               to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+           and mms.update_time &lt; =
+               to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and mms.end_time &gt; =to_char(sysdate,'yyyyMMddHH24mmss')   
+           and mms.start_time &lt; =to_char(sysdate,'yyyyMMddHH24mmss')    
+           and mms.area_code = areainfo.area_code) 新增优惠券数,
+        
+        (select f.cnt
+          from (select t1.area_name as area_name, nvl(t2.cnt, 0) as cnt
+                  from t_sys_area_info t1
+                  left join (select b.area_code, count(a.terminal_id) as cnt
+                              from (select terminal_id
+                                      from t_12580_web_access_log
+                                     where access_start_time &gt; = to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+                                       and access_start_time &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 登录用户
+                                    union
+                                    select terminal_id
+                                      from v_order_info
+                                     where CREATE_TIME &gt; = to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+                                       and CREATE_TIME &lt; =
+                                           to_char(trunc(sysdate - 1),
+                                                   'yyyyMMdd') || '235959' -- 产生支付订单用户，短信购支付无法登录
+                                    ) a,
+                                   t_12580_user_info b
+                             where a.terminal_id = b.terminal_id
+                             group by b.area_code) t2
+                    on t1.area_code = t2.area_code) f
+         where f.area_name = areainfo.area_name) 新增使用用户数,
+           
+        (select count(1)
+          from sms_mo_log molog, t_sys_segment msarea
+         where molog.get_time &gt; = to_char(trunc(sysdate - 1), 'yyyyMM') || '01000000'
+           and molog.get_time &lt; = to_char(trunc(sysdate - 1), 'yyyyMMdd') || '235959'
+           and substr(molog.src_terminal_id, 0, 7) = msarea.segment_code(+)
+           and molog.msg_content not in('BOSSTD540001','BOSSTD540001A','BOSSDZ540001')
+           and msarea.area_code = areainfo.area_code
+        ) 新增上行短信数
+        
+        
+  from t_sys_area_info areainfo
+ order by areainfo.id
+
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>                                            
+        </TaskGroup>
+        
+        
+        <TaskGroup>
+                <mail-server>mail.c-platform.com</mail-server>
+                <mail-from>jsmobileservice@c-platform.com</mail-from>
+                <mail-pass>cplatform</mail-pass>
+                <mail-to>
+                        songyi@c-platform.com,chuyuan@c-platform.com,wangax@c-platform.com,fuyi@c-platform.com,15802401188@139.com
+                </mail-to>
+                <taskgroup-name>沈阳团购订单</taskgroup-name>
+                <taskgroup-desc>沈阳团购订单</taskgroup-desc>
+                <time>00 12 * * *</time>
+                <xls-name>沈阳团购订单.xls</xls-name>
+                <xls-temp>./mailtemp/cylm/</xls-temp>                
+                <task>
+                        <sheet-name>沈阳团购订单</sheet-name>
+                        <query-sql>
+select v.terminal_id 手机号,
+       a.area_name   所属城市,
+       v.PAY_TIME    付款时间,
+       v.CREATE_TIME 下单时间,       
+       s.name        商户名称,
+       v.use_title   商品名称,
+       l.verify_code 验证标识,
+       v.verify_flag 验证状态,
+       v.buy_cnt     购买数量,
+       v.BANKPAY     网银价格,
+       v.GBPAY       红包价格,
+       v.JFPAY       积分价格
+  from v_order_info              v,
+       t_12580_user_info         i,
+       t_sys_area_info           a,
+       t_12580_shop              s,
+       t_12580_validate_code_log l,
+       t_12580_u_groupbuy        u
+ where v.channel = 'tuan'
+   and v.terminal_id = i.terminal_id
+   and i.area_code = a.area_code
+   and v.shop_id = s.id
+   and v.ID = l.order_id
+   and v.good_id = u.team_id
+   and u.ug_area_code = '024'
+   and u.award_flag != '1'
+   and substr(v.PAY_TIME, 0, 8) = to_char(trunc(sysdate - 1), 'yyyyMMdd')
+ order by v.PAY_TIME
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>   
+        </TaskGroup>
+                          
+        
+        <TaskGroup>
+                <mail-server>mail.c-platform.com</mail-server>
+                <mail-from>jsmobileservice@c-platform.com</mail-from>
+                <mail-pass>cplatform</mail-pass>
+                <mail-to>
+                        13709857338@139.com,fuyi@c-platform.com,pangdd@c-platform.com,huangzj@c-platform.com,jinping@c-platform.com,songyi@c-platform.com,wangyfa@c-platform.com,zhangsi@c-platform.com
+                </mail-to>
+                <taskgroup-name>第四季度营销活动中奖名单</taskgroup-name>
+                <taskgroup-desc>第四季度营销活动中奖名单</taskgroup-desc>
+                <time>00 12 * * *</time>
+                <xls-name>第四季度营销活动中奖名单.xls</xls-name>
+                <xls-temp>./mailtemp/cylm/</xls-temp>                
+                <task>
+                        <sheet-name>第四季度营销活动中奖名单</sheet-name>
+                        <query-sql>
+select reward.user_name 用户名,
+       reward.terminal_id 手机号,
+       reward.reward_time 中奖时间,
+       reward.prize 红包金额
+  from T_12580_PMA_GUESS_REWARD reward
+ where to_Char(substr(reward.reward_time, 0, 10)) =
+       to_char((select sysdate - interval '1' day from dual), 'yyyy-MM-dd')
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>   
+        </TaskGroup>  
+        
+        <TaskGroup>
+                <mail-server>mail.c-platform.com</mail-server>
+                <mail-from>jsmobileservice@c-platform.com</mail-from>
+                <mail-pass>cplatform</mail-pass>
+                <mail-to>
+                        13709857338@139.com,fuyi@c-platform.com,pangdd@c-platform.com,huangzj@c-platform.com,jinping@c-platform.com,songyi@c-platform.com,wangyfa@c-platform.com,zhangsi@c-platform.com
+                </mail-to>
+                <taskgroup-name>第四季度营销活动抽奖日志</taskgroup-name>
+                <taskgroup-desc>第四季度营销活动抽奖日志</taskgroup-desc>
+                <time>00 12 * * *</time>
+                <xls-name>第四季度营销活动抽奖日志.xls</xls-name>
+                <xls-temp>./mailtemp/cylm/</xls-temp>                
+                <task>
+                        <sheet-name>第四季度营销活动抽奖日志</sheet-name>
+                        <query-sql>
+  SELECT user_name 用户昵称,
+         phone 手机号码,
+         bonus 中奖金额,
+         click_date 抽奖时间,
+         currentclicktimes 点击次数
+    FROM t_12580_pma_q4_log
+   WHERE day_time = TO_CHAR (SYSDATE - 1, 'yyyy-mm-dd')
+ORDER BY currentclicktimes
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>   
+        </TaskGroup>  
+        
+        <TaskGroup>
+                <mail-server>mail.c-platform.com</mail-server>
+                <mail-from>jsmobileservice@c-platform.com</mail-from>
+                <mail-pass>cplatform</mail-pass>
+                <mail-to>
+                        fuyi@c-platform.com,songyi@c-platform.com,zhangsi@c-platform.com,chuyuan@c-platform.com
+                </mail-to>
+                <taskgroup-name>截止昨日23时29分29秒高级、付费会员统计</taskgroup-name>
+                <taskgroup-desc>截止昨日23时29分29秒高级、付费会员统计</taskgroup-desc>
+                <time>00 12 * * *</time>
+                <xls-name>截止昨日23时29分29秒高级付费会员统计.xls</xls-name>
+                <xls-temp>./mailtemp/cylm/</xls-temp>                
+                <task>
+                        <sheet-name>截止昨日23时29分29秒高级会员统计</sheet-name>
+                        <query-sql>
+                                 select tt2.area_code, count(*)
+				  from (select a.terminal_id
+				          from (select terminal_id, min(order_time) order_time
+				                  from (select terminal_id, order_time
+				                          from t_12580_user_dz
+				                         where order_time &lt;= to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                        union
+				                        select dz.terminal_id, dz.order_time
+				                          from t_12580_user_dz dz,t_12580_user_td td
+				                         where dz.order_time &gt; to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           and dz.terminal_id = td.terminal_id
+                                                            and td.custom_id = dz.custom_id
+				                           and to_number(td.order_time) &lt;=to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           and to_number(td.cancel_time) &gt; to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           
+				                        union
+				                        select dz.terminal_id, dz.order_time
+				                          from t_12580_user_dz dz,t_12580_user_td td
+				                         where dz.order_time &gt; to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           and  dz.terminal_id = td.terminal_id
+				                           and td.custom_id = dz.custom_id
+				                           and to_number(td.cancel_time) &gt;=to_char(trunc(sysdate - 1), 'yyyyMM') ||'01000000'
+				                           and to_number(td.cancel_time) &lt;=to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959')
+				                        group by terminal_id) a) tt1,t_12580_user_info tt2
+				       where tt1.terminal_id =tt2.terminal_id
+				 group by tt2.area_code
+
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task>  
+                <task>
+                        <sheet-name>截止昨日23时29分29秒付费会员统计</sheet-name>
+                        <query-sql>
+                              select tt2.area_code, count(*)
+				  from (select a.terminal_id
+				          from (select terminal_id, min(order_time) order_time
+				                  from (select terminal_id, order_time
+				                          from t_12580_user_dz
+				                         where order_time &lt;= to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                        union
+				                        select dz.terminal_id, dz.order_time
+				                          from t_12580_user_dz dz,t_12580_user_td td
+				                         where dz.order_time &gt; to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           and dz.terminal_id = td.terminal_id
+                                                            and td.custom_id = dz.custom_id
+				                           and to_number(td.order_time) &lt;=to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           and to_number(td.cancel_time) &gt; to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           
+				                        union
+				                        select dz.terminal_id, dz.order_time
+				                          from t_12580_user_dz dz,t_12580_user_td td
+				                         where dz.order_time &gt; to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959'
+				                           and  dz.terminal_id = td.terminal_id
+				                           and td.custom_id = dz.custom_id
+				                           and to_number(td.cancel_time) &gt;=to_char(trunc(sysdate - 1), 'yyyyMM') ||'01000000'
+				                           and to_number(td.cancel_time) &lt;=to_char(trunc(sysdate - 1), 'yyyyMMdd') ||'235959')
+				                        group by terminal_id) a,
+				                       (select terminal_id
+				                         from t_12580_user_info t
+				                        where t.user_brand = 1
+				                          and t.user_level in (1, 2, 3)
+				                          and t.reg_time &lt; = to_char(trunc(sysdate - 1),
+				                                                     'yyyyMMdd') ||'235959') b
+				                             where a.terminal_id = b.terminal_id(+)
+				                              and b.terminal_id is null) tt1,t_12580_user_info tt2
+				       where tt1.terminal_id =tt2.terminal_id
+				 group by tt2.area_code
+
+                        </query-sql>
+                        <query-db>newcylm</query-db>
+                                    <query-db-decode-encode>NO</query-db-decode-encode>
+                </task> 
+        </TaskGroup>
+</Timing>

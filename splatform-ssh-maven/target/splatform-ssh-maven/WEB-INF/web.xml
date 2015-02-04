@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  
+  <display-name>splatform-ssh-maven</display-name>
+  
+  
+  <!-- 要加载Spring配置文件的位置，需要放在servlet、filter定义前 
+		 		指定spring配置文件的位置 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+	<!-- 启动Web容器时,解析 spring 配置文件，自动装配ApplicationContext的配置信息 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<filter>
+		<filter-name>openSessionInViewFilter</filter-name>
+		<filter-class>
+			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
+		<init-param>
+			<param-name>sessionFactoryBeanName</param-name>
+			<param-value>sessionFactory</param-value>
+		</init-param>
+		<init-param>
+			<param-name>singleSession</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>flushMode</param-name>
+			<param-value>AUTO </param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>openSessionInViewFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- 定义Struts2的FilterDispatcher的Filter -->
+	<filter>
+		<!-- 定义核心Filter的名字 -->
+		<filter-name>struts2</filter-name>
+		<!-- 定义核心Filter的实现类 -->
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+	<!-- FilterDispatcher用来初始化Struts2并且处理所有的Web请求 -->
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+	<!-- <servlet>
+		<servlet-name>Admin</servlet-name>
+		<servlet-class>org.logicalcobwebs.proxool.admin.servlet.AdminServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Admin</servlet-name>
+		<url-pattern>/admin</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>authImg</servlet-name>
+		<servlet-class>com.cplatform.lncs.manager.common.DrawConfirmCode</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>authImg</servlet-name>
+		<url-pattern>/authImg</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>fileUpload</servlet-name>
+		<servlet-class>com.cplatform.lncs.manager.base.model.FileUploadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>fileUpload</servlet-name>
+		<url-pattern>/fileUpload</url-pattern>
+	</servlet-mapping> -->
+	<!-- 默认首页配置 -->
+	<welcome-file-list>
+		<welcome-file>/WEB-INF/index.jsp</welcome-file>
+	</welcome-file-list>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+	<error-page>
+	 <error-code>404</error-code>
+	    <location>/WEB-INF/main/error.jsp</location>
+	</error-page>
+	<error-page>
+	    <error-code>500</error-code>
+	    <location>/WEB-INF/main/error.jsp</location>
+	</error-page>
+</web-app>

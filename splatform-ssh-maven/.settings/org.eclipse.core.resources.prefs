@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/splatform/manage/action/facebook/FacebookAction.java=UTF-8
+encoding//src/main/java/com/splatform/manage/base/dao/AbstractBaseDao.java=UTF-8
+encoding//src/main/java/com/splatform/manage/base/intercepter/AuthenticateInterceptor.java=UTF-8
+encoding//src/main/java/com/splatform/manage/demo/tcp/FileClient.java=UTF-8
+encoding//src/main/java/com/splatform/manage/demo/tcp/FileServer.java=UTF-8
+encoding//src/main/java/com/splatform/manage/demo/tcp/TcpClientDemo.java=UTF-8
+encoding//src/main/java/com/splatform/manage/demo/tcp/TcpServerDemo.java=UTF-8
+encoding//src/main/java/com/splatform/manage/module/page/Page.java=UTF-8
+encoding//src/main/java/com/splatform/manage/pojo/LoginUser.java=UTF-8
+encoding/<project>=UTF-8

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 提供登陆验证拦截功能 -->
+<struts>
+	<!-- 一定要继承自convention-default -->
+	<package name="struts-base" extends="convention-default,json-default">
+		<!--
+			原因：package里元素必须按照一定的顺序排列：
+			result-types
+			interceptors
+			default-interceptor-ref
+			default-action-ref
+			default-class-ref
+			global-results
+			global-exception-mappings
+			action*（所有action放到最后）
+		-->
+		<!-- 声明的字符串返回 -->
+		<!-- <result-types>
+			<result-type name="stringType"
+				class="com.splatform.manager.module.result.StringResultType">
+			</result-type>
+		</result-types> -->
+		
+		
+		
+		<interceptors>
+			<!-- 自定义拦截器，处理登陆验证 -->
+			<interceptor name="authenticateStack"
+				class="com.splatform.manage.base.intercepter.AuthenticateInterceptor">
+			</interceptor>
+			<!-- manage专属拦截器栈 -->
+			<interceptor-stack name="manageStack">
+				<interceptor-ref name="authenticateStack"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="manageStack"></default-interceptor-ref>
+		
+		<!-- 定义全局处理结果 -->
+		<global-results>
+			<!-- 逻辑名为unite_login的结果，映射到/unite_login.jsp页面 -->
+			<result name="unite_login">WEB-INF/unite_login.jsp</result>
+			<result name="error">WEB-INF/error-500.jsp</result>
+		</global-results>
+
+
+		<global-exception-mappings>
+			<!-- 指Action抛出Exception异常时，转入名为exception的结果。 -->
+			<exception-mapping exception="java.lang.Exception"
+				result="error" />
+		</global-exception-mappings>
+
+		
+		
+	</package>
+
+</struts>

@@ -20,9 +20,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.sh.manage.constants.Constants;
+import com.sh.manage.entity.MukeCourse;
 import com.sh.manage.entity.SysAttachment;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.config.ResourceConfig;
+import com.sh.manage.service.CourseService;
 import com.sh.manage.service.UploadService;
 import com.sh.manage.service.UserService;
 import com.sh.manage.utils.TimeUtil;
@@ -50,6 +52,12 @@ public class UploadController {
 	 */
 	@Autowired
 	private UploadService uploadService;
+	
+	/**
+	 * 课程管理service
+	 */
+	@Autowired
+	private CourseService courseService;
 
 	/**
 	 * 上传文件
@@ -58,8 +66,10 @@ public class UploadController {
 	@RequestMapping(value = "/uploadImg")
 	public ResponseEntity<String> uploadImg(
 			@RequestParam(value = "userId", required = false, defaultValue = "") Integer userId,
+			@RequestParam(value = "id", required = false, defaultValue = "") Integer id,
+			@RequestParam(value = "type", required = false, defaultValue = "") Integer type,
 			HttpServletRequest request,HttpServletResponse response, ModelMap model) {
-		logger.info("controller:..图片上传!");
+		logger.info("controller:..文件上传!");
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		HttpSession session = request.getSession();
@@ -95,18 +105,50 @@ public class UploadController {
             sysAttachment.setNewfilename(fileName);
             sysAttachment.setUploadtime(TimeUtil.now());
             sysAttachment.setUid(userId);
-            sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型
             
-            Integer faceimgAid = uploadService.addFile(sysAttachment);
-            result.put("aid", faceimgAid);
-            //get user
-            SysUser sysUser = userService.findSysUser(userId);
-            sysUser.setFaceimgAid(faceimgAid);
-            userService.editSysUser(sysUser);
+            switch (type) {
+			case Constants.ATTACH_TYPE_FACEIMG:
+				sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型
+				
+				Integer faceimgAid = uploadService.addFile(sysAttachment);
+	            result.put("aid", faceimgAid);
+	            //get user
+	            SysUser sysUser = userService.findSysUser(userId);
+	            sysUser.setFaceimgAid(faceimgAid);
+	            userService.editSysUser(sysUser);
+	            
+	            session.removeAttribute("faceimgpath");
+	            session.setAttribute("faceimgpath", newFileUrl);
+				
+				break;
+			case Constants.ATTACH_TYPE_BIGIMG:
+				sysAttachment.setType(Constants.ATTACH_TYPE_BIGIMG);//大图片类型
+				break;
+			case Constants.ATTACH_TYPE_FILE:
+				sysAttachment.setType(Constants.ATTACH_TYPE_FILE);//文件类型
+				break;
+			case Constants.ATTACH_TYPE_MUSIC:
+				sysAttachment.setType(Constants.ATTACH_TYPE_MUSIC);//音乐类型
+				break;
+			case Constants.ATTACH_TYPE_VIDEO:
+				sysAttachment.setType(Constants.ATTACH_TYPE_VIDEO);//视频类型
+								
+				Integer videoAid = uploadService.addFile(sysAttachment);
+	            result.put("aid", videoAid);
+	            //get course
+	            MukeCourse course = courseService.findCourse(id);
+	            course.setVideoId(videoAid);
+	            courseService.editCourse(course);
+	            
+	            session.removeAttribute("faceimgPath");
+	            session.setAttribute("faceimgPath", newFileUrl);
+				break;
+			default:
+				break;
+			}
             
-            session.removeAttribute("faceimgPath");
-            session.setAttribute("faceimgPath", newFileUrl);
-            logger.info("controller:..图片上传结束!");
+            
+            logger.info("controller:..文件上传结束!");
         } catch (Exception e) {
             e.printStackTrace();  
             return new ResponseEntity<String>("error",responseHeaders, HttpStatus.CREATED);

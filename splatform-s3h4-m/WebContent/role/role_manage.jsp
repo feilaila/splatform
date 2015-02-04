@@ -183,8 +183,7 @@
   //添加角色
     var addRole = function(){
     	var diag = new zDialog();
-    	diag.Height = 360;
-    	diag.Width = 660;
+    	diag.Height = 400;
     	diag.Title = "角色管理-角色添加";
     	diag.URL = "<%=path %>/addRole.do";
     	diag.OKEvent=function(){

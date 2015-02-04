@@ -11,7 +11,7 @@ String lpath=this.getServletContext().getContextPath();
        <div id="left" >
             <div class="media user-media well-small">
                 <a class="user-link" href="#">
-                    <img id="l_face_img" class="media-object img-thumbnail user-img" width="64" height="64" alt="User Picture" src="${attachment.filepath }" />
+                    <img id="l_face_img" class="media-object img-thumbnail user-img" width="64" height="64" alt="User Picture" src='<c:if test="${attachment.filepath == null}"><%=session.getAttribute("faceimgpath")%></c:if><c:if test="${attachment.filepath != null}">${attachment.filepath}</c:if>' />
                 </a>
                 <br />
                 <div class="media-body">

@@ -67,7 +67,7 @@ public class SysUserDao extends AbstractBaseDao<SysUser>{
 	public Page getAllSysUser(String usercode, String startDate,
 			String endDate, Integer pageNo, int pageSize) {
 		StringBuffer sbf = new StringBuffer();
-		sbf.append("select rt.* from (select s.uid,s.email,s.name,s.usercode,s.password,s.terminal_id,s.valid_time,s.create_time,s.change_pwd_time,s.status,s.lock_status,s.last_login_time,s.last_login_ip,s.group_id,g.group_name groupName from t_sys_user s left join t_sys_group g on s.group_id = g.id ");
+		sbf.append("select rt.* from (select s.uid,s.email,s.name,s.usercode,s.password,s.terminal_id,s.valid_time,s.create_time,s.change_pwd_time,s.status,s.lock_status,s.last_login_time,s.last_login_ip,s.group_id,s.faceimg_aid,g.group_name groupName from t_sys_user s left join t_sys_group g on s.group_id = g.id ");
 		sbf.append(" where 1 = 1 ");//有效的用户and s.status = 1
 		Object[] params = new Object[]{};
 		

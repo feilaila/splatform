@@ -128,6 +128,8 @@ public class LoginController {
 			sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型
 			attachment = uploadService.getFile(sysAttachment);
 			model.addObject("attachment",attachment);
+			session.removeAttribute("faceimgpath");
+			session.setAttribute("faceimgpath", attachment.getFilepath());
 		}
 		
 		logger.info(jsonArr);
@@ -150,7 +152,6 @@ public class LoginController {
 			@RequestParam("password") String password,
 			@RequestParam("rand") String rand) {
 		HttpSession session = request.getSession();
-		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
 		resp.setContentType("text/html;charset=UTF-8");
@@ -363,7 +364,7 @@ public class LoginController {
 
 		/* 判断session是否存在登陆信息 */
 		if (null != session.getAttribute(SessionConstants.LOGIN_USER)) {
-			
+			session.invalidate();
 			session.removeAttribute(SessionConstants.LOGIN_USER);//清楚session
 			//SysUser loginUser = (SysUser) session.getAttribute(SessionConstants.LOGIN_USER);
 			

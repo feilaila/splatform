@@ -155,7 +155,7 @@
 				var settings = {
 					flash_url : "<%=path %>/static/js/swfupload/swfupload/swfupload.swf",
 					upload_url: "<%=path%>/uploadImg.do",	// Relative to the SWF file
-					post_params: {"jsessionid":"<%=request.getSession().getId()%>","userId" : "${sysUser.uid}"},
+					post_params: {"jsessionid":"<%=request.getSession().getId()%>","userId" : "${sysUser.uid}","type":"1"},
 					file_size_limit : "100 MB",
 					file_types : "*.*",
 					file_types_description : "All Files",

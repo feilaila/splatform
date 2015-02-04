@@ -42,7 +42,13 @@ public class MukeCourse  implements java.io.Serializable {
     
 	private String createTime;
 
-
+	//附件id
+	private Integer videoId;
+	/**
+	 * 状态 0待审核  1已审核  2 已下线 ;默认为0
+	 */
+	private Integer status;
+	
     // Constructors
 
     /** default constructor */
@@ -52,7 +58,7 @@ public class MukeCourse  implements java.io.Serializable {
     
     /** full constructor */
     public MukeCourse(Integer id, Integer typeId, Integer uid, String name,
-			String info, String img, String createTime) {
+			String info, String img, String createTime,Integer videoId,Integer status) {
 		super();
 		this.id = id;
 		this.typeId = typeId;
@@ -61,6 +67,8 @@ public class MukeCourse  implements java.io.Serializable {
 		this.info = info;
 		this.img = img;
 		this.createTime = createTime;
+		this.videoId = videoId;
+		this.status = status;
 	}
    
     // Property accessors
@@ -80,8 +88,7 @@ public class MukeCourse  implements java.io.Serializable {
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
 	}
-    
-    
+        
     @Column(name="sys_user_id")
     public Integer getUid() {
         return this.uid;
@@ -90,9 +97,7 @@ public class MukeCourse  implements java.io.Serializable {
 	public void setUid(Integer uid) {
         this.uid = uid;
     }
-    
-    
-    
+      
     @Column(name="name", length=100)
 
     public String getName() {
@@ -108,7 +113,6 @@ public class MukeCourse  implements java.io.Serializable {
 		return title;
 	}
 
-
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -117,7 +121,6 @@ public class MukeCourse  implements java.io.Serializable {
 	public String getInfo() {
 		return info;
 	}
-
 
 	public void setInfo(String info) {
 		this.info = info;
@@ -128,7 +131,6 @@ public class MukeCourse  implements java.io.Serializable {
 		return img;
 	}
 
-
 	public void setImg(String img) {
 		this.img = img;
 	}
@@ -138,14 +140,26 @@ public class MukeCourse  implements java.io.Serializable {
 		return createTime;
 	}
 
-
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 
+	@Column(name="video_id")
+	public Integer getVideoId() {
+		return videoId;
+	}
 
-    
-    
+	public void setVideoId(Integer videoId) {
+		this.videoId = videoId;
+	}
 
+	@Column(name="status")
+	public Integer getStatus() {
+		return status;
+	}
 
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
 }

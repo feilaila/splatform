@@ -55,11 +55,19 @@ public class Constants {
 	/**
 	 * 附件类型  1头像图片 2大图 3 文件  4  音乐  5  视频
 	 */
-	public final static Integer ATTACH_TYPE_FACEIMG = 1;
-	public final static Integer ATTACH_TYPE_BIGIMG = 2;
-	public final static Integer ATTACH_TYPE_FILE = 3;
-	public final static Integer ATTACH_TYPE_MUSIC = 4;
-	public final static Integer ATTACH_TYPE_VIDEO = 5;
+	public final static int ATTACH_TYPE_FACEIMG = 1;
+	public final static int ATTACH_TYPE_BIGIMG = 2;
+	public final static int ATTACH_TYPE_FILE = 3;
+	public final static int ATTACH_TYPE_MUSIC = 4;
+	public final static int ATTACH_TYPE_VIDEO = 5;
+
+	/**
+	 * 课程状态
+	 * 状态 0待审核  1已审核  2 已下线 ;默认为0
+	 */
+	public static final int COURSE_STATUS_INIT = 0;
+	public static final int COURSE_STATUS_ONLINE = 1;
+	public static final int COURSE_STATUS_OFFLINE = 2;
 	
 	static {
 		SUPER_ADMIN_ID_LIST.add("0");

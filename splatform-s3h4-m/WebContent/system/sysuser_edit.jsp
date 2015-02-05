@@ -3,8 +3,8 @@
 <%@ include file="../WEB-INF/include.jsp"%>
 
 <!-- BEGIN HEAD -->
-<link href="<%=path %>/static/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css" />
-<style>
+<%@ include file="../main/header.jsp"%>
+<style type="text/css">
 	.role—area{
 		border:1px solid #9FA0A3;
 		line-height: 40px;
@@ -30,122 +30,93 @@
 		transition-property: transform, opacity;
 		transition-duration: 0.4s;
 	}
+	.box_l_h_c li{
+
+    display:block;
+    float:left;
+    margin:20px 0 0 10px;
+}
 </style>
-<%@ include file="../main/header.jsp"%>
 <!-- END HEAD -->
 
 <!-- BEGIN BODY -->
 <body>
 	<div id="wrap">
-		<form class="_formm15" action="<%=path%>/doEditGroup.do" method="post" id="editForm" name="editForm">
-								<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
-								<input type="hidden" id="groupId" name="groupId"
-											value="${group.id }" />
-								<input type="hidden" id="roleStr" name="roleStr"
-											value="" >
-								<table width="98%" border="0" align="center" cellpadding="4"
-									cellspacing="4" bordercolor="#666666">
-									<tr>
-										<td width="100" align="left">组织名称：</td>
-										<td><input type="text" id="groupName" name="groupName"
-											value="${group.groupName }" /></td>
-									</tr>
-									<tr>
-										<td width="100" align="left">描述：</td>
-										<td><input type="text" id="groupDesc" name="groupDesc"
-											value="${group.groupDesc }" /></td>
-									</tr>
-									<tr>
-										<td width="100" align="left">创建时间：</td>
-										<td><input type="text" id="createTime" name="createTime"
-											value="${group.createTime }" readonly="readonly" /></td>
-									</tr>
-									<tr>
-							          <td width="100" align="left">角色选择:</td>
-							          <td width="400" class="role—area">
-									   	<ul class="wrap-ul">
-									   		<c:forEach items="${roleList}" var="role"
-													varStatus="status">
-									   			<c:choose>
-									   				<c:when test="${role.checked==true }">
-										   				<li class="wrap-li">
-										   					<input name="gRole" type="checkbox" value="${role.id}" checked="checked">${role.roleName}</li>
-										   			</c:when>
-										   			<c:otherwise>
-										   				<li class="wrap-li">
-										   					<input name="gRole" type="checkbox" value="${role.id}"> ${role.roleName}</li>
-										   			</c:otherwise>	
-									   			</c:choose>					   			
-									   		</c:forEach>
-									   	</ul>
-									  </td>
-							        </tr>
-								</table>
-							</form>
+					<form class="" method="post" id="addForm" name="addForm"
+						action="<spring:url value='/doAddsuser.do' htmlEscape='true'/>" target="_self">
+						<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
+						<ul class="box_l_h_c">
+							<li class="box_l_h_c_li">
+								<select id="suGroupId" name="suGroupId" class="form-control"
+									style="height:33px;width: 196px; background: none repeat scroll 0 0 #f5f5f5 !important;">
+										<option value="0" selected>请选择组织</option>
+										<c:forEach items="${groupList}" var="group">
+											<option value="${group.id }"
+												onclick="setSuGroupId('${group.id }','${group.groupName}');"
+											<c:if test="${sysUser.groupId == group.id}">selected</c:if>
+											>${group.groupName}</option>
+										</c:forEach>
+								</select>
+							</li>
+							<li class="box_l_h_c_li">
+								<input id="createDate" class="form-control span3" type="text"
+									name="startDate" value="${sysUser.createTime}" placeholder="开始日期" readonly>
+							</li>
+							<li class="box_l_h_c_li"><input name="usercode" value="${sysUser.usercode}" type="text"
+									placeholder="输入用户名" class="form-control span3" id="usercode"
+									autocomplete="off" /></li>
+							<li class="box_l_h_c_li">
+								<input id="validDate" class="form-control span3" type="text"
+									name="endDate" value="${sysUser.validTime}" placeholder="结束日期" readonly>
+							</li>
+							
+							<li class="box_l_h_c_li">
+								<input name="terminalId" id="terminalId" type="text"
+									placeholder="输入手机号" class="form-control span3" 
+									autocomplete="off" value="${sysUser.terminalId}"/>
+							</li>						
+							<li class="box_l_h_c_li">
+								<input name="email" id="email" type="text"
+									placeholder="输入邮箱" class="form-control span3" 
+									autocomplete="off" value="${sysUser.email}"/>
+							</li>
+							<li class="box_l_h_c_li">
+								<input name="name" value="" type="text"
+									placeholder="输入姓名" class="form-control span3" id="name"
+									autocomplete="off" value="${sysUser.name}"/>
+							</li>
+							<li class="box_l_h_c_li">
+								<select id="status" class="form-control"
+									style="height:33px;width: 196px; background: none repeat scroll 0 0 #f5f5f5 !important;"
+									name="status">
+										<option value="0">状态</option>
+										<option value="1" onclick="setSuStatus('1');">有效</option>
+										<option value="9" onclick="setSuStatus('9');">失效</option>
+								</select>
+							</li>
+							
+						</ul>
+						
+					</form>
 	</div>
 	<!--END MAIN WRAPPER -->
 </body>
+<!-- GLOBAL SCRIPTS -->
+<script src="<%=path%>/static/assets/plugins/jquery-2.0.3.min.js"></script>
 
-<!-- zTree -->
-<script type="text/javascript" src="<%=path %>/static/js/ztree/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="<%=path %>/static/js/ztree/jquery.ztree.core-3.5.min.js"></script>
-<script type="text/javascript" src="<%=path %>/static/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+<script type="text/javascript"	src="<%=path %>/static/js/date-time/bootstrap-datepicker.js"></script>
 
-<SCRIPT type="text/javascript">
-		
-		/*
-		<div class="content_wrap">	
-					<div class="zTreeDemoBackground left">
-						<ul id="treeDemo" class="ztree"></ul>
-					</div>
-		</div>
-		var setting = {
-			check: {
-				enable: true
-			},
-			data: {
-				simpleData: {
-					enable: true
+<iframe name="targetFrame" style="width: 0%; display: none;"></iframe>
+<script type="text/javascript">
+				$('#createDate').datepicker({format:"yyyy-mm-dd"});
+				$('#validDate').datepicker({format:"yyyy-mm-dd"});
+				//提交搜索
+				var setSuGroupId = function(suGroupId){
+					document.getElementById("suGroupId").value=suGroupId;
 				}
-			}
-		};
-
-		var zNodes =[
-			{ id:1, pId:0, name:"随意勾选 1", open:true},
-			{ id:11, pId:1, name:"随意勾选 1-1", open:true},
-			{ id:111, pId:11, name:"随意勾选 1-1-1"},
-			{ id:112, pId:11, name:"随意勾选 1-1-2"},
-			{ id:12, pId:1, name:"随意勾选 1-2", open:true},
-			{ id:121, pId:12, name:"随意勾选 1-2-1"},
-			{ id:122, pId:12, name:"随意勾选 1-2-2"}
-		];
-		
-		var code;
-		
-		function setCheck() {
-			*var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-			 py = $("#py").attr("checked")? "p":"",
-			sy = $("#sy").attr("checked")? "s":"",
-			pn = $("#pn").attr("checked")? "p":"",
-			sn = $("#sn").attr("checked")? "s":"",
-			type = { "Y":py + sy, "N":pn + sn};
-			zTree.setting.check.chkboxType = type;
-			showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
-		}
-		function showCode(str) {
-			if (!code) code = $("#code");
-			code.empty();
-			code.append("<li>"+str+"</li>");
-		}
-		
-		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-			 setCheck();
-			$("#py").bind("change", setCheck);
-			$("#sy").bind("change", setCheck);
-			$("#pn").bind("change", setCheck);
-			$("#sn").bind("change", setCheck); 
-		}); */
-		
-	</SCRIPT>
+				var setSuStatus = function(suStatus){
+					document.getElementById("status").value=suStatus;
+				}
+				
+</script>    
 </html>

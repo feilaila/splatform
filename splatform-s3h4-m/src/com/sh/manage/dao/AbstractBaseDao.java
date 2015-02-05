@@ -351,6 +351,24 @@ public abstract class AbstractBaseDao<T> {
 		objList = query.list();
 		return (List<Object>) objList;
 	}
+	
+	/**
+	 * 查询数据的列表
+	 */
+	@SuppressWarnings("unchecked")
+	public List<?> querysqlDTOList(final String sqlStr, final Object[] paras,final Class clazz)
+			throws SPlatformDaoException {
+		List<?> objList = new ArrayList<>();
+		int count = 0;
+		Query query = this.getCurrentSession().createSQLQuery(sqlStr).setResultTransformer(Transformers.aliasToBean(clazz));
+		if (null != paras && paras.length > 0) {
+			for (Object para : paras) {
+				query.setParameter(count++, para);
+			}
+		}
+		objList = query.list();
+		return (List<?>) objList;
+	}
 
 	// /**
 	// * 分页查询列表

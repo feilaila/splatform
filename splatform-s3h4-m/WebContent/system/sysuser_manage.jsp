@@ -95,14 +95,20 @@
 													<tr>
 														<td>${sysUser.uid}</td>
 														<td>${sysUser['usercode']}</td>
-														<td>${sysUser.name}</td>
+														<td><a href="<%=path%>/suserView.do?parentId=${parentId }&uid=<%=session.getAttribute("uid")%>">${sysUser.name}</a></td>
 														<td>${sysUser.groupName}</td>
 														<td>
 															<c:if test="${sysUser.status == 1}">有效</c:if>
 															<c:if test="${sysUser.status == 9}">失效</c:if>
 														</td>
-														<td>${sysUser.createTime}</td>
-														<td>${sysUser.lastLoginTime}</td>
+														<td>
+															<fmt:parseDate value="${sysUser.createTime}" pattern="yyyyMMdd" var="cdate"/>
+															<fmt:formatDate value="${cdate}" pattern="yyyy-MM-dd"/>
+														</td>
+														<td>
+															<fmt:parseDate value="${sysUser.lastLoginTime}" pattern="yyyyMMddHHmmss" var="ldate"/>
+															<fmt:formatDate value="${ldate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+														</td>
 														<td>${sysUser.lastLoginIP}</td>
 														<td>														
 														<c:if test="${sysUser.status == 1}">
@@ -112,9 +118,14 @@
 															<a data-toggle="modal" href="#suserDel"
 																onClick="delSuser('${sysUser.uid}','${parentId}','${sysUser.name}');"
 																class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
+														
+															<a data-toggle="modal" href="#" onClick="initPwd('${sysUser.uid}','${parentId}','${sysUser.name}');"
+																class="btn btn-warning btn-xs">初始化密码</a>
 														</c:if>
 															
 														<c:if test="${sysUser.status == 9}">
+															
+															
 															<a data-toggle="modal" href="#"
 															onClick=""
 															class="btn btn-xs btn-gray"><i class="icon-edit"></i></a>
@@ -256,7 +267,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
     		diag.Title = "系统管理-用户编辑";
-        	diag.URL = "<%=path %>/toEditSysUser.do?parentId=${parentId}&userId="+id;
+        	diag.URL = "<%=path %>/toEditSysUser.do?parentId=${parentId}&uid="+id;
         	diag.OKEvent = function(){
         		
         		//参数校验
@@ -318,6 +329,15 @@
     		document.getElementById('delForm').submit();diag.close();
     	});
     }
+    
+  	//用户密码初始化
+    var initPwd= function(id,parentId,userName){
+    	$('#init-userId').val(id);
+    	$('#init-parentId').val(parentId);
+    	zDialog.confirm('警告：您确认要初始化用户['+userName+']的密码吗？',function(){
+    		document.getElementById('initPwdForm').submit();diag.close();
+    	});
+    }
     </script>
 
 
@@ -340,6 +360,10 @@
 <form id="delForm" name="delForm" method="post" action="doDelGroup.do" target="thisFrame">
 	<input type="hidden" id="del-userId" name="userId">
 	<input type="hidden" id="del-parentId" name="parentId">
+</form>
+<form id="initPwdForm" name="initPwdForm" method="post" action="doInitPwd.do" target="thisFrame">
+	<input type="hidden" id="init-userId" name="uid">
+	<input type="hidden" id="init-parentId" name="parentId">
 </form>
 <iframe style="display: none" name="thisFrame"></iframe>
 </html>

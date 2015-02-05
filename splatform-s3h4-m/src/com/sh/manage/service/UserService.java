@@ -16,6 +16,7 @@ import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.exception.SPlatformServiceException;
 import com.sh.manage.module.page.Page;
+import com.sh.manage.pojo.SysUserDTO;
 
 /**
  * @author
@@ -163,6 +164,24 @@ public class UserService extends BaseService {
 			}
 			//找不到用户
 			return new SysUser();
+		} catch (Exception e) {
+			logger.error("service:查询系统用户信息出现异常", e);
+			throw new SPlatformServiceException("查询系统用户信息出现异常");
+		}
+	}
+	/**
+	 * 查找系统用户SysUserDTO
+	 * @param sUser
+	 */
+	public SysUserDTO findSysUserDTO(Integer uid)throws SPlatformServiceException {
+		try {
+			List<SysUserDTO> sysUserList = sysUserDao.findSysUserDTO(uid);
+			//找到了用户
+			if(null != sysUserList){
+				return sysUserList.get(0);
+			}
+			//找不到用户
+			return new SysUserDTO();
 		} catch (Exception e) {
 			logger.error("service:查询系统用户信息出现异常", e);
 			throw new SPlatformServiceException("查询系统用户信息出现异常");

@@ -248,7 +248,7 @@ String ctx = request.getContextPath();
                         </a>
 
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="<%=tpath%>/suserView.do?uid=<%=session.getAttribute("uid")%>"><i class="icon-user"></i> 个人资料 </a>
+                            <li><a href="<%=tpath%>/suserView.do?parentId=${parentId }&uid=<%=session.getAttribute("uid")%>"><i class="icon-user"></i> 个人资料 </a>
                             </li>
                             <li><a href="#"><i class="icon-gear"></i> 设置 </a>
                             </li>

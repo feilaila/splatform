@@ -13,6 +13,7 @@ import com.sh.manage.entity.SysMenu;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.Page;
 import com.sh.manage.pojo.LoginUser;
+import com.sh.manage.pojo.SysUserDTO;
 
 /**
  * @author 
@@ -50,10 +51,22 @@ public class SysUserDao extends AbstractBaseDao<SysUser>{
 	 * @return
 	 */
 	public List<SysUser> findSysUser(Integer uid) {
-		String hql = "from SysUser where uid = ";
-		hql += uid;
+		String hql = "from SysUser where uid = " + uid;
 		return this.find(hql);
 	}
+	
+	/**
+	 * sql查询用户和关联信息
+	 */
+	@SuppressWarnings("unchecked")
+	public List<SysUserDTO> findSysUserDTO(Integer uid) {
+		StringBuffer sbf = new StringBuffer();
+		Object[] params = new Object[]{};
+		sbf.append("select u.uid,u.usercode,u.email,u.terminal_id terminalId,u.name,u.create_time createTime,g.group_name groupName,u.faceimg_aid faceimgAid from t_sys_user u,t_sys_group g where 1=1 and u.group_id = g.id and uid = ?");
+		params = ArrayUtils.add(params, uid);
+		return (List<SysUserDTO>) this.querysqlDTOList(sbf.toString(),params,SysUserDTO.class);
+	}
+	
 
 	/**
 	 * 获取全部系统用户

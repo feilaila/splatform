@@ -28,6 +28,7 @@ import com.sh.manage.entity.SysRole;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.Page;
 import com.sh.manage.pojo.LoginUser;
+import com.sh.manage.pojo.SysUserDTO;
 import com.sh.manage.service.GroupService;
 import com.sh.manage.service.RoleService;
 import com.sh.manage.service.UploadService;
@@ -145,7 +146,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value="/toAddAppUser.do")
-    public ModelAndView groupAddPage(HttpServletRequest req,
+    public ModelAndView appUserAddPage(HttpServletRequest req,
 			HttpServletResponse resp) {
 		ModelAndView model = new ModelAndView("/appuser/appuser_add");
 		List<SysGroup> dbGroupList = groupService.getAllGroupList();
@@ -449,12 +450,46 @@ public class UserController {
 	}
 	
 	
+	
+	/**
+	 * 跳转用户修改页面
+	 * @return
+	 */
+	@RequestMapping(value = "/toEditSysUser.do", method = RequestMethod.GET)
+	public ModelAndView toEditSysUserPage(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "uid", required = false, defaultValue = "") Integer uid,
+			HttpServletRequest request,HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		ModelAndView model = new ModelAndView("/system/sysuser_edit");
+		
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+		if (null != _loginUser) {
+			try {
+				// get/new sysUser
+				SysUser sUser = userService.findSysUser(uid);
+				// 组织列表
+				List<SysGroup> groupList = groupService.findAll();
+				model.addObject("groupList", groupList);
+				model.addObject("parentId", parentId);
+				model.addObject("sysUser", sUser);
+			} catch (Exception e) {
+				logger.error("跳转用户修改页面error...");
+			}
+		}else{
+			logger.info("用户未登录");
+		}
+		return model;
+	}
+	
+	
 	/**
 	 * 用户修改
 	 * @return
 	 */
-	@RequestMapping(value = "/toEditSysUser.do", method = RequestMethod.POST)
-	public ResponseEntity<String> toEditSysUser(
+	@RequestMapping(value = "/suserEdit.do", method = RequestMethod.POST)
+	public ResponseEntity<String> suserEdit(
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
 			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
@@ -517,6 +552,7 @@ public class UserController {
 		logger.info("controller:用户修改结束!");
 		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
+	
 	/**
 	 * 用户删除
 	 * @return
@@ -562,6 +598,41 @@ public class UserController {
 		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	
+	/**
+	 * 用户密码初始化
+	 * @return
+	 */
+	@RequestMapping(value = "/doInitPwd.do", method = RequestMethod.POST)
+	public ResponseEntity<String> doInitPwd(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "uid", required = false, defaultValue = "") Integer uid,
+			HttpServletRequest request,HttpServletResponse response,
+			Model model) {
+		logger.info("controller:..用户密码初始化!");
+		String msg="";
+		boolean isCorrect = true;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "text/html;charset=UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+
+		try{
+			//get/new user
+			SysUser sUser  = userService.findSysUser(uid);
+			
+			sUser.setPassword(Constants.SYS_USER_PWD);//默认密码
+			
+			userService.editSysUser(sUser);//密码初始化
+			msg="用户密码初始化成功!";
+		}catch(Exception e){
+			logger.error("controller:用户密码初始化异常!"+uid,e);
+			msg="用户密码初始化出现异常";
+			model.addAttribute("msg", msg);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
+			
+		}
+		logger.info("controller:用户密码初始化结束!");
+		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
+	}
 	
 	
 	/**
@@ -582,7 +653,7 @@ public class UserController {
 			//获取用户信息
 	    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
 			if (null != _loginUser) {
-				SysUser sUser = userService.findSysUser(uid);
+				SysUserDTO sUser = userService.findSysUserDTO(uid);
 				SysAttachment sysAttachment = new SysAttachment();
 				sysAttachment.setAid(sUser.getFaceimgAid());//附件id
 				sysAttachment.setType(Constants.ATTACH_TYPE_FACEIMG);//头像类型

@@ -66,7 +66,7 @@
 										placeholder="开始日期" readonly> 
 									<input id="endDate" class="form-control" type="text" name="endDate" value="${endDate }"
 										placeholder="结束日期" readonly> 
-									<select id="auRoleId" name="auRoleId"
+									<%-- <select id="auRoleId" name="auRoleId"
 										style="height: 33px; width: 120px; background: none repeat scroll 0 0 #f5f5f5 !important;"
 										class="form-control" id="form-field-select-3" data-placeholder="选择组织">
 										<option value="0">请选择组织</option>
@@ -77,7 +77,7 @@
 											>${group.groupName}
 											</option>
 										</c:forEach>
-									</select> 
+									</select>
 									<select id="status"
 										style="height: 33px; width: 80px; background: none repeat scroll 0 0 #f5f5f5 !important;"
 										class="form-control" id="form-field-select-3" name="status"
@@ -85,7 +85,7 @@
 										<option value="0" selected>状态</option>
 										<option value="1" onclick="setAuStatus('1');" <c:if test="${status == 1}">selected</c:if>>有效</option>
 										<option value="9" onclick="setAuStatus('9');" <c:if test="${status == 9}">selected</c:if>>失效</option>
-									</select>
+									</select> --%> 
 									<button class="btn btn-default" type="button" onClick="submitSearchForm()">
 												<i class="icon-search"></i>
 								    </button>

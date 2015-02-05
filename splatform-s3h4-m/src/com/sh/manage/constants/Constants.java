@@ -68,6 +68,11 @@ public class Constants {
 	public static final int COURSE_STATUS_INIT = 0;
 	public static final int COURSE_STATUS_ONLINE = 1;
 	public static final int COURSE_STATUS_OFFLINE = 2;
+
+	/**
+	 * 默认用户密码  abc123
+	 */
+	public static final String SYS_USER_PWD = "abc123";
 	
 	static {
 		SUPER_ADMIN_ID_LIST.add("0");

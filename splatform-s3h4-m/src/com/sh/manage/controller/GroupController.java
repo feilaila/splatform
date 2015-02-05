@@ -217,11 +217,14 @@ public class GroupController {
 	 * @return
 	 */
 	@RequestMapping(value="/toAddGroup.do")
-    public ModelAndView groupAddPage(HttpServletRequest req,
+    public ModelAndView groupAddPage(
+    		@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+    		HttpServletRequest req,
 			HttpServletResponse resp) {
 		ModelAndView model = new ModelAndView("/group/g_add");
 		List<SysRole> dbRoleList = roleService.getAllRoleList();
 		model.addObject("roleList", dbRoleList);
+		model.addObject("parentId", parentId);
         return model;
     }
 	
@@ -233,6 +236,7 @@ public class GroupController {
 	@RequestMapping(value="/doAddGroup.do")
     public ResponseEntity<String> doGroupAdd(HttpServletRequest req,
 			HttpServletResponse resp,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
     		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
@@ -267,12 +271,13 @@ public class GroupController {
 			logger.error("controller:GroupController:组织新增异常!"+groupName,e);
 			msg="组织新增出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
+		model.addAttribute("parentId", parentId);
 		logger.info("controller:GroupController:组织新增结束!");
 		logger.info("..expand:"+expand);
-        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
     }
 	
 	/**
@@ -282,6 +287,7 @@ public class GroupController {
 	@RequestMapping(value="/doEditGroup.do")
     public ResponseEntity<String> doGroupEdit(HttpServletRequest req,
 			HttpServletResponse resp,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
     		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
@@ -313,12 +319,13 @@ public class GroupController {
 			logger.error("controller:GroupController:组织编辑异常!"+groupName,e);
 			msg="组织编辑出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
+		model.addAttribute("parentId", parentId);
 		logger.info("controller:GroupController:组织编辑结束!");
 		logger.info("..expand:"+expand);
-        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
     }
 	
 	
@@ -330,6 +337,7 @@ public class GroupController {
 	@RequestMapping(value="/doDelGroup.do")
     public ResponseEntity<String> doGroupDel(HttpServletRequest req,
 			HttpServletResponse resp,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
     		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
 			HttpServletRequest request,HttpServletResponse response,
@@ -355,12 +363,13 @@ public class GroupController {
 			logger.error("controller:GroupController:组织删除异常!"+groupId,e);
 			msg="组织删除出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
+		model.addAttribute("parentId", parentId);
 		logger.info("controller:GroupController:组织删除结束!");
 		logger.info("..expand:"+expand);
-        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
     }
 	
 	

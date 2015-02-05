@@ -43,6 +43,8 @@
 		<form class="_formm15" action="<%=path%>/doAddGroup.do" method="post" id="addForm" name="addForm">
 								<input type="hidden" id="groupId" name="groupId"
 											value="" />
+								<input type="hidden" id="parentId" name="parentId"
+											value="${parentId }" />
 								<input type="hidden" id="roleStr" name="roleStr"
 											value="" >
 								<table width="100%" border="0" align="center" cellpadding="4"

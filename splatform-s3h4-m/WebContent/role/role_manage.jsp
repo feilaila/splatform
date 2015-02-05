@@ -56,6 +56,7 @@
 						<form id="roleSearchForm" name="roleSearchForm"
 							action="<spring:url value='/romanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
+							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 		            		<div class="form-group">
 								<div class="">
 									<i class="icon-hand-right"></i><span>搜索</span> 
@@ -103,7 +104,7 @@
 													<th class="center">序号</th>
 													<th>角色名称</th>
 													<th>描述</th>
-													<th>添加时间</th>
+													<th>操作时间</th>
 													<th>操作人员</th>
 													<th>操作</th>
 												</tr>
@@ -116,12 +117,17 @@
 														<td>${role.id}</td>
 														<td>${role['roleName']}</td>
 														<td>${role.remark}</td>
-														<td>${role.createTime}</td>
-														<td>${role.operateName}</td>
+														<td>
+															<fmt:parseDate value="${role.createTime}" pattern="yyyyMMddHHmmss" var="cdate"/>
+															<fmt:formatDate value="${cdate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+														</td>
+														
+														<td>
+															${role.operateName}														</td>
 														<td>
 															<a data-toggle="modal" href="#auserEdit" 
 																onClick="editRole('${role.id}');" class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
-															<a data-toggle="modal" href="#auserDel"  onClick="delRole('${role.id}','${role['roleName']}');" class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
+															<a data-toggle="modal" href="#auserDel"  onClick="delRole('${role.id}','${parentId}','${role['roleName']}');" class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
 														</td>
 													</tr>
 												</c:forEach>
@@ -185,7 +191,7 @@
     	var diag = new zDialog();
     	diag.Height = 400;
     	diag.Title = "角色管理-角色添加";
-    	diag.URL = "<%=path %>/addRole.do";
+    	diag.URL = "<%=path %>/addRole.do?parentId=${parentId}";
     	diag.OKEvent=function(){
     		//参数校验
     		var roleName = diag.innerDoc.getElementById('roleName').value;
@@ -226,7 +232,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
     		diag.Title = "系统管理-角色编辑";
-        	diag.URL = "<%=path %>/toEditRole.do?roleId="+id;
+        	diag.URL = "<%=path %>/toEditRole.do?parentId=${parentId}&roleId="+id;
         	diag.OKEvent = function(){
         		
         		//参数校验
@@ -256,8 +262,9 @@
     
     
     //组织删除
-    var delRole= function(id,roleName){
+    var delRole= function(id,parentId,roleName){
     	$('#del-roleId').val(id);
+    	$('#del-parentId').val(parentId);
     	zDialog.confirm('警告：您确认要删除角色['+roleName+']吗？',function(){
     		document.getElementById('delForm').submit();diag.close();
     	});
@@ -288,5 +295,6 @@
 
 <form id="delForm" name="delForm" method="post" action="doDelRole.do" target="targetFrame">
 	<input type="hidden" id="del-roleId" name="roleId">
+	<input type="hidden" id="del-parentId" name="parentId">
 </form>
 </html>

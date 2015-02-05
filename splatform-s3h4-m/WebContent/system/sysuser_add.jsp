@@ -44,6 +44,7 @@
 	<div id="wrap">
 					<form class="" method="post" id="addForm" name="addForm"
 						action="<spring:url value='/doAddsuser.do' htmlEscape='true'/>" target="_self">
+						<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 						<ul class="box_l_h_c">
 							<li class="box_l_h_c_li">
 								<select id="suGroupId" name="suGroupId" class="form-control"

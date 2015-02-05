@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-02-04 17:29:28
+Date: 2015-02-05 13:31:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,33 +20,35 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `muke_course`;
 CREATE TABLE `muke_course` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` int(8) NOT NULL AUTO_INCREMENT,
   `create_time` varchar(18) DEFAULT NULL COMMENT '创建时间',
   `img` varchar(255) DEFAULT NULL COMMENT '缩略图',
   `info` varchar(255) DEFAULT NULL COMMENT '简介',
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
   `title` varchar(255) DEFAULT NULL COMMENT '标题',
-  `type_id` bigint(20) NOT NULL COMMENT '课程类型id',
-  `sys_user_id` varchar(255) NOT NULL COMMENT '用户id',
+  `type_id` int(8) NOT NULL COMMENT '课程类型id',
+  `sys_user_id` int(8) NOT NULL COMMENT '用户id',
   `video_id` int(8) DEFAULT NULL COMMENT '附件id',
-  `status` tinyint(1) NOT NULL COMMENT '状态 0待审核  1已审核  2 已下线 ;默认为0',
+  `status` int(1) NOT NULL COMMENT '状态 0待审核  1已审核  2 已下线 ;默认为0',
   PRIMARY KEY (`id`),
   KEY `FK5014C5F88A5D8984` (`type_id`),
   KEY `FK5014C5F8A83935E6` (`sys_user_id`),
   CONSTRAINT `FK5014C5F88A5D8984` FOREIGN KEY (`type_id`) REFERENCES `muke_course_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of muke_course
 -- ----------------------------
 INSERT INTO `muke_course` VALUES ('1', '20150204170432', '', '测试1测试1测试1测试1', '测试1', '测试1测试1', '1', '2', null, '0');
+INSERT INTO `muke_course` VALUES ('2', '20150205120931', '', 'C语言经典讲解', 'C语言', 'C语言111', '2', '2', null, '0');
+INSERT INTO `muke_course` VALUES ('3', '20150205120952', '', 'html实战训练100案例', 'html实战', 'html实战', '3', '2', null, '0');
 
 -- ----------------------------
 -- Table structure for `muke_course_type`
 -- ----------------------------
 DROP TABLE IF EXISTS `muke_course_type`;
 CREATE TABLE `muke_course_type` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` int(8) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `number` int(11) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,

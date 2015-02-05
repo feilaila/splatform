@@ -52,6 +52,7 @@
 						<form id="groupSearchForm" name="groupSearchForm"
 							action="<spring:url value='/gmanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
+							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 		            		<div class="form-group">
 								<div class="">
 									<i class="icon-hand-right"></i><span>搜索</span> 
@@ -101,7 +102,7 @@
 															onClick="editSgroup('${sysGroup.id}');"
 															class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
 															<a 
-																onClick="delSgroup('${sysGroup.id}','${sysGroup.groupName}');"
+																onClick="delSgroup('${sysGroup.id}','${parentId}','${sysGroup.groupName}');"
 																class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>			
 														</td>
 													</tr>
@@ -168,7 +169,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
         	diag.Title = "系统管理-组织新增";
-        	diag.URL = "<%=path %>/toAddGroup.do";
+        	diag.URL = "<%=path %>/toAddGroup.do?parentId=${parentId}";
         	diag.OKEvent = function(){
         		//参数校验
         		var groupName = diag.innerDoc.getElementById('groupName').value;
@@ -227,7 +228,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
     		diag.Title = "系统管理-组织编辑";
-        	diag.URL = "<%=path %>/toEditGroup.do?gid="+id;
+        	diag.URL = "<%=path %>/toEditGroup.do?parentId=${parentId}&gid="+id;
         	diag.OKEvent = function(){
         		
         		//参数校验
@@ -282,8 +283,9 @@
     
     
     //组织删除
-    var delSgroup= function(id,groupName){
+    var delSgroup= function(id,parentId,groupName){
     	$('#del-groupId').val(id);
+    	$('#del-parentId').val(parentId);
     	zDialog.confirm('警告：您确认要删除组织['+groupName+']吗？',function(){
     		document.getElementById('delForm').submit();diag.close();
     	});
@@ -292,6 +294,7 @@
     
 <form id="delForm" name="delForm" method="post" action="doDelGroup.do" target="thisFrame">
 	<input type="hidden" id="del-groupId" name="groupId">
+	<input type="hidden" id="del-parentId" name="parentId">
 </form>
 <iframe style="display: none" name="thisFrame"></iframe>
 </html>

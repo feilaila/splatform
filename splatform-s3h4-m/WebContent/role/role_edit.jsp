@@ -111,7 +111,8 @@
 	<div id="forlogin">
       <form class="_formm15" action="<%=path%>/doEditRole.do" method="post" id="editForm" name="editForm" target="targetFrame">
 		<input type="hidden" id="roleStr" name="roleMenuStr"
-					value="" >
+					value="${roleMenuStr }" >
+		<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 		<input type="hidden" id="roleId" name="roleId"
 					value="${sysRole.id }" >			
 	      <table width="100%" border="0" align="center" cellpadding="4" cellspacing="4" bordercolor="#666666">

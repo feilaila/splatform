@@ -366,7 +366,8 @@ public class UserController {
 	 */
 	@RequestMapping(value="/toAddSysUser.do")
     public ModelAndView userAddPage(HttpServletRequest req,
-			HttpServletResponse resp) {
+			HttpServletResponse resp,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId) {
 		HttpSession session = req.getSession();
 		ModelAndView model = new ModelAndView("/system/sysuser_add");
 		
@@ -376,6 +377,7 @@ public class UserController {
 			// 组织列表
 			List<SysGroup> groupList = groupService.findAll();
 			model.addObject("groupList", groupList);
+			model.addObject("parentId", parentId);
 			logger.info("groupList.size:"+groupList.size());
 		}
         return model;
@@ -388,6 +390,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/doAddsuser.do", method = RequestMethod.POST)
 	public ResponseEntity<String> suserAdd(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "suGroupId", required = false, defaultValue = "0") Integer suGroupId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "") String roleName,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
@@ -439,10 +442,10 @@ public class UserController {
 			logger.error("controller:用户添加异常!"+usercode,e);
 			msg="用户添加出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 		}
 		logger.info("controller:用户添加结束!");
-		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	
 	
@@ -450,8 +453,9 @@ public class UserController {
 	 * 用户修改
 	 * @return
 	 */
-	@RequestMapping(value = "/suserEdit.do", method = RequestMethod.POST)
-	public ResponseEntity<String> suserEdit(
+	@RequestMapping(value = "/toEditSysUser.do", method = RequestMethod.POST)
+	public ResponseEntity<String> toEditSysUser(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
 			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "") String roleName,
@@ -507,11 +511,11 @@ public class UserController {
 			logger.error("controller:用户修改异常!"+usercode,e);
 			msg="用户修改出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
 		logger.info("controller:用户修改结束!");
-		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	/**
 	 * 用户删除
@@ -520,6 +524,7 @@ public class UserController {
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/suserDel.do", method = RequestMethod.POST)
 	public ResponseEntity<String> suserDel(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
 			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
 			@RequestParam(value = "status", required = false, defaultValue = "9") Integer status,
@@ -550,11 +555,11 @@ public class UserController {
 			logger.error("controller:用户删除异常!"+uid,e);
 			msg="用户删除出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
 		logger.info("controller:用户删除结束!");
-		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/umanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	
 	
@@ -565,6 +570,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/suserView.do", method = RequestMethod.GET)
 	public ModelAndView suserView(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
 			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
 			@RequestParam(value = "status", required = false, defaultValue = "9") Integer status,
@@ -583,6 +589,8 @@ public class UserController {
 				SysAttachment attachment = uploadService.getFile(sysAttachment);
 				model.addObject("attachment", attachment);
 				model.addObject("sysUser", sUser);
+				model.addObject("parentId", parentId);
+				
 			}
 		}catch(Exception e){
 			logger.error("controller:用户查看异常!"+uid,e);

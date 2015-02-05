@@ -38,6 +38,7 @@
 <body>
 	<div id="wrap">
 		<form class="_formm15" action="<%=path%>/doEditGroup.do" method="post" id="editForm" name="editForm">
+								<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 								<input type="hidden" id="groupId" name="groupId"
 											value="${group.id }" />
 								<input type="hidden" id="roleStr" name="roleStr"

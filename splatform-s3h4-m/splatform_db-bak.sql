@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 本地
-Source Server Version : 50508
+Source Server         : spaltform
+Source Server Version : 50520
 Source Host           : localhost:3306
 Source Database       : splatform_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50508
+Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-02-02 22:43:56
+Date: 2015-02-04 17:29:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,22 +21,25 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `muke_course`;
 CREATE TABLE `muke_course` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_time` datetime DEFAULT NULL,
-  `img` varchar(255) DEFAULT NULL,
-  `info` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `type_id` bigint(20) NOT NULL,
-  `sys_user_id` varchar(255) NOT NULL,
+  `create_time` varchar(18) DEFAULT NULL COMMENT '创建时间',
+  `img` varchar(255) DEFAULT NULL COMMENT '缩略图',
+  `info` varchar(255) DEFAULT NULL COMMENT '简介',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `type_id` bigint(20) NOT NULL COMMENT '课程类型id',
+  `sys_user_id` varchar(255) NOT NULL COMMENT '用户id',
+  `video_id` int(8) DEFAULT NULL COMMENT '附件id',
+  `status` tinyint(1) NOT NULL COMMENT '状态 0待审核  1已审核  2 已下线 ;默认为0',
   PRIMARY KEY (`id`),
   KEY `FK5014C5F88A5D8984` (`type_id`),
   KEY `FK5014C5F8A83935E6` (`sys_user_id`),
   CONSTRAINT `FK5014C5F88A5D8984` FOREIGN KEY (`type_id`) REFERENCES `muke_course_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of muke_course
 -- ----------------------------
+INSERT INTO `muke_course` VALUES ('1', '20150204170432', '', '测试1测试1测试1测试1', '测试1', '测试1测试1', '1', '2', null, '0');
 
 -- ----------------------------
 -- Table structure for `muke_course_type`
@@ -49,11 +52,15 @@ CREATE TABLE `muke_course_type` (
   `remark` varchar(255) DEFAULT NULL,
   `img` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of muke_course_type
 -- ----------------------------
+INSERT INTO `muke_course_type` VALUES ('1', 'JAVA', '3', 'java经典教材', null);
+INSERT INTO `muke_course_type` VALUES ('2', 'C', '5', 'C语言编程', null);
+INSERT INTO `muke_course_type` VALUES ('3', 'html', '2', 'html语法讲解', null);
+INSERT INTO `muke_course_type` VALUES ('4', 'css', '6', 'css编程技巧', null);
 
 -- ----------------------------
 -- Table structure for `t_sh_user`
@@ -93,6 +100,45 @@ INSERT INTO `t_sh_user` VALUES ('11', '', '刚刚', '', '', '', '8', '9', '20140
 INSERT INTO `t_sh_user` VALUES ('12', '130@139.com', '初级的', '123', '13011112222', '测试ceshi', '6', '1', '20141201', '20141231', null, null, '3', '测试ceshi');
 
 -- ----------------------------
+-- Table structure for `t_sys_attachment`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_attachment`;
+CREATE TABLE `t_sys_attachment` (
+  `aid` mediumint(8) NOT NULL AUTO_INCREMENT COMMENT '附件id',
+  `type` tinyint(2) DEFAULT NULL COMMENT '附件类型  1头像图片 2大图 3 文件  4  音乐  5  视频',
+  `uid` mediumint(8) DEFAULT NULL COMMENT '会员id；添加人员id',
+  `downloads` mediumint(8) DEFAULT NULL COMMENT '下载次数',
+  `filename` varchar(100) DEFAULT NULL COMMENT '文件原名称',
+  `newfilename` varchar(100) DEFAULT NULL COMMENT '上传的文件新名称',
+  `filepath` varchar(100) DEFAULT NULL COMMENT '文件保存路径',
+  `uploadtime` datetime DEFAULT NULL COMMENT '上传时间',
+  PRIMARY KEY (`aid`)
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8 COMMENT='附件信息表';
+
+-- ----------------------------
+-- Records of t_sys_attachment
+-- ----------------------------
+INSERT INTO `t_sys_attachment` VALUES ('66', '1', '2', null, 'Desert.jpg', 'Desert.jpg', '/splatform-s3h4-m/res/Desert.jpg', '2015-02-04 12:37:57');
+INSERT INTO `t_sys_attachment` VALUES ('67', '1', '2', null, 'Hydrangeas.jpg', 'Hydrangeas.jpg', '/splatform-s3h4-m/res/Hydrangeas.jpg', '2015-02-04 12:40:00');
+INSERT INTO `t_sys_attachment` VALUES ('68', '1', '2', null, 'Chrysanthemum.jpg', 'Chrysanthemum.jpg', '/splatform-s3h4-m/res/Chrysanthemum.jpg', '2015-02-04 12:41:53');
+INSERT INTO `t_sys_attachment` VALUES ('69', '1', '2', null, '519b59626b555.jpg', '519b59626b555.jpg', '/splatform-s3h4-m/res/519b59626b555.jpg', '2015-02-04 12:44:15');
+INSERT INTO `t_sys_attachment` VALUES ('70', '1', '2', null, '491738.jpg', '491738.jpg', '/splatform-s3h4-m/res/491738.jpg', '2015-02-04 12:44:54');
+INSERT INTO `t_sys_attachment` VALUES ('71', '1', '2', null, '11223133_095309330335_2.jpg', '11223133_095309330335_2.jpg', '/splatform-s3h4-m/res/11223133_095309330335_2.jpg', '2015-02-04 12:49:23');
+INSERT INTO `t_sys_attachment` VALUES ('72', '1', '2', null, '519b59626b555.jpg', '519b59626b555.jpg', '/splatform-s3h4-m/res/519b59626b555.jpg', '2015-02-04 14:17:26');
+INSERT INTO `t_sys_attachment` VALUES ('73', '1', '2', null, '491738.jpg', '491738.jpg', '/splatform-s3h4-m/res/491738.jpg', '2015-02-04 14:47:47');
+INSERT INTO `t_sys_attachment` VALUES ('74', '1', '2', null, '519b59626b555.jpg', '519b59626b555.jpg', '/splatform-s3h4-m/res/519b59626b555.jpg', '2015-02-04 15:02:46');
+INSERT INTO `t_sys_attachment` VALUES ('75', '1', '2', null, '491738.jpg', '491738.jpg', '/splatform-s3h4-m/res/491738.jpg', '2015-02-04 15:05:37');
+INSERT INTO `t_sys_attachment` VALUES ('76', '1', '2', null, '519b59626b555.jpg', '519b59626b555.jpg', '/splatform-s3h4-m/res/519b59626b555.jpg', '2015-02-04 15:07:37');
+INSERT INTO `t_sys_attachment` VALUES ('77', '1', '2', null, '491738.jpg', '491738.jpg', '/splatform-s3h4-m/res/491738.jpg', '2015-02-04 15:13:40');
+INSERT INTO `t_sys_attachment` VALUES ('78', '1', '2', null, '11223133_095309330335_2.jpg', '11223133_095309330335_2.jpg', '/splatform-s3h4-m/res/11223133_095309330335_2.jpg', '2015-02-04 15:14:58');
+INSERT INTO `t_sys_attachment` VALUES ('79', '1', '2', null, 'QQ图片20141118083214.jpg', 'QQ图片20141118083214.jpg', '/splatform-s3h4-m/res/QQ图片20141118083214.jpg', '2015-02-04 15:15:10');
+INSERT INTO `t_sys_attachment` VALUES ('80', '1', '2', null, 'QQ20141118083214.jpg', 'QQ20141118083214.jpg', '/splatform-s3h4-m/res/QQ20141118083214.jpg', '2015-02-04 15:15:40');
+INSERT INTO `t_sys_attachment` VALUES ('81', '1', null, null, '11223133_095309330335_2.jpg', '11223133_095309330335_2.jpg', '/splatform-s3h4-m/res/11223133_095309330335_2.jpg', '2015-02-04 16:16:23');
+INSERT INTO `t_sys_attachment` VALUES ('82', '1', '2', null, '11223133_095309330335_2.jpg', '11223133_095309330335_2.jpg', '/splatform-s3h4-m/res/11223133_095309330335_2.jpg', '2015-02-04 16:18:43');
+INSERT INTO `t_sys_attachment` VALUES ('83', '5', '2', null, 'Wildlife.wmv', 'Wildlife.wmv', '/splatform-s3h4-m/res/Wildlife.wmv', '2015-02-04 16:40:52');
+INSERT INTO `t_sys_attachment` VALUES ('84', '5', '2', null, 'Wildlife.wmv', 'Wildlife.wmv', '/splatform-s3h4-m/res/Wildlife.wmv', '2015-02-04 16:50:45');
+
+-- ----------------------------
 -- Table structure for `t_sys_dictionary`
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sys_dictionary`;
@@ -121,7 +167,7 @@ CREATE TABLE `t_sys_group` (
   `menu_code` varchar(14) DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of t_sys_group
@@ -152,7 +198,7 @@ CREATE TABLE `t_sys_group_role` (
   KEY `FKAD5326738330C7D9` (`role_id`),
   CONSTRAINT `FKAD532673105BF75B` FOREIGN KEY (`group_id`) REFERENCES `t_sys_group` (`id`),
   CONSTRAINT `FKAD5326738330C7D9` FOREIGN KEY (`role_id`) REFERENCES `t_sys_role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_group_role
@@ -302,13 +348,27 @@ CREATE TABLE `t_sys_role_operate` (
   KEY `FK93281358C046E0FB` (`operate_id`),
   CONSTRAINT `FK932813588330C7D9` FOREIGN KEY (`role_id`) REFERENCES `t_sys_role` (`id`),
   CONSTRAINT `FK93281358C046E0FB` FOREIGN KEY (`operate_id`) REFERENCES `t_sys_operate` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of t_sys_role_operate
 -- ----------------------------
 INSERT INTO `t_sys_role_operate` VALUES ('4', '2', '1');
 INSERT INTO `t_sys_role_operate` VALUES ('5', '2', '3');
+
+-- ----------------------------
+-- Table structure for `t_sys_settings`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_settings`;
+CREATE TABLE `t_sys_settings` (
+  `key` varchar(200) NOT NULL COMMENT '设置键名',
+  `value` text NOT NULL COMMENT '设置内容，大量数据将序列化',
+  PRIMARY KEY (`key`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_sys_settings
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `t_sys_user`
@@ -329,23 +389,24 @@ CREATE TABLE `t_sys_user` (
   `last_login_time` varchar(14) DEFAULT NULL,
   `last_login_ip` varchar(100) DEFAULT NULL,
   `group_id` int(8) DEFAULT NULL,
+  `faceimg_aid` int(8) DEFAULT NULL COMMENT '头像id，对应attach表aid',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_sys_user
 -- ----------------------------
-INSERT INTO `t_sys_user` VALUES ('1', 'ceshi1', '123', '981233555@qq.com', 'admin', '10210005555', null, null, null, '0', '1', null, null, '1');
-INSERT INTO `t_sys_user` VALUES ('2', 'admin', '123', '981233555@qq.com', '超级管理员', '11110000111', '20141203', '20141202', null, '0', '1', null, null, '1');
-INSERT INTO `t_sys_user` VALUES ('3', 'xiaozhi', '', '12555@126.com', '小智', '15011112222', '20141203', '20141202', null, '0', '1', null, null, '2');
-INSERT INTO `t_sys_user` VALUES ('4', 'bigtou', '', '4545115@163.com', '大头哥', '13811112223', '20141225', '20141202', null, '0', '1', null, null, '3');
-INSERT INTO `t_sys_user` VALUES ('5', 'kefux', '', '4545115@163.com', '客服YYY', '15011112288', '20141231', '20141202', null, '0', '1', null, null, '4');
-INSERT INTO `t_sys_user` VALUES ('7', '测试2', '123', '981@qq.com', 'ddd', '13013013000', '20141231', '20141202', null, '0', '9', null, null, '7');
-INSERT INTO `t_sys_user` VALUES ('8', '超人1', '123', '123@qq.com', '超人1', '14766665555', '20141231', '20141201', null, '0', '9', null, null, '7');
-INSERT INTO `t_sys_user` VALUES ('9', 'ceshi1205', '123', '123@126.com', '测试1205', '13011112222', '20141231', '20141205', null, '0', '1', null, null, '4');
-INSERT INTO `t_sys_user` VALUES ('10', 'cskf1', '123', '1122@qq.com', '测试客服1', '15011112222', '20150228', '20150126', null, '0', '1', null, null, '2');
-INSERT INTO `t_sys_user` VALUES ('11', 'lscs1', '123', '123@qq.com', '老师测试1', '15012134567', '20150228', '20150201', null, '0', '1', null, null, '7');
-INSERT INTO `t_sys_user` VALUES ('12', 'ceshi22', '123', '123@qq.com', '测试用户22', '15111112154', '20150228', '20150201', null, '0', '1', null, null, '7');
+INSERT INTO `t_sys_user` VALUES ('1', 'ceshi1', '123', '981233555@qq.com', 'admin', '10210005555', null, null, null, '0', '1', null, null, '1', null);
+INSERT INTO `t_sys_user` VALUES ('2', 'admin', '123', '981233555@qq.com', '超级管理员', '11110000111', '20141203', '20141202', null, '0', '1', null, null, '1', '82');
+INSERT INTO `t_sys_user` VALUES ('3', 'xiaozhi', '', '12555@126.com', '小智', '15011112222', '20141203', '20141202', null, '0', '1', null, null, '2', null);
+INSERT INTO `t_sys_user` VALUES ('4', 'bigtou', '', '4545115@163.com', '大头哥', '13811112223', '20141225', '20141202', null, '0', '1', null, null, '3', null);
+INSERT INTO `t_sys_user` VALUES ('5', 'kefux', '', '4545115@163.com', '客服YYY', '15011112288', '20141231', '20141202', null, '0', '1', null, null, '4', null);
+INSERT INTO `t_sys_user` VALUES ('7', '测试2', '123', '981@qq.com', 'ddd', '13013013000', '20141231', '20141202', null, '0', '9', null, null, '7', null);
+INSERT INTO `t_sys_user` VALUES ('8', '超人1', '123', '123@qq.com', '超人1', '14766665555', '20141231', '20141201', null, '0', '9', null, null, '7', null);
+INSERT INTO `t_sys_user` VALUES ('9', 'ceshi1205', '123', '123@126.com', '测试1205', '13011112222', '20141231', '20141205', null, '0', '1', null, null, '4', null);
+INSERT INTO `t_sys_user` VALUES ('10', 'cskf1', '123', '1122@qq.com', '测试客服1', '15011112222', '20150228', '20150126', null, '0', '1', null, null, '2', null);
+INSERT INTO `t_sys_user` VALUES ('11', 'lscs1', '123', '123@qq.com', '老师测试1', '15012134567', '20150228', '20150201', null, '0', '1', null, null, '7', null);
+INSERT INTO `t_sys_user` VALUES ('12', 'ceshi22', '123', '123@qq.com', '测试用户22', '15111112154', '20150228', '20150201', null, '0', '1', null, null, '7', null);
 
 -- ----------------------------
 -- Table structure for `t_sys_user_role`

@@ -111,6 +111,7 @@
       <form class="_formm15" action="<%=path%>/doAddRole.do" method="post" id="addForm" name="addForm" target="targetFrame">
 		<input type="hidden" id="roleMenuStr" name="roleMenuStr"
 					value="" >
+		<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 	      <table width="100%" border="0" align="center" cellpadding="4" cellspacing="4" bordercolor="#666666">
 	        <tr>
 	          <td width="100" align="left">角色名称：</td>

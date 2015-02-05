@@ -141,7 +141,8 @@ public class RoleController {
 	 */
 	@RequestMapping(value="/addRole.do")
     public ModelAndView roleAddPage(HttpServletRequest req,
-			HttpServletResponse resp) {
+			HttpServletResponse resp,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId) {
 		HttpSession session = req.getSession();
 		ModelAndView model = new ModelAndView("/role/role_add");
 		
@@ -151,6 +152,7 @@ public class RoleController {
 			//获取菜单列表
 			menuStrs = (String) session.getAttribute("menuStrs");
 			model.addObject("menuStrs", menuStrs);
+			model.addObject("parentId", parentId);
 			logger.info("menuStrs:"+menuStrs);
 		}
         return model;
@@ -169,6 +171,8 @@ public class RoleController {
 	@RequestMapping(value = "/doAddRole.do", method = RequestMethod.POST)
 	public ResponseEntity<String> doAddRole(HttpServletRequest request,
 			HttpServletResponse resp,
+			Model model,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "0") String roleName,
 			@RequestParam(value = "remark", required = false, defaultValue = "0") String remark,
 			@RequestParam(value = "roleMenuStr", required = false, defaultValue = "0") String roleMenuStr) {
@@ -198,10 +202,11 @@ public class RoleController {
 		} catch (SPlatformServiceException e) {
 			e.printStackTrace();
 			msg = "新增出现异常,请稍等..";
-			return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 		}
+    	model.addAttribute("parentId", parentId);
     	logger.info("controller:添加角色结束!");
-		return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 
 	
@@ -211,6 +216,7 @@ public class RoleController {
 	 */
 	@RequestMapping(value = "/doDelRole.do", method = RequestMethod.POST)
 	public ResponseEntity<String> doDelRole(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "roleId", required = false, defaultValue = "0") int roleId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "0") String roleName,
 			HttpServletRequest request,HttpServletResponse response,
@@ -232,16 +238,17 @@ public class RoleController {
 			}else{
 				msg="角色不存在!";
 			}
-			
+			model.addAttribute("msg", msg);
 		}catch(Exception e){
 			logger.error("controller:删除角色异常!"+roleName,e);
 			msg="删除角色出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/romanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
+		model.addAttribute("parentId", parentId);
 		logger.info("controller:删除角色结束!");
-		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/romanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	
 	/**
@@ -249,7 +256,9 @@ public class RoleController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/toEditRole.do")
-    public ModelAndView roleEditPage(@RequestParam(value = "roleId", required = false, defaultValue = "0") int roleId,
+    public ModelAndView roleEditPage(
+    		@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+    		@RequestParam(value = "roleId", required = false, defaultValue = "0") int roleId,
     		HttpServletRequest request,
 			HttpServletResponse response) {
 		HttpSession session = request.getSession();
@@ -274,6 +283,7 @@ public class RoleController {
 			String _temp = "{ id:'0', pId:'-1', name:"+"'全选'"+",iconOpen:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/1_open.png'"+", iconClose:'"+request.getContextPath()+"/static/js/ztree/zTreeStyle/img/diy/1_close.png'"+",open:true}";
 			items.add(_temp);
 			String checked = "";
+			String roleMenuStr="";
 			//处理菜单选择列表
 	    	for(SysMenu menu:allMenuList){
 	    		
@@ -281,6 +291,7 @@ public class RoleController {
 	    			if(roleMenu.getId() == menu.getId()){
 	    				//logger.info("存在此菜单..."+menu.getId()+menu.getMenuName());
 	    				checked=", checked:true";
+	    				roleMenuStr+=menu.getId()+",";
 	    			}
 	    		}
 	    		_temp = "{id:'"+menu.getId()+"',pId:'"+menu.getMenuPid()+"',name:'"+
@@ -301,12 +312,19 @@ public class RoleController {
 			menuStrs = JsonUtils.toJson(items);
 			menuStrs = menuStrs.replaceAll("\"", "");
 			
+			//处理已拥有的菜单，去除最后一个，
+			if(roleMenuStr.contains(",")){
+				roleMenuStr = roleMenuStr.substring(0, roleMenuStr.lastIndexOf(","));
+			}
+			model.addObject("roleMenuStr", roleMenuStr);//返回给前台
 			model.addObject("menuStrs", menuStrs);
 			model.addObject("sysRole", sysRole);
+			model.addObject("parentId", parentId);
 	    	logger.info("menuStrs:"+menuStrs.toString());
 		} catch (Exception e) {
 			logger.error("跳转角色编辑页面error...");
 		}
+		
         return model;
     }
 	
@@ -324,6 +342,8 @@ public class RoleController {
 	@RequestMapping(value = "/doEditRole.do", method = RequestMethod.POST)
 	public ResponseEntity<String> doEditRole(HttpServletRequest request,
 			HttpServletResponse resp,
+			Model model,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "roleId", required = false, defaultValue = "") Integer roleId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "0") String roleName,
 			@RequestParam(value = "remark", required = false, defaultValue = "0") String remark,
@@ -345,7 +365,7 @@ public class RoleController {
 				role.setRemark(remark);
 				role.setRoleName(roleName);
 				role.setCreateTime(TimeUtil.now());
-				
+				String ss = TimeUtil.now();
 				roleService.updateRoleInfo(role, roleMenuStr);
 				msg = "角色编辑成功!";
 			}else{
@@ -354,10 +374,11 @@ public class RoleController {
 		} catch (SPlatformServiceException e) {
 			e.printStackTrace();
 			msg = "编辑出现异常,请稍等..";
-			return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 		}
+    	model.addAttribute("parentId", parentId);
     	logger.info("controller:添加角色结束!");
-		return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do")+"'</script>",responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<String>("<script>parent.parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.parent.close(); parent.parent.location.href='" + WebUtils.formatURI(request, "/romanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 	}
 	
 	

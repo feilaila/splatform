@@ -56,6 +56,7 @@
 						<form id="suserSearchForm" name="suserSearchForm"
 							action="<spring:url value='/umanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
+							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
 							<i class="icon-hand-right"></i><span>搜索</span> 
 							<input type="text" placeholder="输入用户名" class="form-control" 
 									id="search" name="usercode" value="${usercode }"
@@ -106,10 +107,10 @@
 														<td>														
 														<c:if test="${sysUser.status == 1}">
 															<a data-toggle="modal" href="#suserEdit"
-															onClick="editSuser('${sysUser.uid}'');"
+															onClick="editSuser('${sysUser.uid}');"
 															class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
 															<a data-toggle="modal" href="#suserDel"
-																onClick="delSuser('${sysUser.uid}','${sysUser.name}');"
+																onClick="delSuser('${sysUser.uid}','${parentId}','${sysUser.name}');"
 																class="btn btn-xs btn-danger"><i class="icon-trash"></i></a>
 														</c:if>
 															
@@ -184,7 +185,7 @@
     		var diag = new zDialog();
     		diag.Height = 360;
         	diag.Title = "系统管理-用户新增";
-        	diag.URL = "<%=path %>/toAddSysUser.do";
+        	diag.URL = "<%=path %>/toAddSysUser.do?parentId=${parentId}";
         	diag.OKEvent = function(){
         		//参数校验
         		var usercode = diag.innerDoc.getElementById("usercode").value;
@@ -255,7 +256,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
     		diag.Title = "系统管理-用户编辑";
-        	diag.URL = "<%=path %>/toEditSysUser.do?userId="+id;
+        	diag.URL = "<%=path %>/toEditSysUser.do?parentId=${parentId}&userId="+id;
         	diag.OKEvent = function(){
         		
         		//参数校验
@@ -310,8 +311,9 @@
     
     
     //用户删除
-    var delSuser= function(id,userName){
+    var delSuser= function(id,parentId,userName){
     	$('#del-userId').val(id);
+    	$('#del-parentId').val(parentId);
     	zDialog.confirm('警告：您确认要删除用户['+userName+']吗？',function(){
     		document.getElementById('delForm').submit();diag.close();
     	});
@@ -337,6 +339,7 @@
 
 <form id="delForm" name="delForm" method="post" action="doDelGroup.do" target="thisFrame">
 	<input type="hidden" id="del-userId" name="userId">
+	<input type="hidden" id="del-parentId" name="parentId">
 </form>
 <iframe style="display: none" name="thisFrame"></iframe>
 </html>

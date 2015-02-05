@@ -109,6 +109,7 @@ public class GroupController {
 			HttpServletResponse resp,
     		@RequestParam(value = "gIndex", required = false, defaultValue = "") Integer gIndex,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
+    		@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
     		@RequestParam(value = "expand", required = false, defaultValue = "false") Boolean expand,
     		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
 		
@@ -130,7 +131,7 @@ public class GroupController {
 		List<ZTreeNode> _nodeList = _loginUser.getNodeList();
 		
 		/**获取组对应的角色列表*/
-		//List<SysGroup> groupRoles = groupService.getGroupRoles(groupIndex);
+		//List<SysGroup> groupRoles parentId= groupService.getGroupRoles(groupIndex);
 		
 		//返回的page对象
 		//page = groupService.getGroupRoles(groupIndex,pageNo, pageSize);
@@ -149,6 +150,7 @@ public class GroupController {
 		model.addObject("groupName",groupName);
 		model.addObject("nodeList", _nodeList);
 		
+		model.addObject("parentId", parentId);
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		

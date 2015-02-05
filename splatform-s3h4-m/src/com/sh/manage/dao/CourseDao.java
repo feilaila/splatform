@@ -10,7 +10,7 @@ import com.sh.manage.entity.MukeCourse;
 import com.sh.manage.entity.MukeCourseType;
 import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.Page;
-import com.sh.manage.pojo.MukeCoursePojo;
+import com.sh.manage.pojo.MukeCourseDTO;
 
 /**
  * @author 
@@ -64,11 +64,11 @@ public class CourseDao extends AbstractBaseDao<MukeCourse>{
 	 */
 	public Page getAllMukeCourse(String name, String createTime,Integer pageNo, int pageSize) {
 		StringBuffer sbf = new StringBuffer();
-		sbf.append("select rt.* from (select s.id,s.create_time,s.img,s.info,s.title,s.name,s.type_id,s.sys_user_id,s.video_id,s.status,u.name userName from muke_course s join t_sys_user u on s.sys_user_id=u.uid left join muke_course_type t on s.type_id = t.id ");
+		sbf.append("select rt.* from (select s.id,s.create_time createTime,s.img,s.info,s.title,s.name,s.type_id typeId,s.sys_user_id uid,s.video_id videoId,s.status,u.name userName,t.name cTypeName from muke_course s join t_sys_user u on s.sys_user_id=u.uid left join muke_course_type t on s.type_id = t.id ");
 		sbf.append(" where 1 = 1 ");//有效的用户and s.status = 1
 		
-		sbf.append("select rt.* from (select {course.*},{user.*},{type.*} from muke_course {course} join t_sys_user {user} on {course}.sys_user_id={user}.uid left join muke_course_type {type} on {course}.type_id = {type}.id ");
-		sbf.append(" where 1 = 1 ");//有效的用户and s.status = 1
+//		sbf.append("select rt.* from (select s.*,u.*,t.* from muke_course s join t_sys_user u on s.sys_user_id=u.uid left join muke_course_type t on s.type_id = t.id ");
+//		sbf.append(" where 1 = 1 ");//有效的用户and s.status = 1
 		Object[] params = new Object[]{};
 		
 		if(!StringUtils.isEmpty(name)){
@@ -81,7 +81,7 @@ public class CourseDao extends AbstractBaseDao<MukeCourse>{
 		}
 
 		sbf.append(") as rt");
-		return this.queryMoreModelListByPage(sbf.toString(), params, pageNo, pageSize, MukeCourse.class,SysUser.class,MukeCourseType.class);
+		return this.queryModelDTOListByPage(sbf.toString(), params, pageNo, pageSize, MukeCourseDTO.class);
 	}
 
 	/**

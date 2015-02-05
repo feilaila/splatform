@@ -87,6 +87,7 @@ public class UserController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/aumanage")
 	public ModelAndView appUserManagePage(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "status", required = false, defaultValue = "") Integer status,
 			@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
@@ -134,6 +135,7 @@ public class UserController {
 		model.addObject("page", page);
 		model.addObject("appUserList", appUserList);
 		model.addObject("groupList", groupList);
+		model.addObject("parentId", parentId);
 		return model;
 	}
 
@@ -314,6 +316,7 @@ public class UserController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/umanage.do")
 	public ModelAndView sysUserManagePage(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "endDate", required = false, defaultValue = "") String endDate,
@@ -350,6 +353,7 @@ public class UserController {
 		
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
+		model.addObject("parentId", parentId);
 		model.addObject("sysUserList", sysUserList);
 		//model.addObject("roleList", roleList);
 		return model;

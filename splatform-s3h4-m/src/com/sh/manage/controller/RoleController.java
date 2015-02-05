@@ -103,6 +103,7 @@ public class RoleController {
 	@RequestMapping(value="/romanage.do")
     public ModelAndView roleManagePage(HttpServletRequest req,
 			HttpServletResponse resp,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
     		@RequestParam(value = "gIndex", required = false, defaultValue = "") Integer gIndex,
     		@RequestParam(value = "roleName", required = false, defaultValue = "") String roleName,
     		@RequestParam(value = "expand", required = false, defaultValue = "false") Boolean expand,
@@ -128,6 +129,7 @@ public class RoleController {
 		model.addObject("roleList", roleList);
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
+		model.addObject("parentId", parentId);
 		model.addObject("roleName", roleName);
 		logger.info("..expand:"+expand);
         return model;

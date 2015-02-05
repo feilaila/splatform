@@ -45,7 +45,7 @@ String lpath=this.getServletContext().getContextPath();
                 
                 <c:forEach items="${sessionScope.treeNodeList }" var="treeNode">
 	                <li class="panel ">
-		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" 
+		                <a href="#" data-parent="#menu" data-toggle="collapse" class="accordion-toggle <c:if test='${treeNode.id != parentId}'>collapsed</c:if>" 
 		                data-target="#form-${treeNode.code}-nav">
 		                    <i class="${treeNode.iconTag }"></i> ${treeNode.name }
 		                    <span class="pull-right">
@@ -53,12 +53,12 @@ String lpath=this.getServletContext().getContextPath();
 		                    </span>
 		                    &nbsp; <span class="label label-success">5</span>&nbsp;
 		                </a>
-		                <ul class="collapse" id="form-${treeNode.code}-nav">
+		                <ul class="<c:if test='${treeNode.id != parentId}'>collapse</c:if><c:if test='${treeNode.id == parentId}'>in</c:if>" id="form-${treeNode.code}-nav">
 		                	<c:if test="${treeNode.hasChild == 1}">
 		                		<!-- has child nodes -->
 		                		<c:forEach items="${treeNode.children}" var="childNode">
 		                			<li class="">
-		                				<a href="<%=lpath %>/${childNode.menuUrl }"><i class="icon-angle-right"></i> ${childNode.name } </a>
+		                				<a href="<%=lpath %>/${childNode.menuUrl }?parentId=${childNode.parentId }"><i class="icon-angle-right"></i> ${childNode.name } </a>
 		                			</li>
 		                		</c:forEach>
 		                	</c:if>

@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -491,12 +492,12 @@ public abstract class AbstractBaseDao<T> {
 	 * @param clazz
 	 * @return
 	 */
-	public Page queryMoreModelListByPage(final String sqlStr, final Object[] paras,
-			final int pageNo, final int pageSize, @SuppressWarnings("rawtypes") final Class clazz1,final Class clazz2,final Class clazz3) {
+	public Page queryModelDTOListByPage(final String sqlStr, final Object[] paras,
+			final int pageNo, final int pageSize, final Class clazz) {
 		List<?> objList = new ArrayList<>();
 		int count = 0;
 		Query query = this.getCurrentSession().createSQLQuery(sqlStr)
-				.addEntity(clazz1).addEntity(clazz2).addEntity(clazz3);
+				.setResultTransformer(Transformers.aliasToBean(clazz));
 
 		if (null != paras && paras.length > 0) {
 			for (Object para : paras) {

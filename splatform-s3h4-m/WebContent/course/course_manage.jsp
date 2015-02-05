@@ -94,7 +94,7 @@
 														<td>${course.id}</td>
 														<td>${course.name}</td>
 														<td>${course.title}</td>
-														<td>${course.typeId}</td>
+														<td>${course.cTypeName}</td>
 														<td>
 															<c:if test="${course.status ==0 }">待审核</c:if>
 														</td>

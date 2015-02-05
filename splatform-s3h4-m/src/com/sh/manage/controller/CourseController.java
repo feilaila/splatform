@@ -78,6 +78,7 @@ public class CourseController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/coursemanage.do")
 	public ModelAndView courseManagePage(
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "name", required = false, defaultValue = "") String name,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
@@ -110,6 +111,7 @@ public class CourseController {
 		model.addObject("name", name);
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
+		model.addObject("parentId", parentId);
 		model.addObject("courseList", courseList);
 		model.addObject("courseTypeList", courseTypeList);
 		//model.addObject("roleList", roleList);

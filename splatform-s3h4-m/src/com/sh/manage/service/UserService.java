@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sh.manage.cache.CacheManager;
 import com.sh.manage.dao.AppUserDao;
 import com.sh.manage.dao.SysUserDao;
 import com.sh.manage.entity.AppUser;
@@ -26,6 +27,11 @@ import com.sh.manage.pojo.SysUserDTO;
 public class UserService extends BaseService {
 
 	private Logger logger = Logger.getLogger(UserService.class);
+	
+	/**
+	 * 自定义缓存
+	 */
+	private CacheManager<SysUserDTO> cacheManager = new CacheManager<SysUserDTO>();
 	
 	@Autowired
 	private AppUserDao appUserDao;
@@ -175,9 +181,18 @@ public class UserService extends BaseService {
 	 */
 	public SysUserDTO findSysUserDTO(Integer uid)throws SPlatformServiceException {
 		try {
+			//先找缓存
+			SysUserDTO sysUserDTO = cacheManager.getValue(uid.toString());
+			if(null!=sysUserDTO){
+				logger.info("缓存中存在:"+uid);
+				return sysUserDTO;
+			}
+			//缓存没有，查询db
 			List<SysUserDTO> sysUserList = sysUserDao.findSysUserDTO(uid);
 			//找到了用户
 			if(null != sysUserList){
+				//加入缓存
+				cacheManager.addOrUpdateCache(uid.toString(), sysUserList.get(0));
 				return sysUserList.get(0);
 			}
 			//找不到用户

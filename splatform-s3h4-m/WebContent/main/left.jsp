@@ -16,6 +16,14 @@ String lpath=this.getServletContext().getContextPath();
 		padding: 5px 0 5px 15px;
 		border-bottom:1px solid #99A;
 	}
+	.bg{
+		background: #3083eb;
+		height: 40px;
+		left: 0;
+		overflow: hidden;
+		position: absolute;
+		width: 3px;
+	}
 </style>
 <!-- MENU SECTION -->
        <div id="left" >
@@ -68,7 +76,8 @@ String lpath=this.getServletContext().getContextPath();
 		                		<!-- has child nodes -->
 		                		<c:forEach items="${treeNode.children}" var="childNode">
 		                			<li class="_sec_menu">
-		                				<a href="<%=lpath %>/${childNode.menuUrl }?parentId=${childNode.parentId }"><i class="icon-angle-right"></i> ${childNode.name } </a>
+		                				<c:if test='${treeNode.id != owdId}'><span class="bg"></span></c:if>
+		                				<a href="<%=lpath %>/${childNode.menuUrl }?parentId=${childNode.parentId }&ownId=${childNode.id }"><i class="icon-angle-right"></i> ${childNode.name } </a>
 		                			</li>
 		                		</c:forEach>
 		                	</c:if>

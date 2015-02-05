@@ -57,6 +57,8 @@
 							action="<spring:url value='/umanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
 							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
+							<input type="hidden" id="owdId" name="owdId" value="${owdId }" />
+							
 							<i class="icon-hand-right"></i><span>搜索</span> 
 							<input type="text" placeholder="输入用户名" class="form-control" 
 									id="search" name="usercode" value="${usercode }"
@@ -95,7 +97,7 @@
 													<tr>
 														<td>${sysUser.uid}</td>
 														<td>${sysUser['usercode']}</td>
-														<td><a href="<%=path%>/suserView.do?parentId=${parentId }&uid=<%=session.getAttribute("uid")%>">${sysUser.name}</a></td>
+														<td><a href="<%=path%>/suserView.do?parentId=${parentId }&uid=${sysUser.uid}">${sysUser.name}</a></td>
 														<td>${sysUser.groupName}</td>
 														<td>
 															<c:if test="${sysUser.status == 1}">有效</c:if>

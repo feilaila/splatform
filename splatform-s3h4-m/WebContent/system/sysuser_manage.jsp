@@ -57,7 +57,7 @@
 							action="<spring:url value='/umanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
 							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
-							<input type="hidden" id="owdId" name="owdId" value="${owdId }" />
+							<input type="hidden" id="ownId" name="ownId" value="${ownId }" />
 							
 							<i class="icon-hand-right"></i><span>搜索</span> 
 							<input type="text" placeholder="输入用户名" class="form-control" 

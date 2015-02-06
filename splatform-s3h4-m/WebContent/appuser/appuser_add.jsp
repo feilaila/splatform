@@ -47,7 +47,7 @@
 						<ul class="box_l_h_c">
 							<li class="box_l_h_c_li">
 								<select id="groupId" name="groupId"
-									style="width: 159px; background: none repeat scroll 0 0 #f5f5f5 !important;">
+									style="width: 170px; background: none repeat scroll 0 0 #f5f5f5 !important;" class="form-control">
 										<option value="0" selected>请选择组织</option>
 										<c:forEach items="${groupList}" var="group">
 											<option value="${group.id }">${group.groupName }</option>												onclick="setAuRoleId('${role.id }');">${role.roleName}</option>
@@ -55,60 +55,60 @@
 								</select>
 							</li>
 							<li class="box_l_h_c_li">
-								<input id="createDate" class="span3" type="text"
+								<input id="createDate" class="form-control span3" type="text"
 									name="startDate" value="" placeholder="开始日期" readonly>
 							</li>
 						<li class="box_l_h_c_li"><input name="username" value="" type="text"
-									placeholder="输入用户名" class="ui-autocomplete-input" id=""
+									placeholder="输入用户名" class="form-control" id=""
 									autocomplete="off" /></li>
 							<li class="box_l_h_c_li">
-								<input id="validDate" class="span3" type="text"
+								<input id="validDate" class="form-control span3" type="text"
 									name="endDate" value="" placeholder="结束日期" readonly>
 							</li>
 							
 							<li class="box_l_h_c_li">
 								<input name="password" id="password" value="" type="password"
-									placeholder="输入密码" class="ui-autocomplete-input" 
+									placeholder="输入密码" class="form-control" 
 									autocomplete="off" />
 							</li>
 							
 							<li class="box_l_h_c_li">
 								<input name="terminalId" id="terminalId" type="text"
-									placeholder="输入手机号" class="ui-autocomplete-input" 
+									placeholder="输入手机号" class="form-control" 
 									autocomplete="off" />
 							</li>
 							
 						<li class="box_l_h_c_li">
 								<input name="repassword" id="repassword" value="" type="password"
-									placeholder="确认密码" class="ui-autocomplete-input" 
+									placeholder="确认密码" class="form-control" 
 									autocomplete="off" />
 							</li>
 							<li class="box_l_h_c_li">
 								<input name="email" id="email" type="text"
-									placeholder="输入邮箱" class="ui-autocomplete-input" 
+									placeholder="输入邮箱" class="form-control" 
 								autocomplete="off" />
 							</li>
 							<li class="box_l_h_c_li">
 								<input name="name" value="" type="text"
-									placeholder="输入姓名" class="ui-autocomplete-input" id="name"
+									placeholder="输入姓名" class="form-control" id="name"
 									autocomplete="off" />
 							</li>
 							<li class="box_l_h_c_li">
 								<input name="limitYear" value="" type="text" id="limitYear"
-									placeholder="开通年限(限数字,0-100)" class="ui-autocomplete-input"
+									placeholder="开通年限(限数字,0-100)" class="form-control"
 									autocomplete="off" />
 							</li>
 							<li class="box_l_h_c_li">
 								<input name="remark" value="" type="text"
-									placeholder="备注" class="ui-autocomplete-input" id=""
+									placeholder="备注" class="form-control" id=""
 									autocomplete="off" />
 							</li>
 							<li class="box_l_h_c_li">
 								<select id="status"
-									style="width: 159px; background: none repeat scroll 0 0 #f5f5f5 !important;"
+									style="width: 170px; background: none repeat scroll 0 0 #f5f5f5 !important;" class="form-control"
 									name="status">
 										<option value="0" selected>状态</option>
-									<option value="1" onclick="setAuStatus('1');" <c:if test="${status == 1}">selected</c:if>>有效</option>
+									<option value="1" onclick="setAuStatus('1');" selected>有效</option>
 									<option value="9" onclick="setAuStatus('9');" <c:if test="${status == 9}">selected</c:if>>失效</option>
 								</select>
 							</li>

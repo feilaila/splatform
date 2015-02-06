@@ -25,6 +25,9 @@
 	.mr0{
 		margin: 0px 0px 0px 0px;
 	}
+	.col-lg-12{
+		margin: 20px 0 0 10px;
+	}
 </style>
 <!-- END HEAD -->
 
@@ -56,6 +59,9 @@
 						<form id="suserSearchForm" name="suserSearchForm"
 							action="<spring:url value='/coursemanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
+							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
+							<input type="hidden" id="ownId" name="ownId" value="${ownId }" />
+							
 							<i class="icon-hand-right"></i><span>搜索</span> 
 							<input type="text" placeholder="输入课程名" class="form-control" 
 									id="search" name="name" value="${name }"
@@ -105,7 +111,7 @@
 														<td>														
 														<c:if test="${course.id > 0}">
 															<a data-toggle="modal" href="#suserEdit"
-															onClick="editSuser('${course.id}'');"
+															onClick="editCourse('${course.id}');"
 															class="btn btn-xs btn-primary"><i class="icon-edit"></i></a>
 															<a data-toggle="modal" href="#suserDel"
 																onClick="delSuser('${course.id}','${course.name}');"
@@ -207,61 +213,9 @@
     
     //在父页面提交iframe中的表单
     //课程编辑
-    var editSuser = function(id){
-    		var diag = new zDialog();
-    		diag.Height = 400;
-    		diag.Title = "系统管理-课程编辑";
-        	diag.URL = "<%=path %>/toEditSysUser.do?userId="+id;
-        	diag.OKEvent = function(){
-        		
-        		//参数校验
-        		var groupName = diag.innerDoc.getElementById('groupName').value;
-        		var groupDesc = diag.innerDoc.getElementById('groupDesc').value;
-        		if(groupDesc=='' || groupName == ''){
-        			zDialog.alert('请填写组织名称和对应描述!');
-        			return;
-        		}
-        		
-        		//处理角色选择
-        		var roleArr = new Array();
-        		//alert(e.value);
-        		//alert(e.checked);
-        		//传入后台的字符串
-        		var roleStr = diag.innerDoc.getElementById("roleStr").value;
-        		
-        		roleStr="";
-        		roleArr=diag.innerDoc.getElementsByName("gRole");
-        		for(var i=0;i<roleArr.length;i++){
-        			if(roleArr[i].checked){
-        				roleStr+= roleArr[i].value+",";  
-        			}
-        		}
-        		//去掉最后一个逗号
-        		if(roleStr.charAt(roleStr.length - 1)==","){
-        			roleStr=roleStr.substring(0,roleStr.length-1);
-        		}
-        		//设置以及选择的角色id
-        		if(diag.innerDoc.getElementById("roleStr").value==""){										
-        			diag.innerDoc.getElementById("roleStr").value = roleStr;
-        		}else{
-        			//先清空表单的值
-        			diag.innerDoc.getElementById("roleStr").value="";
-        		}
-        		diag.innerDoc.getElementById("roleStr").value = roleStr;
-        		//alert(roleStr);
-        		diag.innerDoc.getElementById('editForm').submit();
-        		diag.submited=true;
-        	};//点击确定后调用的方法
-        	diag.OnLoad=function(){
-        		if(diag.submited){
-        			diag.openerWindow.location.reload();
-                    try{
-        				diag.close();
-                    }catch(e){}
-        		}
-        	};
-        	diag.CancelEvent = function(){diag.close();};
-        	diag.show();
+    var editCourse = function(id){
+    	$('#edit-courseId').val(id);
+    	document.getElementById('editForm').submit();
     }
     
     
@@ -288,6 +242,11 @@
 
 <form id="delForm" name="delForm" method="post" action="doDelGroup.do" target="thisFrame">
 	<input type="hidden" id="del-userId" name="userId">
+</form>
+<form id="editForm" name="editForm" method="post" action="toEditCourse.do" target="_self">
+	<input type="hidden" id="edit-courseId" name="courseId">
+	<input type="hidden" id="edit-parentId" name="parentId" value="${parentId }">
+	<input type="hidden" id="edit-ownId" name="ownId" value="${ownId }">
 </form>
 <iframe style="display: none" name="thisFrame"></iframe>
 </html>

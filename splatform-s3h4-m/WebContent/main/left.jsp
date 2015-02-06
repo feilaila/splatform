@@ -76,7 +76,7 @@ String lpath=this.getServletContext().getContextPath();
 		                		<!-- has child nodes -->
 		                		<c:forEach items="${treeNode.children}" var="childNode">
 		                			<li class="_sec_menu">
-		                				<c:if test='${treeNode.id != owdId}'><span class="bg"></span></c:if>
+		                				<c:if test='${childNode.id == ownId}'><span class="bg"></span></c:if>
 		                				<a href="<%=lpath %>/${childNode.menuUrl }?parentId=${childNode.parentId }&ownId=${childNode.id }"><i class="icon-angle-right"></i> ${childNode.name } </a>
 		                			</li>
 		                		</c:forEach>

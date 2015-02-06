@@ -25,6 +25,7 @@ import com.sh.manage.entity.MukeCourseType;
 import com.sh.manage.entity.SysAttachment;
 import com.sh.manage.module.page.Page;
 import com.sh.manage.pojo.LoginUser;
+import com.sh.manage.pojo.MukeCourseDTO;
 import com.sh.manage.service.CourseService;
 import com.sh.manage.service.UploadService;
 import com.sh.manage.service.UserService;
@@ -79,6 +80,7 @@ public class CourseController {
 	@RequestMapping(value = "/coursemanage.do")
 	public ModelAndView courseManagePage(
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
 			@RequestParam(value = "name", required = false, defaultValue = "") String name,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
@@ -112,6 +114,7 @@ public class CourseController {
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		model.addObject("parentId", parentId);
+		model.addObject("ownId", ownId);
 		model.addObject("courseList", courseList);
 		model.addObject("courseTypeList", courseTypeList);
 		//model.addObject("roleList", roleList);
@@ -340,6 +343,43 @@ public class CourseController {
 		}catch(Exception e){
 			logger.error("controller:课程查看异常!"+id,e);
 		}
+        return model;
+	}
+	
+	/**
+	 * 课程编辑页面
+	 * @return
+	 */
+	@RequestMapping(value = "/toEditCourse.do", method = RequestMethod.POST)
+	public ModelAndView toEditCourse(
+			@RequestParam(value = "courseId", required = false, defaultValue = "") Integer courseId,
+			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
+			HttpServletRequest request,HttpServletResponse response) {
+		logger.info("controller:..课程编辑页面!");
+		ModelAndView model = new ModelAndView("/course/course_edit");
+		HttpSession session = request.getSession();
+		try{
+			//获取课程信息
+	    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+			if (null != _loginUser) {
+				//get/new course
+				MukeCourseDTO course = courseService.findCourseDTO(courseId);
+				if(null!= course.getVideoId() && course.getVideoId() > 0){
+					SysAttachment sysAttachment = new SysAttachment();
+					sysAttachment.setAid(course.getVideoId());//附件id
+					sysAttachment.setType(Constants.ATTACH_TYPE_VIDEO);//视频类型
+					SysAttachment attachment = uploadService.getFile(sysAttachment);
+					model.addObject("attachment", attachment);
+				}
+				model.addObject("course", course);
+				
+			}
+		}catch(Exception e){
+			logger.error("controller:课程编辑页面异常!"+courseId,e);
+		}
+		model.addObject("parentId", parentId);
+		model.addObject("ownId", ownId);
         return model;
 	}
 	

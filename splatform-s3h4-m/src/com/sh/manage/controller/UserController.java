@@ -318,6 +318,7 @@ public class UserController {
 	@RequestMapping(value = "/umanage.do")
 	public ModelAndView sysUserManagePage(
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "endDate", required = false, defaultValue = "") String endDate,
@@ -355,6 +356,7 @@ public class UserController {
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		model.addObject("parentId", parentId);
+		model.addObject("ownId", ownId);
 		model.addObject("sysUserList", sysUserList);
 		//model.addObject("roleList", roleList);
 		return model;

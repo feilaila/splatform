@@ -94,4 +94,29 @@ public class CourseDao extends AbstractBaseDao<MukeCourse>{
 		Object[] params = new Object[]{};
 		return (List<MukeCourseType>) this.queryModelSqlList(sql,params,MukeCourseType.class);
 	}
+
+	/**
+	 * 查询课程其他信息
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MukeCourseDTO> findMukeCourseDTO(Integer id) {
+		StringBuffer sbf = new StringBuffer();
+		sbf.append("select rt.* from (select s.id,s.create_time createTime,s.img,s.info,s.title,s.name,s.type_id typeId,s.sys_user_id uid,s.video_id videoId,s.status,u.name userName,t.name cTypeName from muke_course s join t_sys_user u on s.sys_user_id=u.uid left join muke_course_type t on s.type_id = t.id ");
+		sbf.append(" where 1 = 1 ");//有效的用户and s.status = 1
+		
+//		sbf.append("select rt.* from (select s.*,u.*,t.* from muke_course s join t_sys_user u on s.sys_user_id=u.uid left join muke_course_type t on s.type_id = t.id ");
+//		sbf.append(" where 1 = 1 ");//有效的用户and s.status = 1
+		Object[] params = new Object[]{};
+		
+		if(id > 0){
+			params = ArrayUtils.add(params, id);
+			sbf.append(" and s.id = ? ");
+		}
+	
+
+		sbf.append(") as rt");
+		return (List<MukeCourseDTO>) this.querysqlDTOList(sbf.toString(), params, MukeCourseDTO.class);
+	}
 }

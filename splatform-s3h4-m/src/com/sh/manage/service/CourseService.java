@@ -15,6 +15,7 @@ import com.sh.manage.entity.MukeCourse;
 import com.sh.manage.entity.MukeCourseType;
 import com.sh.manage.exception.SPlatformServiceException;
 import com.sh.manage.module.page.Page;
+import com.sh.manage.pojo.MukeCourseDTO;
 
 /**
  * @author
@@ -50,6 +51,26 @@ public class CourseService extends BaseService {
 			throw new SPlatformServiceException("查询课程信息出现异常");
 		}
 	}
+	
+	/**
+	 * 查找课程其他信息
+	 * @param course
+	 */
+	public MukeCourseDTO findCourseDTO(Integer id)throws SPlatformServiceException {
+		try {
+			List<MukeCourseDTO> courseList = courseDao.findMukeCourseDTO(id);
+			//找到了课程
+			if(null != courseList){
+				return courseList.get(0);
+			}
+			//找不到课程
+			return new MukeCourseDTO();
+		} catch (Exception e) {
+			logger.error("service:查询课程信息出现异常", e);
+			throw new SPlatformServiceException("查询课程信息出现异常");
+		}
+	}
+	
 	/**
 	 * 课程添加
 	 * @param course

@@ -109,7 +109,7 @@ public class GroupController {
     		@RequestParam(value = "gIndex", required = false, defaultValue = "") Integer gIndex,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
     		@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
-    		@RequestParam(value = "owdId", required = false, defaultValue = "") Integer owdId,
+    		@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
     		@RequestParam(value = "expand", required = false, defaultValue = "false") Boolean expand,
     		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
 		
@@ -151,7 +151,7 @@ public class GroupController {
 		model.addObject("nodeList", _nodeList);
 		
 		model.addObject("parentId", parentId);
-		model.addObject("owdId", owdId);
+		model.addObject("ownId", ownId);
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		

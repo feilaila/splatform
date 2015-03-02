@@ -316,16 +316,25 @@ public class UserController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/umanage.do")
-	public ModelAndView sysUserManagePage(
+	public ModelAndView sysUserManagePage(HttpServletRequest req,
+			HttpServletResponse resp,
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "endDate", required = false, defaultValue = "") String endDate,
 			@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {
-		// 获取会员以及等级
+		HttpSession session = req.getSession();
+		// 获取用户以及等级
 		if (null == pageNo) {
 			pageNo = initPageNo;
+		}
+		Integer ownUid = 0;
+		//获取用户信息
+    	LoginUser _loginUser = (LoginUser) session.getAttribute(SessionConstants.LOGIN_USER);
+		if (null != _loginUser) {
+			//获取登录用户id
+			ownUid = _loginUser.getId();
 		}
 		// 返回会员列表页
 		ModelAndView model = new ModelAndView("/system/sysuser_manage");
@@ -356,7 +365,8 @@ public class UserController {
 		model.addObject("pageSize", pageSize);
 		model.addObject("page", page);
 		model.addObject("parentId", parentId);
-		model.addObject("ownId", ownId);
+		model.addObject("ownId", ownId);//当前菜单id
+		model.addObject("ownUid", ownUid);//当前登录用户id
 		model.addObject("sysUserList", sysUserList);
 		//model.addObject("roleList", roleList);
 		return model;
@@ -490,11 +500,11 @@ public class UserController {
 	 * 用户修改
 	 * @return
 	 */
-	@RequestMapping(value = "/suserEdit.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/doEditSysUser.do", method = RequestMethod.POST)
 	public ResponseEntity<String> suserEdit(
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
-			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
+			@RequestParam(value = "suGroupId", required = false, defaultValue = "0") Integer suGroupId,
 			@RequestParam(value = "roleName", required = false, defaultValue = "") String roleName,
 			@RequestParam(value = "startDate", required = false, defaultValue = "") String startDate,
 			@RequestParam(value = "usercode", required = false, defaultValue = "") String usercode,
@@ -519,7 +529,7 @@ public class UserController {
 			SysUser sUser = userService.findSysUser(uid);
 			
 			// get|new role
-			SysRole role = roleService.findSysRole(suRoleId);
+//			SysRole role = roleService.findSysRole(suRoleId);
 			
 			sUser.setEmail(email);
 			sUser.setValidTime(endDate.replaceAll("-", ""));//时间格式化，去掉-
@@ -528,19 +538,20 @@ public class UserController {
 			sUser.setStatus(status);//默认有效
 			sUser.setUsercode(usercode);			
 			sUser.setTerminalId(terminalId);
+			sUser.setGroupId(suGroupId);
 			
 			//更新，先删后增关系
-			List<SysRole> roleList = sUser.getRoleList();
-			List<SysRole> delRoleList = new ArrayList<SysRole>();
-			//List<SysRole> addRoleList = new ArrayList<SysRole>();
-			for(SysRole r:roleList){
-				if(r.getId()!=suRoleId){
-					delRoleList.add(r);//for 循环等同于iterator
-				}
-			}
-			sUser.getRoleList().removeAll(delRoleList);//删除不需要的关系
-			sUser.getRoleList().add(role);//添加新增的关联关系,可以批量插入关系
-			role.getUserList().add(sUser);//添加关联关系
+//			List<SysRole> roleList = sUser.getRoleList();
+//			List<SysRole> delRoleList = new ArrayList<SysRole>();
+//			//List<SysRole> addRoleList = new ArrayList<SysRole>();
+//			for(SysRole r:roleList){
+//				if(r.getId()!=suRoleId){
+//					delRoleList.add(r);//for 循环等同于iterator
+//				}
+//			}
+//			sUser.getRoleList().removeAll(delRoleList);//删除不需要的关系
+//			sUser.getRoleList().add(role);//添加新增的关联关系,可以批量插入关系
+//			role.getUserList().add(sUser);//添加关联关系
 
 			userService.editSysUser(sUser);
 			msg="用户修改成功!";
@@ -559,8 +570,7 @@ public class UserController {
 	 * 用户删除
 	 * @return
 	 */
-	@SuppressWarnings("unused")
-	@RequestMapping(value = "/suserDel.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/doDelSysUser.do", method = RequestMethod.POST)
 	public ResponseEntity<String> suserDel(
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
@@ -580,6 +590,7 @@ public class UserController {
 			= userService.findSysUser(uid);
 			
 			// get|new role
+			@SuppressWarnings("unused")
 			SysRole role = roleService.findSysRole(suRoleId);
 			
 			sUser.setStatus(status);//默认失效
@@ -645,6 +656,7 @@ public class UserController {
 	public ModelAndView suserView(
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
 			@RequestParam(value = "uid", required = false, defaultValue = "0") Integer uid,
+			@RequestParam(value = "ownUid", required = false, defaultValue = "0") Integer ownUid,
 			@RequestParam(value = "suRoleId", required = false, defaultValue = "0") Integer suRoleId,
 			@RequestParam(value = "status", required = false, defaultValue = "9") Integer status,
 			HttpServletRequest request,HttpServletResponse response) {
@@ -663,7 +675,7 @@ public class UserController {
 				model.addObject("attachment", attachment);
 				model.addObject("sysUser", sUser);
 				model.addObject("parentId", parentId);
-				
+				model.addObject("ownUid", ownUid);
 			}
 		}catch(Exception e){
 			logger.error("controller:用户查看异常!"+uid,e);

@@ -97,7 +97,7 @@
 													<tr>
 														<td>${sysUser.uid}</td>
 														<td>${sysUser['usercode']}</td>
-														<td><a href="<%=path%>/suserView.do?parentId=${parentId }&uid=${sysUser.uid}">${sysUser.name}</a></td>
+														<td><a href="<%=path%>/suserView.do?parentId=${parentId }&uid=${sysUser.uid}&ownUid=${ownUid}">${sysUser.name}</a></td>
 														<td>${sysUser.groupName}</td>
 														<td>
 															<c:if test="${sysUser.status == 1}">有效</c:if>
@@ -271,42 +271,49 @@
     		diag.Title = "系统管理-用户编辑";
         	diag.URL = "<%=path %>/toEditSysUser.do?parentId=${parentId}&uid="+id;
         	diag.OKEvent = function(){
-        		
+        		diag.innerDoc.getElementById("uid").value = id;
         		//参数校验
-        		var groupName = diag.innerDoc.getElementById('groupName').value;
+        		var usercode = diag.innerDoc.getElementById("usercode").value;
+        		var name = diag.innerDoc.getElementById("name").value;
+        		if(usercode == '' || name == ''){
+        			alert('请输入用户名和姓名');
+        			//$("input[type='text'][name='usercode']").focus();
+        			return;
+        		}
+        		
+        		//邮箱校验
+        		//邮箱正则
+        		var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        		var v_email = diag.innerDoc.getElementById("email").value;
+        		if(v_email !=''){
+        			if(!emailReg.test(v_email)){
+        				alert('请输入有效的E_mail！');
+        		        //$("input[type='text'][name='email']").focus();
+        		        return;
+        			}
+        		}else{
+        			alert('请输入E_mail！');
+        	        //$("input[type='text'][name='email']").focus();
+        	        return;
+        		}
+        		
+        		//手机号校验
+        		var v_ter = diag.innerDoc.getElementById("terminalId").value;
+        		if(v_ter==""||v_ter.length<11){
+        			alert("请输入正确的手机号码!");
+        			//$("input[type='text'][name='terminalId']").focus();
+        			return;
+        		}
+        		/**var groupName = diag.innerDoc.getElementById('groupName').value;
         		var groupDesc = diag.innerDoc.getElementById('groupDesc').value;
         		if(groupDesc=='' || groupName == ''){
         			zDialog.alert('请填写组织名称和对应描述!');
         			return;
-        		}
+        		}**/
         		
-        		//处理角色选择
-        		var roleArr = new Array();
-        		//alert(e.value);
-        		//alert(e.checked);
-        		//传入后台的字符串
-        		var roleStr = diag.innerDoc.getElementById("roleStr").value;
         		
-        		roleStr="";
-        		roleArr=diag.innerDoc.getElementsByName("gRole");
-        		for(var i=0;i<roleArr.length;i++){
-        			if(roleArr[i].checked){
-        				roleStr+= roleArr[i].value+",";  
-        			}
-        		}
-        		//去掉最后一个逗号
-        		if(roleStr.charAt(roleStr.length - 1)==","){
-        			roleStr=roleStr.substring(0,roleStr.length-1);
-        		}
-        		//设置以及选择的角色id
-        		if(diag.innerDoc.getElementById("roleStr").value==""){										
-        			diag.innerDoc.getElementById("roleStr").value = roleStr;
-        		}else{
-        			//先清空表单的值
-        			diag.innerDoc.getElementById("roleStr").value="";
-        		}
-        		diag.innerDoc.getElementById("roleStr").value = roleStr;
         		//alert(roleStr);
+        		
         		diag.innerDoc.getElementById('editForm').submit();
         		diag.submited=true;
         	};//点击确定后调用的方法
@@ -359,8 +366,8 @@
 				}
 </script>    
 
-<form id="delForm" name="delForm" method="post" action="doDelGroup.do" target="thisFrame">
-	<input type="hidden" id="del-userId" name="userId">
+<form id="delForm" name="delForm" method="post" action="doDelSysUser.do" target="thisFrame">
+	<input type="hidden" id="del-userId" name="uid">
 	<input type="hidden" id="del-parentId" name="parentId">
 </form>
 <form id="initPwdForm" name="initPwdForm" method="post" action="doInitPwd.do" target="thisFrame">

@@ -99,10 +99,10 @@
 									</div-->
 								</div>
 
-								<div class="upload_tag">
+								<div class="upload_tag" <c:if test="${sysUser.uid != ownUid}">style="display:none"</c:if>>
 									<label class="left mgr5" for="etime">上传头像</label>
 									<div id="pic_upload" class="upload_btn_cs">
-										<div id="pic_upload_button" class="upload_Button">
+										<div id="pic_upload_button" class="upload_Button" >
 											<span name="spanButtonPlaceHolder" id="spanButtonPlaceHolder">X</span>
 										</div>
 										<input id="btnCancel" type="button" value=""

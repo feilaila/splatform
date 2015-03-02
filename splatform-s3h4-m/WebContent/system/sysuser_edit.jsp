@@ -42,9 +42,10 @@
 <!-- BEGIN BODY -->
 <body>
 	<div id="wrap">
-					<form class="" method="post" id="addForm" name="addForm"
-						action="<spring:url value='/doAddsuser.do' htmlEscape='true'/>" target="_self">
+					<form class="" method="post" id="editForm" name="editForm"
+						action="<spring:url value='/doEditSysUser.do' htmlEscape='true'/>" target="_self">
 						<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
+						<input type="hidden" id="uid" name="uid" value="" />
 						<ul class="box_l_h_c">
 							<li class="box_l_h_c_li">
 								<select id="suGroupId" name="suGroupId" class="form-control"
@@ -81,7 +82,7 @@
 									autocomplete="off" value="${sysUser.email}"/>
 							</li>
 							<li class="box_l_h_c_li">
-								<input name="name" value="" type="text"
+								<input name="name" type="text"
 									placeholder="输入姓名" class="form-control span3" id="name"
 									autocomplete="off" value="${sysUser.name}"/>
 							</li>
@@ -89,9 +90,10 @@
 								<select id="status" class="form-control"
 									style="height:33px;width: 196px; background: none repeat scroll 0 0 #f5f5f5 !important;"
 									name="status">
+										
 										<option value="0">状态</option>
-										<option value="1" onclick="setSuStatus('1');">有效</option>
-										<option value="9" onclick="setSuStatus('9');">失效</option>
+										<option value="1" onclick="setSuStatus('1');" <c:if test="${sysUser.status==1 }">selected</c:if> >有效</option>
+										<option value="9" onclick="setSuStatus('9');" <c:if test="${sysUser.status==9 }">selected</c:if> >失效</option>
 								</select>
 							</li>
 							

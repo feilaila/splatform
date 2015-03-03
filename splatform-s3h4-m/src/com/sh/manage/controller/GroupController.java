@@ -224,12 +224,14 @@ public class GroupController {
 	@RequestMapping(value="/toAddGroup.do")
     public ModelAndView groupAddPage(
     		@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+    		@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
     		HttpServletRequest req,
 			HttpServletResponse resp) {
 		ModelAndView model = new ModelAndView("/group/g_add");
 		List<SysRole> dbRoleList = roleService.getAllRoleList();
 		model.addObject("roleList", dbRoleList);
 		model.addObject("parentId", parentId);
+		model.addObject("ownId", ownId);
         return model;
     }
 	

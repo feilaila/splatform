@@ -53,6 +53,8 @@
 							action="<spring:url value='/gmanage.do' htmlEscape='true'/>"
 							method="post" target="_self">
 							<input type="hidden" id="parentId" name="parentId" value="${parentId }" />
+							<input type="hidden" id="ownId" name="ownId"
+											value="${ownId }" />
 		            		<div class="form-group">
 								<div class="">
 									<i class="icon-hand-right"></i><span>搜索</span> 
@@ -169,7 +171,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
         	diag.Title = "系统管理-组织新增";
-        	diag.URL = "<%=path %>/toAddGroup.do?parentId=${parentId}";
+        	diag.URL = "<%=path %>/toAddGroup.do?parentId=${parentId}&ownId=${ownId}";
         	diag.OKEvent = function(){
         		//参数校验
         		var groupName = diag.innerDoc.getElementById('groupName').value;
@@ -228,7 +230,7 @@
     		var diag = new zDialog();
     		diag.Height = 400;
     		diag.Title = "系统管理-组织编辑";
-        	diag.URL = "<%=path %>/toEditGroup.do?parentId=${parentId}&gid="+id;
+        	diag.URL = "<%=path %>/toEditGroup.do?parentId=${parentId}&ownId=${ownId}&gid="+id;
         	diag.OKEvent = function(){
         		
         		//参数校验

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.sh.manage.entity.MukeCourse;
 import com.sh.manage.entity.MukeCourseType;
-import com.sh.manage.entity.SysUser;
 import com.sh.manage.module.page.Page;
 import com.sh.manage.pojo.MukeCourseDTO;
 

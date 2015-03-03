@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.sh.manage.entity.SysOperate;
-import com.sh.manage.entity.SysRole;
 
 /**
  * 角色数据访问类

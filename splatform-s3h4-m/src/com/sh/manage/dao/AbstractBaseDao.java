@@ -355,7 +355,7 @@ public abstract class AbstractBaseDao<T> {
 	/**
 	 * 查询数据的列表
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List<?> querysqlDTOList(final String sqlStr, final Object[] paras,final Class clazz)
 			throws SPlatformDaoException {
 		List<?> objList = new ArrayList<>();
@@ -510,6 +510,7 @@ public abstract class AbstractBaseDao<T> {
 	 * @param clazz
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	public Page queryModelDTOListByPage(final String sqlStr, final Object[] paras,
 			final int pageNo, final int pageSize, final Class clazz) {
 		List<?> objList = new ArrayList<>();

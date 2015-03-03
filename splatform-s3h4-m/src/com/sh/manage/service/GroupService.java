@@ -86,6 +86,7 @@ public class GroupService extends BaseService{
 		return null;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = {SPlatformServiceException.class})
 	public boolean delGroup(SysGroup group) throws SPlatformServiceException {
 		

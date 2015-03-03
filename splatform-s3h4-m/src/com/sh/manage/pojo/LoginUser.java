@@ -3,7 +3,6 @@ package com.sh.manage.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 
 import com.sh.manage.constants.Constants;
 import com.sh.manage.entity.SysMenu;

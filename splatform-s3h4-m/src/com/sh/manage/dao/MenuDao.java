@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import com.sh.manage.constants.Constants;
 import com.sh.manage.constants.SessionConstants;
 import com.sh.manage.entity.SysMenu;
-import com.sh.manage.entity.SysRole;
 import com.sh.manage.pojo.LoginUser;
 
 /**

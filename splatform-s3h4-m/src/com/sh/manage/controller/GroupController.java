@@ -169,6 +169,8 @@ public class GroupController {
 			HttpServletResponse resp,
     		@RequestParam(value = "gid", required = false, defaultValue = "") Integer gid,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
+    		@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+    		@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
     		@RequestParam(value = "pageNo", required = false, defaultValue = "") Integer pageNo) {		
 		//获取组织列表
 		if (null == pageNo) {
@@ -202,6 +204,8 @@ public class GroupController {
 			
 			model.addObject("roleList", roleList);
 			model.addObject("group", group);
+			model.addObject("parentId", parentId);
+			model.addObject("ownId", ownId);
 		} catch (SPlatformServiceException e) {
 			logger.error(e.getMessage());
 			if(logger.isDebugEnabled()){
@@ -238,6 +242,7 @@ public class GroupController {
     public ResponseEntity<String> doGroupAdd(HttpServletRequest req,
 			HttpServletResponse resp,
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
     		@RequestParam(value = "groupDesc", required = false, defaultValue = "") String groupDesc,
@@ -272,13 +277,14 @@ public class GroupController {
 			logger.error("controller:GroupController:组织新增异常!"+groupName,e);
 			msg="组织新增出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId+"&ownId="+ownId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
 		model.addAttribute("parentId", parentId);
+		model.addAttribute("ownId", ownId);
 		logger.info("controller:GroupController:组织新增结束!");
 		logger.info("..expand:"+expand);
-        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId+"&ownId="+ownId)+"'</script>",responseHeaders, HttpStatus.CREATED);
     }
 	
 	/**
@@ -289,6 +295,7 @@ public class GroupController {
     public ResponseEntity<String> doGroupEdit(HttpServletRequest req,
 			HttpServletResponse resp,
 			@RequestParam(value = "parentId", required = false, defaultValue = "") Integer parentId,
+			@RequestParam(value = "ownId", required = false, defaultValue = "") Integer ownId,
     		@RequestParam(value = "groupId", required = false, defaultValue = "") Integer groupId,
     		@RequestParam(value = "expand", required = false, defaultValue = "") Integer expand,
     		@RequestParam(value = "groupName", required = false, defaultValue = "") String groupName,
@@ -320,13 +327,14 @@ public class GroupController {
 			logger.error("controller:GroupController:组织编辑异常!"+groupName,e);
 			msg="组织编辑出现异常";
 			model.addAttribute("msg", msg);
-			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
+			return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId+"&ownId="+ownId)+"'</script>",responseHeaders, HttpStatus.CREATED);
 			
 		}
 		model.addAttribute("parentId", parentId);
+		model.addAttribute("ownId", ownId);
 		logger.info("controller:GroupController:组织编辑结束!");
 		logger.info("..expand:"+expand);
-        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId)+"'</script>",responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<String>("<script>parent.callBack('msgdiv','" + msg + "'," + isCorrect + ");parent.close(); parent.location.href='" + WebUtils.formatURI(request, "/gmanage.do?parentId="+parentId+"&ownId="+ownId)+"'</script>",responseHeaders, HttpStatus.CREATED);
     }
 	
 	

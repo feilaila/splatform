@@ -291,7 +291,7 @@ public class RoleController {
 	    		
 	    		for(SysMenu roleMenu : roleMenuList){
 	    			if(roleMenu.getId() == menu.getId()){
-	    				//logger.info("存在此菜单..."+menu.getId()+menu.getMenuName());
+	    				logger.info("存在此菜单..."+menu.getId()+menu.getMenuName());
 	    				checked=", checked:true";
 	    				roleMenuStr+=menu.getId()+",";
 	    			}
@@ -324,6 +324,7 @@ public class RoleController {
 			model.addObject("parentId", parentId);
 	    	logger.info("menuStrs:"+menuStrs.toString());
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("跳转角色编辑页面error...");
 		}
 		

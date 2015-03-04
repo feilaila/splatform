@@ -43,6 +43,9 @@
 											value="${group.id }" />
 								<input type="hidden" id="parentId" name="parentId"
 											value="${parentId }" />
+								<input type="hidden" id="ownId" name="ownId"
+											value="${ownId }" />
+											
 								<input type="hidden" id="roleStr" name="roleStr"
 											value="" >
 								<table width="98%" border="0" align="center" cellpadding="4"

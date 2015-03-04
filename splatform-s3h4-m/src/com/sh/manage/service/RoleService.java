@@ -320,9 +320,9 @@ public class RoleService extends BaseService {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = {SPlatformServiceException.class})
 	public void updateRoleInfo(SysRole role, String roleMenuStr) throws SPlatformServiceException{
 		try {
-			//更新组织信息
+			//更新角色信息
 			roleDao.update(role);
-			//处理组织对应角色
+			//处理角色对应菜单
 			String[] roleMenuArr = roleMenuStr.split(",");
 			if(roleMenuArr.length>0){
 				//清除之前的数据

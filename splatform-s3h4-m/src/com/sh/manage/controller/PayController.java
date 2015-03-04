@@ -24,4 +24,10 @@ public class PayController {
 	public ModelAndView aliPayPage() {
 		return new ModelAndView("/pay/index");
 	}
+	
+	
+	@RequestMapping(value = "/wxpay/callback")
+	public ModelAndView wxPayCallback() {
+		return new ModelAndView("/pay/index");
+	}
 }

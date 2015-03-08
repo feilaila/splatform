@@ -358,7 +358,7 @@ public abstract class AbstractBaseDao<T> {
 	@SuppressWarnings("rawtypes")
 	public List<?> querysqlDTOList(final String sqlStr, final Object[] paras,final Class clazz)
 			throws SPlatformDaoException {
-		List<?> objList = new ArrayList<>();
+		List<T> objList = new ArrayList<T>();
 		int count = 0;
 		Query query = this.getCurrentSession().createSQLQuery(sqlStr).setResultTransformer(Transformers.aliasToBean(clazz));
 		if (null != paras && paras.length > 0) {
@@ -513,7 +513,7 @@ public abstract class AbstractBaseDao<T> {
 	@SuppressWarnings("rawtypes")
 	public Page queryModelDTOListByPage(final String sqlStr, final Object[] paras,
 			final int pageNo, final int pageSize, final Class clazz) {
-		List<?> objList = new ArrayList<>();
+		List<T> objList = new ArrayList<T>();
 		int count = 0;
 		Query query = this.getCurrentSession().createSQLQuery(sqlStr)
 				.setResultTransformer(Transformers.aliasToBean(clazz));

@@ -32,7 +32,7 @@ public class ButtonTag extends TagSupport {
 	 */
 	private static final long serialVersionUID = -3130860495480656707L;
 	// 按钮map
-	private static Map<String,String> BTN_MAP = new HashMap<String,String>();
+	private static Map<String, String> BTN_MAP = new HashMap<String, String>();
 	// 标签属性用户名
 	private String user = null;
 	// 标签属性操作url
@@ -46,22 +46,21 @@ public class ButtonTag extends TagSupport {
 	private String alt = null;
 	// 标签属性操作value 按钮文本
 	private String value = null;
-	
+
 	// 标签编码
 	private String modelCode = null;
-	
-//	static{
-//		BTN_MAP.put("add_btn", "添加");
-//		BTN_MAP.put("edit_btn", "修改");
-//		BTN_MAP.put("del_btn", "删除");
-//		BTN_MAP.put("audit_btn", "审核");
-//	}
-	
-	
+
+	// static{
+	// BTN_MAP.put("add_btn", "添加");
+	// BTN_MAP.put("edit_btn", "修改");
+	// BTN_MAP.put("del_btn", "删除");
+	// BTN_MAP.put("audit_btn", "审核");
+	// }
+
 	/* 标签初始方法 */
 	@SuppressWarnings("static-access")
 	public int doStartTag() throws JspTagException {
-		
+
 		return super.EVAL_BODY_INCLUDE;
 	}
 
@@ -70,65 +69,53 @@ public class ButtonTag extends TagSupport {
 	public int doEndTag() throws JspTagException {
 		Boolean b = false;
 		List list = new ArrayList();
-		//jdbc自定义template
+		// jdbc自定义template
 		JdbcSpTemplate spTemplate = new JdbcSpTemplate();
 		try {
-			
-			String username=(String)pageContext.getSession().getAttribute(SessionConstants.LOGIN_USER);
-			
-		    //先去缓存中查找，如果找不到执行数据库操作，提高性能
-//			if(null!=CacheManage.get("key")){
-//				
-//			}else{
-//				list = spTemplate.getRolesBtnByUser(username);
-			//此处增加缓存操作
-//			}
-			
+
+			String username = (String) pageContext.getSession().getAttribute(SessionConstants.LOGIN_USER);
+
+			// 先去缓存中查找，如果找不到执行数据库操作，提高性能
+			// if(null!=CacheManage.get("key")){
+			//
+			// }else{
+			// list = spTemplate.getRolesBtnByUser(username);
+			// 此处增加缓存操作
+			// }
+
 			list = spTemplate.getRolesBtnByUser(username);
-			
-			
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		for (int i = 0; i < list.size(); i++) {
-			//是否包含当前按钮编码
-			if(list.get(i).equals(modelCode)){
-				b=true;
+			// 是否包含当前按钮编码
+			if (list.get(i).equals(modelCode)) {
+				b = true;
 				break;
 			}
-//			if (p.getUrl().trim().equals(url.trim())) {
-//				b = true;
-//				// 如果jsmethod属性不为null 则把超链接href改为调用js
-//				if (jsmethod != null) {
-//					url = jsmethod;
-//				}
-//			}
+			// if (p.getUrl().trim().equals(url.trim())) {
+			// b = true;
+			// // 如果jsmethod属性不为null 则把超链接href改为调用js
+			// if (jsmethod != null) {
+			// url = jsmethod;
+			// }
+			// }
 		}
 		JspWriter out = pageContext.getOut();
 		if (b) {
 			try {
 				// 有权限 显示操作按钮
-//				out.println("<a href='" + url + "' class='btn btn-minier btn-info'><img src='"
-//						+ image + "' alt='" + alt + "' />" + value + "</a>");
-				switch (modelCode) {
-				case Constants.ADD_BTN:
-					out.println("<a href='" + url + "' class='btn btn-sm btn-info'><img src='"
-							+ image + "' alt='" + alt + "' />" + value + "</a>");
-					break;
-				case Constants.EDIT_BTN:
-					out.println("<a href='" + url + "' class='btn btn-sm btn-primary'><img src='"
-							+ image + "' alt='" + alt + "' />" + value + "</a>");
-					break;
-				case Constants.DEL_BTN:
-					out.println("<a href='" + url + "' class='btn btn-sm btn-danger'><img src='"
-							+ image + "' alt='" + alt + "' />" + value + "</a>");
-					break;
-				case Constants.QUERY_BTN:
-					out.println("<a href='" + url + "' class='btn btn-minier btn-info'><img src='"
-							+ image + "' alt='" + alt + "' />" + value + "</a>");
-					break;
-				default:
-					break;
+				out.println("<a href='" + url + "' class='btn btn-minier btn-info'><img src='" + image + "' alt='" + alt + "' />" + value + "</a>");
+
+				if (Constants.ADD_BTN.equals(modelCode)) {
+					out.println("<a href='" + url + "' class='btn btn-sm btn-info'><img src='" + image + "' alt='" + alt + "' />" + value + "</a>");
+				} else if (Constants.EDIT_BTN.equals(modelCode)) {
+					out.println("<a href='" + url + "' class='btn btn-sm btn-primary'><img src='" + image + "' alt='" + alt + "' />" + value + "</a>");
+				} else if (Constants.DEL_BTN.equals(modelCode)) {
+					out.println("<a href='" + url + "' class='btn btn-sm btn-danger'><img src='" + image + "' alt='" + alt + "' />" + value + "</a>");
+				} else if (Constants.QUERY_BTN.equals(modelCode)) {
+					out.println("<a href='" + url + "' class='btn btn-minier btn-info'><img src='" + image + "' alt='" + alt + "' />" + value + "</a>");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

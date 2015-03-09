@@ -3,3 +3,17 @@ Cache
 
 *.svn
 *.class
+splatform-s3h4-m/.classpath
+splatform-s3h4-m/.classpath
+splatform-s3h4-m/.classpath
+splatform-s3h4-m/.classpath
+splatform-s3h4-m/.settings/org.eclipse.jdt.core.prefs
+splatform-s3h4-m/.settings/org.eclipse.jdt.core.prefs
+*.prefs
+splatform-s3h4-m/.classpath
+splatform-s3h4-m/resources/db.properties
+splatform-s3m3-m/.classpath
+splatform-s3m3-m/.settings/org.eclipse.wst.common.project.facet.core.xml
+splatform-s3m3-m/.settings/org.eclipse.jdt.core.prefs
+splatform-s3h4-m/WebContent/WEB-INF/classes/applicationContext-db.xml
+splatform-s3h4-m/WebContent/WEB-INF/classes/db.properties
